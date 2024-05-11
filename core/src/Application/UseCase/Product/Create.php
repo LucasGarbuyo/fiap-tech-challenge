@@ -2,15 +2,14 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use TechChallenge\Domain\Product\Repository\IProduct;
+use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Product\Entities\Product;
-
 
 class Create
 {
-    private IProduct $ProductRepository;
+    private IProductRepository $ProductRepository;
 
-    public function __construct(IProduct $ProductRepository)
+    public function __construct(IProductRepository $ProductRepository)
     {
         $this->ProductRepository = $ProductRepository;
     }

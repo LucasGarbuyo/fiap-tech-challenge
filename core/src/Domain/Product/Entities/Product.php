@@ -36,6 +36,9 @@ class Product
 
     public function setName(string $name): self
     {
+        if (strlen($name) > 255)
+            throw new DomainException("Nome do produto não pode ter mais que 255 caracteres");
+
         $this->name = $name;
 
         return $this;

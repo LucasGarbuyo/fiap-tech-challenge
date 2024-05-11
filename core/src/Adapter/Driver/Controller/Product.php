@@ -4,7 +4,6 @@ namespace TechChallenge\Adapter\Driver\Controller;
 
 use TechChallenge\Application\UseCase\Product\Dto as ProductDto;
 use TechChallenge\Application\UseCase\Product\Create as ProductCreate;
-
 use TechChallenge\Adapter\Driven\Infra\Repository\Product\Repository as ProductRepository;
 
 class Product
