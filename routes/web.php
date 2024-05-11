@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Tech\Test;
+use TechChallenge\Adapter\Driver\Controller\Product;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', [Test::class, "test"]);
+Route::get('/test', [Product::class, "store"]);

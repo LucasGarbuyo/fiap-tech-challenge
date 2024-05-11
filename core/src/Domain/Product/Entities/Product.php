@@ -1,6 +1,6 @@
 <?php
 
-namespace Tech\Product\Domain\Product\Entities;
+namespace TechChallenge\Domain\Product\Entities;
 
 use DomainException;
 

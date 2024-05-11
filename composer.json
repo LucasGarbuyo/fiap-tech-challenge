@@ -26,7 +26,8 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Tech\\": "Tech/"
+            "Tech\\": "Tech/",
+            "TechChallenge\\": "core/src"
         }
     },
     "autoload-dev": {
