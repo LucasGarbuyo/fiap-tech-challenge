@@ -5,7 +5,7 @@ namespace TechChallenge\Application\UseCase\Product;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Product\Entities\Product;
 
-class Create
+class Store
 {
     private IProductRepository $ProductRepository;
 
@@ -17,7 +17,7 @@ class Create
     public function execute(Dto $data)
     {
         $product = (new Product())
-            ->setId(uniqid(more_entropy: true))
+            ->setId(uniqid("PROD_", true))
             ->setName($data->name)
             ->setDescription($data->description)
             ->setPrice($data->price);
