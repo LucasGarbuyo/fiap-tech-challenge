@@ -9,7 +9,7 @@ class Dto
     public ?string $description;
     public ?float $price;
 
-    public function __construct(?string $id, ?string $name, ?string $description, ?float $price)
+    public function __construct(?string $id = null, ?string $name = null, ?string $description = null, ?float $price = null)
     {
         $this->id = $id;
         $this->name = $name;

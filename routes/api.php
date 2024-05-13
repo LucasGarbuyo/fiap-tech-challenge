@@ -8,8 +8,8 @@ use TechChallenge\Adapter\Driver\Controller\Product;
     return $request->user();
 })->middleware('auth:sanctum');*/
 
-    Route::controller(Product::class)->group(function () {
-        Route::post('/product/store', [Product::class, "store"]);
-        Route::put('/product/edit/{productId}', [Product::class, "edit"]);
-    });
-
+Route::controller(Product::class)->group(function () {
+    Route::get('/product/index', [Product::class, "index"]);
+    Route::get('/product/edit/{id}', [Product::class, "edit"]);
+    Route::post('/product/store', [Product::class, "store"]);
+});

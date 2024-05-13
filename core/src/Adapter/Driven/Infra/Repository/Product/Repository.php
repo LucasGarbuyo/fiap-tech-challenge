@@ -2,8 +2,8 @@
 
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Product;
 
+use Exception;
 use Illuminate\Support\Facades\DB;
-use TechChallenge\Application\UseCase\Product\Dto;
 use TechChallenge\Domain\Product\Entities\Product;
 use TechChallenge\Domain\Product\Repository\IProduct;
 
@@ -12,12 +12,32 @@ class Repository implements IProduct
     /** @return Product[] */
     public function index(array $filters = [], array|bool $append = []): array
     {
-        return [];
+        $productsData = DB::table('products')->get();
+
+        $products = [];
+
+        foreach ($productsData as $productData)
+            $products[] = (new Product)
+                ->setId($productData->id)
+                ->setName($productData->name)
+                ->setDescription($productData->description)
+                ->setPrice($productData->price);
+
+        return $products;
     }
 
     public function edit(string $id): Product
     {
-        return new Product();
+        $productData = DB::table('products')->where('id', $id)->first();
+
+        if (empty($productData))
+            throw new Exception("Product not found");
+
+        return (new Product())
+            ->setId($productData->id)
+            ->setName($productData->name)
+            ->setDescription($productData->description)
+            ->setPrice($productData->price);
     }
 
     public function find(string $id): Product|NULL
