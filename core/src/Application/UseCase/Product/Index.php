@@ -15,8 +15,8 @@ class Index
     }
 
     /** @return Product[] */
-    public function execute(): array
+    public function execute(array $filters = [], array|bool $append = []): array
     {
-        return $this->ProductRepository->index();
+        return $this->ProductRepository->index($filters, $append);
     }
 }

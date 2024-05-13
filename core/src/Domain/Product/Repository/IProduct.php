@@ -11,11 +11,7 @@ interface IProduct
 
     public function edit(string $id): Product;
 
-    public function find(string $id): Product|NULL;
-
-    public function store(Product $product): void;
+    public function store(Product $product): string;
 
     public function update(Product $product): void;
-
-    public function delete(string $id): void;
 }

@@ -7,9 +7,13 @@ use DI\ContainerBuilder;
 use TechChallenge\Adapter\Driven\Infra\Repository\Product\Repository as ProductRepository;
 use TechChallenge\Domain\Product\Repository\IProduct;
 
-class Container
+class DIContainer
 {
     private static ?ContainerBuilder $containerBuild = null;
+
+    private function __construct()
+    {
+    }
 
     public static function create()
     {

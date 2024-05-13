@@ -6,7 +6,7 @@ use DateTime;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Product\Entities\Product;
 
-class Store
+class Update
 {
     private IProductRepository $ProductRepository;
 
@@ -19,14 +19,9 @@ class Store
     {
         $data = (array) $data;
 
-        if (isset($data['id']))
-            unset($data['id']);
-
         $product = (new Product((array) $data))
-            ->setId(uniqid("PROD_", true))
-            ->setCreatedAt(new DateTime())
             ->setUpdatedAt(new DateTime());
 
-        return $this->ProductRepository->store($product);
+        return $this->ProductRepository->update($product);
     }
 }

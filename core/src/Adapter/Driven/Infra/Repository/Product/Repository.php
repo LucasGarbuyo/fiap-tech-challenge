@@ -3,6 +3,7 @@
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Product;
 
 use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use TechChallenge\Domain\Product\Entities\Product;
 use TechChallenge\Domain\Product\Repository\IProduct;
@@ -12,70 +13,54 @@ class Repository implements IProduct
     /** @return Product[] */
     public function index(array $filters = [], array|bool $append = []): array
     {
-        $productsData = DB::table('products')->get();
+        $productsData = $this->query()->get();
 
         $products = [];
 
         foreach ($productsData as $productData)
-            $products[] = (new Product)
-                ->setId($productData->id)
-                ->setName($productData->name)
-                ->setDescription($productData->description)
-                ->setPrice($productData->price);
+            $products[] = (new Product((array) $productData));
 
         return $products;
     }
 
     public function edit(string $id): Product
     {
-        $productData = DB::table('products')->where('id', $id)->first();
+        $productData = $this->query()->where('id', $id)->first();
 
         if (empty($productData))
-            throw new Exception("Product not found");
+            throw new Exception("Product not found", 404);
 
-        return (new Product())
-            ->setId($productData->id)
-            ->setName($productData->name)
-            ->setDescription($productData->description)
-            ->setPrice($productData->price);
+        return (new Product((array) $productData));
     }
 
-    public function find(string $id): Product|NULL
+    public function store(Product $product): string
     {
-
-        // validar erro de id inexistente .
-        $getProduct =  DB::table('products')->where('id', $id)->first();
-
-        if (!$getProduct) return NULL;
-
-        $product = optional($getProduct, function ($productData) {
-            $product = new Product();
-            $product->setId($productData->id);
-            $product->setName($productData->name);
-            $product->setDescription($productData->description);
-            $product->setPrice($productData->price);
-
-            return $product;
-        });
-
-        return $product;
-    }
-
-    public function store(Product $product): void
-    {
-        DB::table('products')->insert([
+        $this->query()->insert([
             'id' => $product->getId(),
+            'name' => $product->getName(),
+            'description' => $product->getDescription(),
+            'price' => $product->getPrice(),
+            'created_at' => $product->getCreatedAt(),
+            'updated_at' => $product->getUpdatedAt()
+        ]);
+
+        return $product->getId();
+    }
+
+    public function update(Product $product): void
+    {
+        if (!$this->query()->where('id', $product->getId())->exists())
+            throw new Exception("Product not found", 404);
+
+        $this->query()->where('id', $product->getId())->update([
             'name' => $product->getName(),
             'description' => $product->getDescription(),
             'price' => $product->getPrice()
         ]);
     }
 
-    public function update(Product $product): void
+    protected function query(): Builder
     {
-    }
-
-    public function delete(string $id): void
-    {
+        return DB::table("products")->whereNull('deleted_at');
     }
 }
