@@ -19,6 +19,13 @@ class Container
         return self::$containerBuild->build();
     }
 
+
+    public static function edit($productId)
+    {
+        $produto = (new ProductRepository())->find($productId);
+        return $produto;
+    }
+
     private static function load(): void
     {
         self::$containerBuild = new ContainerBuilder();
