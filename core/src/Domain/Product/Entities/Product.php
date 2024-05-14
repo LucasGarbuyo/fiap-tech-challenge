@@ -11,9 +11,9 @@ class Product
     private ?string $name = null;
     private ?string $description = null;
     private ?float $price = null;
-    private ?DateTime $createdAt = null;
-    private ?DateTime $updatedAt = null;
-    private ?DateTime $deletedAt = null;
+    private ?DateTime $created_at = null;
+    private ?DateTime $updated_at = null;
+    private ?DateTime $deleted_at = null;
 
     public function __construct(array $data = [])
     {
@@ -34,11 +34,11 @@ class Product
         if (isset($data["price"]))
             $this->setPrice($data["price"]);
 
-        if (isset($data["createdAt"]))
-            $this->setCreatedAt($data["createdAt"]);
+        if (isset($data["created_at"]))
+            $this->setCreatedAt($data["created_at"]);
 
-        if (isset($data["updatedAt"]))
-            $this->setUpdatedAt($data["updatedAt"]);
+        if (isset($data["updated_at"]))
+            $this->setUpdatedAt($data["updated_at"]);
 
         return $this;
     }
@@ -97,40 +97,40 @@ class Product
         return $this->price;
     }
 
-    public function setCreatedAt(DateTime $createdAt): self
+    public function setCreatedAt(String|DateTime $createdAt): self
     {
-        $this->createdAt = $createdAt;
+        $this->created_at = is_string($createdAt) ? new DateTime($createdAt) : $createdAt;
 
         return $this;
     }
 
     public function getCreatedAt(): DateTime|null
     {
-        return $this->createdAt;
+        return $this->created_at;
     }
 
-    public function setUpdatedAt(DateTime $updatedAt): self
+    public function setUpdatedAt(String|DateTime $updatedAt): self
     {
-        $this->updatedAt = $updatedAt;
+        $this->updated_at = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): DateTime|null
     {
-        return $this->updatedAt;
+        return $this->updated_at;
     }
 
     public function setDeletedAt(DateTime $deletedAt): self
     {
-        $this->deletedAt = $deletedAt;
+        $this->deleted_at = is_string($deletedAt) ? new DateTime($deletedAt) : $deletedAt;
 
         return $this;
     }
 
     public function getDeletedAt(): DateTime|null
     {
-        return $this->deletedAt;
+        return $this->deleted_at;
     }
 
     public function toArray(): array
@@ -140,8 +140,8 @@ class Product
             "name" => $this->getName(),
             "description" => $this->getDescription(),
             "price" => $this->getPrice(),
-            "createdAt" => $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null,
-            "updatedAt" => $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null
+            "created_at" => $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null,
+            "updated_at" => $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null
         ];
     }
 }

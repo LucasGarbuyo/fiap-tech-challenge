@@ -2,13 +2,14 @@
 
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Product;
 
+use DateTime;
 use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use TechChallenge\Domain\Product\Entities\Product;
-use TechChallenge\Domain\Product\Repository\IProduct;
+use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 
-class Repository implements IProduct
+class Repository implements IProductRepository
 {
     /** @return Product[] */
     public function index(array $filters = [], array|bool $append = []): array
@@ -35,14 +36,16 @@ class Repository implements IProduct
 
     public function store(Product $product): string
     {
-        $this->query()->insert([
-            'id' => $product->getId(),
-            'name' => $product->getName(),
-            'description' => $product->getDescription(),
-            'price' => $product->getPrice(),
-            'created_at' => $product->getCreatedAt(),
-            'updated_at' => $product->getUpdatedAt()
-        ]);
+        $this->query()->insert(
+            [
+                'id' => $product->getId(),
+                'name' => $product->getName(),
+                'description' => $product->getDescription(),
+                'price' => $product->getPrice(),
+                'created_at' => $product->getCreatedAt(),
+                'updated_at' => $product->getUpdatedAt()
+            ]
+        );
 
         return $product->getId();
     }
@@ -52,11 +55,26 @@ class Repository implements IProduct
         if (!$this->query()->where('id', $product->getId())->exists())
             throw new Exception("Product not found", 404);
 
-        $this->query()->where('id', $product->getId())->update([
-            'name' => $product->getName(),
-            'description' => $product->getDescription(),
-            'price' => $product->getPrice()
-        ]);
+        $this->query()->where('id', $product->getId())->update(
+            [
+                'name' => $product->getName(),
+                'description' => $product->getDescription(),
+                'price' => $product->getPrice(),
+                'updated_at' => $product->getUpdatedAt()
+            ]
+        );
+    }
+
+    public function delete(string $id, DateTime $deleteAt): void
+    {
+        if (!$this->query()->where('id', $id)->exists())
+            throw new Exception("Product not found", 404);
+
+        $this->query()->where('id', $id)->update(
+            [
+                "deleted_at" => $deleteAt->format('Y-m-d H:i:s')
+            ]
+        );
     }
 
     protected function query(): Builder
