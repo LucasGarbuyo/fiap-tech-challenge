@@ -1,6 +1,6 @@
 <?php
 
-namespace TechChallenge\Adapter\Driver\Controller;
+namespace TechChallenge\Adapter\Driver\Api\V1;
 
 class Controller
 {

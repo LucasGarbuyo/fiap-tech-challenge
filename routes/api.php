@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use TechChallenge\Adapter\Driver\Controller\Product;
-use TechChallenge\Adapter\Driver\Controller\Customer;
+use TechChallenge\Adapter\Driver\Api\V1\Product;
+use TechChallenge\Adapter\Driver\Api\V1\Customer;
 
 /*Route::get('/user', function (Request $request) {
     return $request->user();

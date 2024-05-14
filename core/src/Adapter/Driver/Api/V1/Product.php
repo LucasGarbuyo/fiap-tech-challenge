@@ -1,6 +1,6 @@
 <?php
 
-namespace TechChallenge\Adapter\Driver\Controller;
+namespace TechChallenge\Adapter\Driver\Api\V1;
 
 use Exception;
 use Illuminate\Http\Request;
