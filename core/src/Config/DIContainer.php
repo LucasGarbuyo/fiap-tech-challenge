@@ -4,8 +4,13 @@ namespace TechChallenge\Config;
 
 use DI\ContainerBuilder;
 
+//Product
 use TechChallenge\Adapter\Driven\Infra\Repository\Product\Repository as ProductRepository;
 use TechChallenge\Domain\Product\Repository\IProduct;
+
+//Customer
+use TechChallenge\Adapter\Driven\Infra\Repository\Customer\Repository as CustomerRepository;
+use TechChallenge\Domain\Customer\Repository\ICustomer;
 
 class DIContainer
 {
@@ -29,6 +34,7 @@ class DIContainer
 
         self::$containerBuild->addDefinitions([
             IProduct::class => \DI\get(ProductRepository::class),
+            ICustomer::class => \DI\get(CustomerRepository::class),
         ]);
     }
 }
