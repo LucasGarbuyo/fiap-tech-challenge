@@ -37,7 +37,14 @@ class Repository implements ICustomerRepository
 
     public function store(Customer $customer): string
     {
-        return "";
+        $this->query()->insert([
+            "id" => $customer->getId(),
+            "name" => $customer->getName(),
+            "cpf" => $customer->getCpf(),
+            "email" => $customer->getEmail()
+        ]);
+
+        return $customer->getId();
     }
 
     public function update(Customer $customer): void

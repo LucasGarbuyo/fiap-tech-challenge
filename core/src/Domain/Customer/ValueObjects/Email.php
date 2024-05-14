@@ -11,12 +11,14 @@ class Email
         $this->setAddress($address);
     }
 
-    public function setAddress(string $address)
+    public function setAddress(?string $address): self
     {
         $this->address = $address;
+
+        return $this;
     }
 
-    public function __toString()
+    public function __toString(): String
     {
         return $this->address;
     }

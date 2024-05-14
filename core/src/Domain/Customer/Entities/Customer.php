@@ -21,7 +21,7 @@ class Customer
             ->setEmail($email);
     }
 
-    public function getId(): string
+    public function getId(): string|null
     {
         return $this->id;
     }
@@ -43,7 +43,7 @@ class Customer
         return $this;
     }
 
-    public function getName(): string
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -62,7 +62,7 @@ class Customer
 
     public function setEmail(Email $email): self
     {
-        return $this->email = $email;
+        $this->email = $email;
 
         return $this;
     }
@@ -70,5 +70,15 @@ class Customer
     public function getEmail(): Email
     {
         return $this->email;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            "id" => $this->getId(),
+            "name" => $this->getName(),
+            "cpf" => (string) $this->getCpf(),
+            "email" => (string) $this->getEmail()
+        ];
     }
 }
