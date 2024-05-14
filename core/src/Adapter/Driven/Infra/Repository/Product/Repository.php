@@ -3,10 +3,10 @@
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Product;
 
 use DateTime;
-use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use TechChallenge\Domain\Product\Entities\Product;
+use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 
 class Repository implements IProductRepository
@@ -29,7 +29,7 @@ class Repository implements IProductRepository
         $productData = $this->query()->where('id', $id)->first();
 
         if (empty($productData))
-            throw new Exception("Product not found", 404);
+            throw new ProductNotFoundException();
 
         return (new Product((array) $productData));
     }
@@ -53,7 +53,7 @@ class Repository implements IProductRepository
     public function update(Product $product): void
     {
         if (!$this->query()->where('id', $product->getId())->exists())
-            throw new Exception("Product not found", 404);
+            throw new ProductNotFoundException();
 
         $this->query()->where('id', $product->getId())->update(
             [
@@ -68,7 +68,7 @@ class Repository implements IProductRepository
     public function delete(string $id, DateTime $deleteAt): void
     {
         if (!$this->query()->where('id', $id)->exists())
-            throw new Exception("Product not found", 404);
+            throw new ProductNotFoundException();
 
         $this->query()->where('id', $id)->update(
             [

@@ -2,7 +2,7 @@
 
 namespace TechChallenge\Domain\Customer\Entities;
 
-use DomainException;
+use TechChallenge\Domain\Customer\Exceptions\CustomerException;
 use TechChallenge\Domain\Customer\ValueObjects\Cpf;
 use TechChallenge\Domain\Customer\ValueObjects\Email;
 
@@ -29,7 +29,7 @@ class Customer
     public function setId(string $id): self
     {
         if (!empty($this->getId()))
-            throw new DomainException("Cliente já possui um ID");
+            throw new CustomerException("Cliente já possui um ID");
 
         $this->id = $id;
 

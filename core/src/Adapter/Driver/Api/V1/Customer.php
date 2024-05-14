@@ -2,12 +2,12 @@
 
 namespace TechChallenge\Adapter\Driver\Api\V1;
 
-use Exception;
 use Illuminate\Http\Request;
 use TechChallenge\Application\UseCase\Customer\Dto as ProductDto;
 use TechChallenge\Config\DIContainer;
 use TechChallenge\Application\UseCase\Customer\Index as CustomerIndex;
 use TechChallenge\Application\UseCase\Customer\Store as CustomerStore;
+use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Customer extends Controller
 {
@@ -23,14 +23,14 @@ class Customer extends Controller
             }, $customers);
 
             return $this->return($results, 200);
-        } catch (Exception $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getCode()
+                $e->getStatus()
             );
         }
     }
@@ -45,13 +45,14 @@ class Customer extends Controller
             $id = $customerStore->execute($data);
 
             return $this->return(["id" => $id], 201);
-        } catch (Exception $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
-                ]
+                ],
+                $e->getStatus()
             );
         }
     }

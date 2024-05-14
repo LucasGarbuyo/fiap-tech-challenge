@@ -3,7 +3,7 @@
 namespace TechChallenge\Domain\Product\Entities;
 
 use DateTime;
-use DomainException;
+use TechChallenge\Domain\Product\Exceptions\ProductException;
 
 class Product
 {
@@ -46,7 +46,7 @@ class Product
     public function setId(string $id): self
     {
         if (!empty($this->getId()))
-            throw new DomainException("Produto já possui um ID");
+            throw new ProductException("Produto já possui um ID");
 
         $this->id = $id;
 
@@ -61,7 +61,7 @@ class Product
     public function setName(string $name): self
     {
         if (strlen($name) > 255)
-            throw new DomainException("Nome do produto não pode ter mais que 255 caracteres");
+            throw new ProductException("Nome do produto não pode ter mais que 255 caracteres");
 
         $this->name = $name;
 

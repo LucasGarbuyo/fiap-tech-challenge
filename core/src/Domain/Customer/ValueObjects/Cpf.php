@@ -2,7 +2,7 @@
 
 namespace TechChallenge\Domain\Customer\ValueObjects;
 
-use DomainException;
+use TechChallenge\Domain\Customer\Exceptions\CustomerException;
 
 class Cpf
 {
@@ -18,7 +18,7 @@ class Cpf
         $document = preg_replace('/[^\d]+/', '', $document);
 
         if (strlen($document) != 11)
-            throw new DomainException("Documento inválido");
+            throw new CustomerException("Documento inválido");
 
         $this->document = $document;
 

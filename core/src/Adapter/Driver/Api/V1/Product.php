@@ -2,7 +2,6 @@
 
 namespace TechChallenge\Adapter\Driver\Api\V1;
 
-use Exception;
 use Illuminate\Http\Request;
 use TechChallenge\Application\UseCase\Product\Dto as ProductDto;
 use TechChallenge\Application\UseCase\Product\Index as ProductIndex;
@@ -11,6 +10,7 @@ use TechChallenge\Application\UseCase\Product\Edit as ProductEdit;
 use TechChallenge\Application\UseCase\Product\Update as ProductUpdate;
 use TechChallenge\Application\UseCase\Product\Delete as ProductDelete;
 use TechChallenge\Config\DIContainer;
+use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Product extends Controller
 {
@@ -26,14 +26,14 @@ class Product extends Controller
             }, $products);
 
             return $this->return($results, 200);
-        } catch (Exception $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getCode()
+                $e->getStatus()
             );
         }
     }
@@ -48,14 +48,14 @@ class Product extends Controller
             $id = $productStore->execute($data);
 
             return $this->return(["id" => $id], 201);
-        } catch (Exception $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getCode()
+                $e->getStatus()
             );
         }
     }
@@ -70,14 +70,14 @@ class Product extends Controller
             $product = $productEdit->execute($data);
 
             return $this->return($product->toArray(), 200);
-        } catch (Exception $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getCode()
+                $e->getStatus()
             );
         }
     }
@@ -92,7 +92,7 @@ class Product extends Controller
             $productUpdate->execute($data);
 
             return $this->return([], 204);
-        } catch (Exception $e) {
+        } catch (DefaultException $e) {
 
             return $this->return(
                 [
@@ -100,7 +100,7 @@ class Product extends Controller
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getCode()
+                $e->getStatus()
             );
         }
     }
@@ -115,13 +115,14 @@ class Product extends Controller
             $productDelete->execute($data);
 
             return $this->return([], 204);
-        } catch (Exception $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
-                ]
+                ],
+                $e->getStatus()
             );
         }
     }
