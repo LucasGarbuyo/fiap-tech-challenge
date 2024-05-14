@@ -34,7 +34,7 @@ class Repository implements IProductRepository
         return (new Product((array) $productData));
     }
 
-    public function store(Product $product): string
+    public function store(Product $product): void
     {
         $this->query()->insert(
             [
@@ -46,8 +46,6 @@ class Repository implements IProductRepository
                 'updated_at' => $product->getUpdatedAt()
             ]
         );
-
-        return $product->getId();
     }
 
     public function update(Product $product): void

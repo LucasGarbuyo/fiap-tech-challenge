@@ -2,6 +2,7 @@
 
 namespace TechChallenge\Application\UseCase\Customer;
 
+use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Customer\ValueObjects\Cpf;
@@ -18,13 +19,17 @@ class Store
 
     public function execute(Dto $data): string
     {
-        $customer = new Customer(
+        $customer = (new Customer(
             uniqid("CUST_", true),
             $data->name,
             new Cpf($data->cpf),
             new Email($data->email)
-        );
+        ))
+            ->setCreatedAt(new DateTime())
+            ->setUpdatedAt(new DateTime());
 
-        return $this->CustomerRepository->store($customer);
+        $this->CustomerRepository->store($customer);
+
+        return $customer->getId();
     }
 }

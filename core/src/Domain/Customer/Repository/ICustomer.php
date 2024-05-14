@@ -12,7 +12,7 @@ interface ICustomer
 
     public function edit(string $id): Customer;
 
-    public function store(Customer $customer): string;
+    public function store(Customer $customer): void;
 
     public function update(Customer $customer): void;
 

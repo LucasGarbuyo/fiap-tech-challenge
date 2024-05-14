@@ -27,6 +27,8 @@ class Store
             ->setCreatedAt(new DateTime())
             ->setUpdatedAt(new DateTime());
 
-        return $this->ProductRepository->store($product);
+        $this->ProductRepository->store($product);
+
+        return $product->getId();
     }
 }

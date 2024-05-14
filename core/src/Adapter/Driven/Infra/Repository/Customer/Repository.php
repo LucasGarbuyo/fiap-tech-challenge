@@ -25,7 +25,9 @@ class Repository implements ICustomerRepository
                 $customerData->name,
                 new Cpf($customerData->cpf),
                 new Email($customerData->email)
-            ));
+            ))
+                ->setCreatedAt($customerData->created_at)
+                ->setUpdatedAt($customerData->updated_at);
 
         return $customers;
     }
@@ -35,16 +37,16 @@ class Repository implements ICustomerRepository
         return new Customer();
     }
 
-    public function store(Customer $customer): string
+    public function store(Customer $customer): void
     {
         $this->query()->insert([
             "id" => $customer->getId(),
             "name" => $customer->getName(),
             "cpf" => $customer->getCpf(),
-            "email" => $customer->getEmail()
+            "email" => $customer->getEmail(),
+            "created_at" => $customer->getCreatedAt(),
+            "updated_at" => $customer->getUpdatedAt(),
         ]);
-
-        return $customer->getId();
     }
 
     public function update(Customer $customer): void

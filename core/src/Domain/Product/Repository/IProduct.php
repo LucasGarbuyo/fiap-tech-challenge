@@ -12,7 +12,7 @@ interface IProduct
 
     public function edit(string $id): Product;
 
-    public function store(Product $product): string;
+    public function store(Product $product): void;
 
     public function update(Product $product): void;
 
