@@ -6,14 +6,14 @@ use TechChallenge\Domain\Customer\Exceptions\CustomerException;
 
 class Cpf
 {
-    private ?string $document = null;
+    private readonly string $document;
 
-    public function __construct(?string $document)
+    public function __construct(string $document)
     {
         $this->setDocument($document);
     }
 
-    public function setDocument(?string $document): self
+    public function setDocument(string $document): self
     {
         $document = preg_replace('/[^\d]+/', '', $document);
 

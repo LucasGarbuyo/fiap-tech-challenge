@@ -2,11 +2,8 @@
 
 namespace TechChallenge\Application\UseCase\Customer;
 
-use DateTime;
-use TechChallenge\Domain\Customer\Entities\Customer;
+use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
-use TechChallenge\Domain\Customer\ValueObjects\Cpf;
-use TechChallenge\Domain\Customer\ValueObjects\Email;
 
 class Store
 {
@@ -19,14 +16,10 @@ class Store
 
     public function execute(Dto $data): string
     {
-        $customer = (new Customer(
-            uniqid("CUST_", true),
-            $data->name,
-            new Cpf($data->cpf),
-            new Email($data->email)
-        ))
-            ->setCreatedAt(new DateTime())
-            ->setUpdatedAt(new DateTime());
+        $customer = (new CustomerFactory())
+            ->new()
+            ->withNameCpfEmail($data->name, $data->cpf, $data->email)
+            ->build();
 
         $this->CustomerRepository->store($customer);
 

@@ -5,6 +5,7 @@ namespace TechChallenge\Adapter\Driven\Infra\Repository\Customer;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 use TechChallenge\Domain\Customer\Entities\Customer;
+use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
 use TechChallenge\Domain\Customer\ValueObjects\Cpf;
 use TechChallenge\Domain\Customer\ValueObjects\Email;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
@@ -19,15 +20,13 @@ class Repository implements ICustomerRepository
 
         $customers = [];
 
+        $CustomerFactory = new CustomerFactory();
+
         foreach ($customersData as $customerData)
-            $customers[] = (new Customer(
-                $customerData->id,
-                $customerData->name,
-                new Cpf($customerData->cpf),
-                new Email($customerData->email)
-            ))
-                ->setCreatedAt($customerData->created_at)
-                ->setUpdatedAt($customerData->updated_at);
+            $customers[] = $CustomerFactory
+                ->new($customerData->id, $customerData->created_at, $customerData->updated_at)
+                ->withNameCpfEmail($customerData->name, $customerData->cpf, $customerData->email)
+                ->build();
 
         return $customers;
     }

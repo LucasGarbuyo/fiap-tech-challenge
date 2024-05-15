@@ -9,38 +9,38 @@ use TechChallenge\Domain\Customer\ValueObjects\Email;
 
 class Customer
 {
-    private ?string $id = null;
-    private ?string $name = null;
-    private ?Cpf $cpf = null;
-    private ?Email $email = null;
-    private ?DateTime $created_at = null;
-    private ?DateTime $updated_at = null;
-    private ?DateTime $deleted_at = null;
+    private ?string $name;
+    private ?Cpf $cpf;
+    private ?Email $email;
+    private readonly DateTime $created_at;
+    private DateTime $updated_at;
+    private DateTime $deleted_at;
 
-    public function __construct(?string $id = null, ?string $name = null, ?Cpf $cpf = null, ?Email $email = null)
-    {
-        $this->setId($id)
-            ->setName($name)
-            ->setCpf($cpf)
-            ->setEmail($email);
+    public function __construct(
+        private readonly string $id,
+        String|DateTime $created_at,
+        String|DateTime $updated_at,
+    ) {
+        $this
+            ->setCreatedAt($created_at)
+            ->setUpdatedAt($updated_at);
     }
 
-    public function getId(): string|null
+    public static function create(?string $id = null, ?DateTime $created_at = null, ?DateTime $updated_at = null): self
+    {
+        return new self(
+            id: $id ?? uniqid("CUST_", true),
+            created_at: $created_at ?? new DateTime(),
+            updated_at: $updated_at ?? new DateTime()
+        );
+    }
+
+    public function getId(): string
     {
         return $this->id;
     }
 
-    public function setId(string $id): self
-    {
-        if (!empty($this->getId()))
-            throw new CustomerException("Cliente já possui um ID");
-
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function setName(string $name): self
+    public function setName(?string $name): self
     {
         $this->name = $name;
 
@@ -76,33 +76,33 @@ class Customer
         return $this->email;
     }
 
-    public function setCreatedAt(String|DateTime $createdAt): self
+    public function setCreatedAt(DateTime $created_at): self
     {
-        $this->created_at = is_string($createdAt) ? new DateTime($createdAt) : $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getCreatedAt(): DateTime|null
+    public function getCreatedAt(): DateTime
     {
         return $this->created_at;
     }
 
-    public function setUpdatedAt(String|DateTime $updatedAt): self
+    public function setUpdatedAt(DateTime $updated_at): self
     {
-        $this->updated_at = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
+        $this->updated_at = $updated_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): DateTime|null
+    public function getUpdatedAt(): DateTime
     {
         return $this->updated_at;
     }
 
-    public function setDeletedAt(DateTime $deletedAt): self
+    public function setDeletedAt(DateTime $deleted_at): self
     {
-        $this->deleted_at = is_string($deletedAt) ? new DateTime($deletedAt) : $deletedAt;
+        $this->deleted_at = $deleted_at;
 
         return $this;
     }
