@@ -3,7 +3,6 @@
 namespace TechChallenge\Domain\Customer\Entities;
 
 use DateTime;
-use TechChallenge\Domain\Customer\Exceptions\CustomerException;
 use TechChallenge\Domain\Customer\ValueObjects\Cpf;
 use TechChallenge\Domain\Customer\ValueObjects\Email;
 
@@ -14,12 +13,12 @@ class Customer
     private ?Email $email;
     private readonly DateTime $created_at;
     private DateTime $updated_at;
-    private DateTime $deleted_at;
+    private ?DateTime $deleted_at;
 
     public function __construct(
         private readonly string $id,
-        String|DateTime $created_at,
-        String|DateTime $updated_at,
+        DateTime $created_at,
+        DateTime $updated_at,
     ) {
         $this
             ->setCreatedAt($created_at)
@@ -40,7 +39,7 @@ class Customer
         return $this->id;
     }
 
-    public function setName(?string $name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -100,9 +99,9 @@ class Customer
         return $this->updated_at;
     }
 
-    public function setDeletedAt(DateTime $deleted_at): self
+    public function delete(): self
     {
-        $this->deleted_at = $deleted_at;
+        $this->deleted_at = new DateTime();
 
         return $this;
     }

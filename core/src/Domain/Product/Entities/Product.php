@@ -7,53 +7,33 @@ use TechChallenge\Domain\Product\Exceptions\ProductException;
 
 class Product
 {
-    private ?string $id = null;
-    private ?string $name = null;
-    private ?string $description = null;
-    private ?float $price = null;
-    private ?DateTime $created_at = null;
-    private ?DateTime $updated_at = null;
-    private ?DateTime $deleted_at = null;
+    private ?string $name;
+    private ?string $description;
+    private ?float $price;
+    private readonly DateTime $created_at;
+    private DateTime $updated_at;
+    private ?DateTime $deleted_at;
 
-    public function __construct(array $data = [])
-    {
-        $this->setData($data);
+    public function __construct(
+        private readonly string $id,
+        DateTime $created_at,
+        DateTime $updated_at,
+    ) {
+        $this
+            ->setCreatedAt($created_at)
+            ->setUpdatedAt($updated_at);
     }
 
-    public function setData(array $data): self
+    public static function create(?string $id = null, ?DateTime $created_at = null, ?DateTime $updated_at = null)
     {
-        if (isset($data["id"]))
-            $this->setId($data["id"]);
-
-        if (isset($data["name"]))
-            $this->setName($data["name"]);
-
-        if (isset($data["description"]))
-            $this->setDescription($data["description"]);
-
-        if (isset($data["price"]))
-            $this->setPrice($data["price"]);
-
-        if (isset($data["created_at"]))
-            $this->setCreatedAt($data["created_at"]);
-
-        if (isset($data["updated_at"]))
-            $this->setUpdatedAt($data["updated_at"]);
-
-        return $this;
+        return new self(
+            id: $id ?? uniqid("PROD_", true),
+            created_at: $created_at ?? new DateTime(),
+            updated_at: $updated_at ?? new DateTime()
+        );
     }
 
-    public function setId(string $id): self
-    {
-        if (!empty($this->getId()))
-            throw new ProductException("Produto já possui um ID");
-
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getId(): string|null
+    public function getId(): string
     {
         return $this->id;
     }
@@ -97,9 +77,9 @@ class Product
         return $this->price;
     }
 
-    public function setCreatedAt(String|DateTime $createdAt): self
+    public function setCreatedAt(DateTime $created_at): self
     {
-        $this->created_at = is_string($createdAt) ? new DateTime($createdAt) : $createdAt;
+        $this->created_at = $created_at;
 
         return $this;
     }
@@ -109,9 +89,9 @@ class Product
         return $this->created_at;
     }
 
-    public function setUpdatedAt(String|DateTime $updatedAt): self
+    public function setUpdatedAt(DateTime $updated_at): self
     {
-        $this->updated_at = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
+        $this->updated_at = $updated_at;
 
         return $this;
     }
@@ -121,9 +101,9 @@ class Product
         return $this->updated_at;
     }
 
-    public function setDeletedAt(DateTime $deletedAt): self
+    public function delete(): self
     {
-        $this->deleted_at = is_string($deletedAt) ? new DateTime($deletedAt) : $deletedAt;
+        $this->deleted_at = new DateTime();
 
         return $this;
     }

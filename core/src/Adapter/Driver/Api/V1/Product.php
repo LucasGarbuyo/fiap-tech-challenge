@@ -63,9 +63,9 @@ class Product extends Controller
     public function edit(Request $request, string $id)
     {
         try {
-            $productEdit = DIContainer::create()->get(ProductEdit::class);
-
             $data = new ProductDto($id);
+
+            $productEdit = DIContainer::create()->get(ProductEdit::class);
 
             $product = $productEdit->execute($data);
 

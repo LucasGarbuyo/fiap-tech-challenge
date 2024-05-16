@@ -2,9 +2,9 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use DateTime;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
-use TechChallenge\Domain\Product\Entities\Product;
+use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
+
 
 class Store
 {
@@ -17,15 +17,10 @@ class Store
 
     public function execute(Dto $data)
     {
-        $data = (array) $data;
-
-        if (isset($data['id']))
-            unset($data['id']);
-
-        $product = (new Product((array) $data))
-            ->setId(uniqid("PROD_", true))
-            ->setCreatedAt(new DateTime())
-            ->setUpdatedAt(new DateTime());
+        $product = (new ProductFactory())
+            ->new()
+            ->withNameDescriptionPrice($data->name, $data->description, $data->price)
+            ->build();
 
         $this->ProductRepository->store($product);
 

@@ -2,14 +2,12 @@
 
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Customer;
 
-use DateTime;
 use Illuminate\Support\Facades\DB;
-use TechChallenge\Domain\Customer\Entities\Customer;
+use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
 use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
-use TechChallenge\Domain\Customer\ValueObjects\Cpf;
-use TechChallenge\Domain\Customer\ValueObjects\Email;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use Illuminate\Database\Query\Builder;
+use TechChallenge\Domain\Customer\Exceptions\CustomerNotFoundException;
 
 class Repository implements ICustomerRepository
 {
@@ -31,29 +29,59 @@ class Repository implements ICustomerRepository
         return $customers;
     }
 
-    public function edit(string $id): Customer
+    public function edit(string $id): CustomerEntity
     {
-        return new Customer();
+        $customerData = $this->query()->where('id', $id)->first();
+
+        if (empty($customerData))
+            throw new CustomerNotFoundException();
+
+        return (new CustomerFactory())
+            ->new($customerData->id, $customerData->created_at, $customerData->updated_at)
+            ->withNameCpfEmail($customerData->name, $customerData->cpf, $customerData->email)
+            ->build();
     }
 
-    public function store(Customer $customer): void
+    public function store(CustomerEntity $customer): void
     {
-        $this->query()->insert([
-            "id" => $customer->getId(),
-            "name" => $customer->getName(),
-            "cpf" => $customer->getCpf(),
-            "email" => $customer->getEmail(),
-            "created_at" => $customer->getCreatedAt(),
-            "updated_at" => $customer->getUpdatedAt(),
-        ]);
+        $this->query()
+            ->insert([
+                "id" => $customer->getId(),
+                "name" => $customer->getName(),
+                "cpf" => $customer->getCpf(),
+                "email" => $customer->getEmail(),
+                "created_at" => $customer->getCreatedAt(),
+                "updated_at" => $customer->getUpdatedAt(),
+            ]);
     }
 
-    public function update(Customer $customer): void
+    public function update(CustomerEntity $customer): void
     {
+        if (!$this->query()->where('id', $customer->getId())->exists())
+            throw new CustomerNotFoundException();
+
+        $this->query()
+            ->where('id', $customer->getId())
+            ->update(
+                [
+                    "name" => $customer->getName(),
+                    "cpf" => $customer->getCpf(),
+                    "email" => $customer->getEmail(),
+                    "created_at" => $customer->getCreatedAt(),
+                    "updated_at" => $customer->getUpdatedAt()
+                ]
+            );
     }
 
-    public function delete(string $id, DateTime $deleteAt): void
+    public function delete(CustomerEntity $customer): void
     {
+        $this->query()
+            ->where('id', $customer->getId())
+            ->update(
+                [
+                    "deleted_at" => $customer->getDeletedAt()->format("Y-m-d H:i:s")
+                ]
+            );
     }
 
     protected function query(): Builder

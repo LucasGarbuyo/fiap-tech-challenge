@@ -2,7 +2,6 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use DateTime;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 
 class Delete
@@ -16,6 +15,10 @@ class Delete
 
     public function execute(Dto $data)
     {
-        $this->ProductRepository->delete($data->id, new DateTime());
+        $product = $this->ProductRepository->edit($data->id);
+
+        $product->delete();
+
+        $this->ProductRepository->delete($product);
     }
 }

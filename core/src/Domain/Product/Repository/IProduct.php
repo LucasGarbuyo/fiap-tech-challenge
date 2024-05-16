@@ -2,7 +2,6 @@
 
 namespace TechChallenge\Domain\Product\Repository;
 
-use DateTime;
 use TechChallenge\Domain\Product\Entities\Product;
 
 interface IProduct
@@ -16,5 +15,5 @@ interface IProduct
 
     public function update(Product $product): void;
 
-    public function delete(string $id, DateTime $deleteAt): void;
+    public function delete(Product $product): void;
 }

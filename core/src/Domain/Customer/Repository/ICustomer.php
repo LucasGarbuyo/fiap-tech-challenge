@@ -2,7 +2,6 @@
 
 namespace TechChallenge\Domain\Customer\Repository;
 
-use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
 
 interface ICustomer
@@ -16,5 +15,5 @@ interface ICustomer
 
     public function update(Customer $customer): void;
 
-    public function delete(string $id, DateTime $deleteAt): void;
+    public function delete(Customer $customer): void;
 }

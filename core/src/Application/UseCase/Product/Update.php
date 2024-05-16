@@ -4,7 +4,7 @@ namespace TechChallenge\Application\UseCase\Product;
 
 use DateTime;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
-use TechChallenge\Domain\Product\Entities\Product;
+use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
 
 class Update
 {
@@ -17,10 +17,12 @@ class Update
 
     public function execute(Dto $data)
     {
-        $data = (array) $data;
+        $product = (new ProductFactory())
+            ->new($data->id, $data->created_at, $data->updated_at)
+            ->withNameDescriptionPrice($data->name, $data->description, $data->price)
+            ->build();
 
-        $product = (new Product((array) $data))
-            ->setUpdatedAt(new DateTime());
+        $product->setUpdatedAt(new DateTime());
 
         return $this->ProductRepository->update($product);
     }
