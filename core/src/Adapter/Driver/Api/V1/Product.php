@@ -39,12 +39,12 @@ class Product extends Controller
     }
 
     public function store(Request $request)
-    {
+    {        
         try {
             $data = new ProductDto(null, $request->name, $request->description, $request->price);
-
+           
             $productStore = DIContainer::create()->get(ProductStore::class);
-
+           
             $id = $productStore->execute($data);
 
             return $this->return(["id" => $id], 201);
@@ -91,7 +91,7 @@ class Product extends Controller
 
             $productUpdate->execute($data);
 
-            return $this->return([], 204);
+            return $this->return('Produto atualizado com sucesso!', 200);
         } catch (DefaultException $e) {
 
             return $this->return(
@@ -114,7 +114,7 @@ class Product extends Controller
 
             $productDelete->execute($data);
 
-            return $this->return([], 204);
+            return $this->return('Produto deletado com sucesso!', 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [

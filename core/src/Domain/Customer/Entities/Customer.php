@@ -3,9 +3,7 @@
 namespace TechChallenge\Domain\Customer\Entities;
 
 use DateTime;
-use TechChallenge\Domain\Customer\ValueObjects\Cpf;
-use TechChallenge\Domain\Customer\ValueObjects\Email;
-
+use TechChallenge\Domain\Customer\ValueObjects\{Cpf, Email};
 class Customer
 {
     private ?string $name;

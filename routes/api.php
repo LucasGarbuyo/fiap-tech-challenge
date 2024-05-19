@@ -4,10 +4,6 @@ use Illuminate\Support\Facades\Route;
 use TechChallenge\Adapter\Driver\Api\V1\Product;
 use TechChallenge\Adapter\Driver\Api\V1\Customer;
 
-/*Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');*/
-
 Route::controller(Product::class)
     ->prefix('/product')
     ->group(function () {

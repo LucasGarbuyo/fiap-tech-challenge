@@ -1,0 +1,476 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "TechChallenge"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api"
+        }
+    ],
+    "paths": {
+        "/product/index": {
+            "get": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Buscar produtos",
+                "description": "Este endpoint é usado para buscar todos os produtos cadastrados no sistema.",
+                "responses": {
+                    "200": {
+                        "description": "Listagem de produtos encontrada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "description": "ID único do produto."
+                                            },
+                                            "nome": {
+                                                "type": "string",
+                                                "description": "Nome do produto."
+                                            },
+                                            "preco": {
+                                                "type": "number",
+                                                "format": "float",
+                                                "description": "Preço do produto."
+                                            },
+                                            "descricao": {
+                                                "type": "string",
+                                                "description": "Descrição do produto."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhum produto encontrado."
+                    }
+                }
+            }
+        },
+        "/product/edit/{id}": {
+            "get": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Buscar produto por ID",
+                "description": "Este endpoint é usado para buscar um produto específico pelo seu ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do produto."
+                        },
+                        "description": "ID do produto a ser buscado."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Produto encontrado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "ID único do produto."
+                                        },
+                                        "nome": {
+                                            "type": "string",
+                                            "description": "Nome do produto."
+                                        },
+                                        "preco": {
+                                            "type": "number",
+                                            "format": "float",
+                                            "description": "Preço do produto."
+                                        },
+                                        "descricao": {
+                                            "type": "string",
+                                            "description": "Descrição do produto."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Produto não encontrado."
+                    }
+                }
+            }
+        },
+        "/product/store": {
+            "post": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Criar novo produto",
+                "description": "Este endpoint é usado para criar um novo produto.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Nome do produto.",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Descrição do produto."
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "description": "Preço do produto."
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "price"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Produto criado com sucesso."
+                    },
+                    "404": {
+                        "description": "Nome do produto não pode ter mais que 255 caracteres."
+                    }
+                }
+            }
+        },
+        "/product/update/{id}": {
+            "put": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Atualizar produto por ID",
+                "description": "Este endpoint é usado para atualizar um produto existente pelo seu ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do produto."
+                        },
+                        "description": "ID do produto a ser atualizado."
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Nome do produto.",
+                                        "maxLength": 255
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "description": "Descrição do produto."
+                                    },
+                                    "price": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "description": "Preço do produto."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Produto atualizado com sucesso."
+                    },
+                    "404": {
+                        "description": "Produto não encontrado."
+                    }
+                }
+            }
+        },
+        "/product/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Produtos"
+                ],
+                "summary": "Deletar produto por ID",
+                "description": "Este endpoint é usado para deletar um produto existente pelo seu ID. O produto deletado preencherá o campo com datetime o campo `deleted_at`.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do produto."
+                        },
+                        "description": "ID do produto a ser deletado."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Produto deletado com sucesso."
+                    },
+                    "404": {
+                        "description": "Produto não encontrado."
+                    }
+                }
+            }
+        },
+        "/customer/index": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Buscar clientes",
+                "description": "Este endpoint é usado para buscar todos os clientes cadastrados no sistema.",
+                "responses": {
+                    "200": {
+                        "description": "Listagem de clientes encontrada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "description": "ID único do cliente."
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Nome do cliente."
+                                            },
+                                            "cpf": {
+                                                "type": "string",
+                                                "description": "Preço do cliente."
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Descrição do cliente."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhum cliente encontrado."
+                    }
+                }
+            }
+        },
+        "/customer/edit/{id}": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Buscar cliente por ID",
+                "description": "Este endpoint é usado para buscar um cliente específico pelo seu ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do cliente."
+                        },
+                        "description": "ID do cliente a ser buscado."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cliente encontrado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "ID único do cliente."
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "description": "Nome do cliente."
+                                        },
+                                        "cpf": {
+                                            "type": "string",
+                                            "description": "CPF do cliente."
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "description": "Email do cliente."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado."
+                    }
+                }
+            }
+        },
+        "/customer/store": {
+            "post": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Criar novo cliente",
+                "description": "Este endpoint é usado para criar um novo cliente.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Nome do cliente."
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "description": "CPF do cliente."
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Email do cliente."
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "cpf",
+                                    "email"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente criado com sucesso."
+                    },
+                    "404": {
+                        "description": "Erro ao criar cliente."
+                    }
+                }
+            }
+        },
+        "/customer/update/{id}": {
+            "put": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Atualizar cliente por ID",
+                "description": "Este endpoint é usado para atualizar um cliente existente pelo seu ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do cliente."
+                        },
+                        "description": "ID do cliente a ser atualizado."
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Novo nome do cliente."
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "description": "Novo CPF do cliente."
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Novo email do cliente."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente atualizado com sucesso."
+                    },
+                    "404": {
+                        "description": "Erro ao atualizar cliente."
+                    }
+                }
+            }
+        },
+        "/customer/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Deletar cliente por ID",
+                "description": "Este endpoint é usado para deletar um cliente existente pelo seu ID. O cliente deletado preencherá o campo com datetime o campo `deleted_at`.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do cliente."
+                        },
+                        "description": "ID do cliente a ser deletado."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cliente deletado com sucesso."
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado."
+                    }
+                }
+            }
+        }
+    },
+       
+    "security": [
+        []
+    ]
+}
