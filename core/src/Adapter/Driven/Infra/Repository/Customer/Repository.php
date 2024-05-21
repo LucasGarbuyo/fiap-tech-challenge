@@ -8,6 +8,7 @@ use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use Illuminate\Database\Query\Builder;
 use TechChallenge\Domain\Customer\Exceptions\CustomerNotFoundException;
+use TechChallenge\Domain\Customer\ValueObjects\Cpf;
 
 class Repository implements ICustomerRepository
 {
@@ -32,6 +33,19 @@ class Repository implements ICustomerRepository
     public function edit(string $id): CustomerEntity
     {
         $customerData = $this->query()->where('id', $id)->first();
+
+        if (empty($customerData))
+            throw new CustomerNotFoundException();
+
+        return (new CustomerFactory())
+            ->new($customerData->id, $customerData->created_at, $customerData->updated_at)
+            ->withNameCpfEmail($customerData->name, $customerData->cpf, $customerData->email)
+            ->build();
+    }
+
+    public function editByCpf(Cpf $cpf): CustomerEntity
+    {
+        $customerData = $this->query()->where('cpf', $cpf)->first();
 
         if (empty($customerData))
             throw new CustomerNotFoundException();

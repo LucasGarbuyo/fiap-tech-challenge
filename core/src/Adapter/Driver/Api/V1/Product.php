@@ -39,12 +39,12 @@ class Product extends Controller
     }
 
     public function store(Request $request)
-    {        
+    {
         try {
             $data = new ProductDto(null, $request->name, $request->description, $request->price);
-           
+
             $productStore = DIContainer::create()->get(ProductStore::class);
-           
+
             $id = $productStore->execute($data);
 
             return $this->return(["id" => $id], 201);

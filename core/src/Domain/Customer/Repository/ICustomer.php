@@ -3,6 +3,7 @@
 namespace TechChallenge\Domain\Customer\Repository;
 
 use TechChallenge\Domain\Customer\Entities\Customer;
+use TechChallenge\Domain\Customer\ValueObjects\Cpf;
 
 interface ICustomer
 {
@@ -16,4 +17,6 @@ interface ICustomer
     public function update(Customer $customer): void;
 
     public function delete(Customer $customer): void;
+
+    public function editByCpf(Cpf $cpf): Customer;
 }

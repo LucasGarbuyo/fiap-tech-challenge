@@ -3,11 +3,13 @@
 namespace TechChallenge\Adapter\Driver\Api\V1;
 
 use Illuminate\Http\Request;
+use Illuminate\Log\Logger;
 use TechChallenge\Application\UseCase\Customer\Dto as CustomerDTO;
 use TechChallenge\Config\DIContainer;
 use TechChallenge\Application\UseCase\Customer\Index as CustomerIndex;
 use TechChallenge\Application\UseCase\Customer\Store as CustomerStore;
 use TechChallenge\Application\UseCase\Customer\Edit as CustomerEdit;
+use TechChallenge\Application\UseCase\Customer\EditByCpf as CustomerEditByCpf;
 use TechChallenge\Application\UseCase\Customer\Update as CustomerUpdate;
 use TechChallenge\Application\UseCase\Customer\Delete as CustomerDelete;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
@@ -114,6 +116,30 @@ class Customer extends Controller
             $productDelete->execute($data);
 
             return $this->return([], 204);
+        } catch (DefaultException $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                $e->getStatus()
+            );
+        }
+    }
+
+    public function editByCfp(Request $request, string $cpf)
+    {
+        try {
+            Logger("oi");
+
+            $data = new CustomerDTO(cpf: $cpf);
+
+            $CustomerEditByCpf = DIContainer::create()->get(CustomerEditByCpf::class);
+
+            $customer = $CustomerEditByCpf->execute($data);
+
+            return $this->return($customer->toArray(), 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [

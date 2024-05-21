@@ -18,7 +18,7 @@ class Cpf
         $document = preg_replace('/[^\d]+/', '', $document);
 
         if (strlen($document) != 11)
-            throw new CustomerException("Documento inválido");
+            throw new CustomerException("Cpf inválido");
 
         $this->document = $document;
 

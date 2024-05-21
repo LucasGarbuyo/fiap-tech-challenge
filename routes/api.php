@@ -22,4 +22,5 @@ Route::controller(Customer::class)
         Route::post('/store', [Customer::class, "store"]);
         Route::put('/update/{id}', [Customer::class, "update"]);
         Route::delete('/delete/{id}', [Customer::class, "delete"]);
+        Route::get('/edit/cpf/{cpf}', [Customer::class, "editByCfp"]);
     });
