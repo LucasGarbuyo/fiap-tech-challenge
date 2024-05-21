@@ -3,6 +3,7 @@
 namespace TechChallenge\Domain\Product\Factories;
 
 use DateTime;
+use TechChallenge\Domain\Product\ValueObjects\Price;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 
 class Product
@@ -27,7 +28,7 @@ class Product
         $this->product
             ->setName($name)
             ->setDescription($description)
-            ->setPrice($price);
+            ->setPrice(new Price($price));
 
         return $this;
     }

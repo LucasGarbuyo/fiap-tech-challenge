@@ -4,12 +4,13 @@ namespace TechChallenge\Domain\Product\Entities;
 
 use DateTime;
 use TechChallenge\Domain\Product\Exceptions\ProductException;
+use TechChallenge\Domain\Product\ValueObjects\Price;
 
 class Product
 {
     private ?string $name;
     private ?string $description;
-    private ?float $price;
+    private ?Price $price;
     private readonly DateTime $created_at;
     private DateTime $updated_at;
     private ?DateTime $deleted_at;
@@ -65,16 +66,21 @@ class Product
         return $this->description;
     }
 
-    public function setPrice(float $price): self
+    public function setPrice(Price $price): self
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getPrice(): float|null
+    public function getPrice(): Price
     {
         return $this->price;
+    }
+
+    public function getPriceValue(): float
+    {
+        return $this->price->getValue();
     }
 
     public function setCreatedAt(DateTime $created_at): self
@@ -119,7 +125,7 @@ class Product
             "id" => $this->getId(),
             "name" => $this->getName(),
             "description" => $this->getDescription(),
-            "price" => $this->getPrice(),
+            "price" => $this->getPrice()->getValue(),
             "created_at" => $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null,
             "updated_at" => $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null
         ];

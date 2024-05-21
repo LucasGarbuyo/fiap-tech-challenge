@@ -50,7 +50,7 @@ class Repository implements IProductRepository
                     'id' => $product->getId(),
                     'name' => $product->getName(),
                     'description' => $product->getDescription(),
-                    'price' => $product->getPrice(),
+                    'price' =>  $product->getPriceValue(),
                     'created_at' => $product->getCreatedAt(),
                     'updated_at' => $product->getUpdatedAt()
                 ]
@@ -68,7 +68,7 @@ class Repository implements IProductRepository
                 [
                     'name' => $product->getName(),
                     'description' => $product->getDescription(),
-                    'price' => $product->getPrice(),
+                    'price' => $product->getPriceValue(),
                     'updated_at' => $product->getUpdatedAt()
                 ]
             );

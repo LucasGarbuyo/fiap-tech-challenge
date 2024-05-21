@@ -23,7 +23,7 @@ class Store
             ->build();
 
         $this->ProductRepository->store($product);
-
+       
         return $product->getId();
     }
 }
