@@ -78,11 +78,6 @@ class Product
         return $this->price;
     }
 
-    public function getPriceValue(): float
-    {
-        return $this->price->getValue();
-    }
-
     public function setCreatedAt(DateTime $created_at): self
     {
         $this->created_at = $created_at;

@@ -2,6 +2,8 @@
 
 namespace TechChallenge\Domain\Customer\ValueObjects;
 
+use TechChallenge\Domain\Customer\Exceptions\CustomerException;
+
 class Email
 {
     private readonly string $address;
@@ -13,6 +15,9 @@ class Email
 
     public function setAddress(string $address): self
     {
+        if (filter_var($address, FILTER_VALIDATE_EMAIL) === false)
+            throw new CustomerException("E-mail inválido");
+
         $this->address = $address;
 
         return $this;

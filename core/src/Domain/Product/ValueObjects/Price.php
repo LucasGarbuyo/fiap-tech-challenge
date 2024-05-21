@@ -24,11 +24,17 @@ class Price
             throw new \InvalidArgumentException("Invalid price value");
         }
 
-        $this->value = (float)$value;
+        $this->value = (float) $value;
+
         return $this;
     }
 
     public function getValue(): float
+    {
+        return $this->value;
+    }
+
+    public function __toString(): string
     {
         return $this->value;
     }
