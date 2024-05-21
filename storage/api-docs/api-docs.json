@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "TechChallenge"
+        "title": "TechChallenge - API Documentation"
     },
     "servers": [
         {
@@ -30,16 +30,16 @@
                                                 "type": "integer",
                                                 "description": "ID único do produto."
                                             },
-                                            "nome": {
+                                            "name": {
                                                 "type": "string",
                                                 "description": "Nome do produto."
                                             },
-                                            "preco": {
+                                            "price": {
                                                 "type": "number",
                                                 "format": "float",
                                                 "description": "Preço do produto."
                                             },
-                                            "descricao": {
+                                            "description": {
                                                 "type": "string",
                                                 "description": "Descrição do produto."
                                             }
@@ -86,16 +86,16 @@
                                             "type": "string",
                                             "description": "ID único do produto."
                                         },
-                                        "nome": {
+                                        "name": {
                                             "type": "string",
                                             "description": "Nome do produto."
                                         },
-                                        "preco": {
+                                        "price": {
                                             "type": "number",
                                             "format": "float",
                                             "description": "Preço do produto."
                                         },
-                                        "descricao": {
+                                        "description": {
                                             "type": "string",
                                             "description": "Descrição do produto."
                                         }
