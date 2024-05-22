@@ -31,6 +31,22 @@ use TechChallenge\Application\UseCase\Customer\Delete as CustomerUseCaseDelete;
 use TechChallenge\Domain\Customer\UseCase\EditByCpf as ICustomerUseCaseEditByCpf;
 use TechChallenge\Application\UseCase\Customer\EditByCpf as CustomerUseCaseEditByCpf;
 
+//Product UseCase
+use TechChallenge\Domain\Product\UseCase\Index as IProductUseCaseIndex;
+use TechChallenge\Application\UseCase\Product\Index as ProductUseCaseIndex;
+
+use TechChallenge\Domain\Product\UseCase\Edit as IProductUseCaseEdit;
+use TechChallenge\Application\UseCase\Product\Edit as ProductUseCaseEdit;
+
+use TechChallenge\Domain\Product\UseCase\Store as IProductUseCaseStore;
+use TechChallenge\Application\UseCase\Product\Store as ProductUseCaseStore;
+
+use TechChallenge\Domain\Product\UseCase\Update as IProductUseCaseUpdate;
+use TechChallenge\Application\UseCase\Product\Update as ProductUseCaseUpdate;
+
+use TechChallenge\Domain\Product\UseCase\Delete as IProductUseCaseDelete;
+use TechChallenge\Application\UseCase\Product\Delete as ProductUseCaseDelete;
+
 class DIContainer
 {
     private static ?ContainerBuilder $containerBuild = null;
@@ -52,14 +68,24 @@ class DIContainer
         self::$containerBuild = new ContainerBuilder();
 
         self::$containerBuild->addDefinitions([
+            //Entities
             IProductRepository::class => \DI\get(ProductRepository::class),
             ICustomerRepository::class => \DI\get(CustomerRepository::class),
+
+            //Customer UseCase
             ICustomerUseCaseIndex::class => \DI\get(CustomerUseCaseIndex::class),
             ICustomerUseCaseEdit::class => \DI\get(CustomerUseCaseEdit::class),
             ICustomerUseCaseStore::class => \DI\get(CustomerUseCaseStore::class),
             ICustomerUseCaseUpdate::class => \DI\get(CustomerUseCaseUpdate::class),
             ICustomerUseCaseDelete::class => \DI\get(CustomerUseCaseDelete::class),
             ICustomerUseCaseEditByCpf::class => \DI\get(CustomerUseCaseEditByCpf::class),
+
+            //Product UseCase
+            IProductUseCaseIndex::class => \DI\get(ProductUseCaseIndex::class),
+            IProductUseCaseEdit::class => \DI\get(ProductUseCaseEdit::class),
+            IProductUseCaseStore::class => \DI\get(ProductUseCaseStore::class),
+            IProductUseCaseUpdate::class => \DI\get(ProductUseCaseUpdate::class),
+            IProductUseCaseDelete::class => \DI\get(ProductUseCaseDelete::class),
         ]);
     }
 }

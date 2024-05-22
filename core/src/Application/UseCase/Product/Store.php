@@ -2,20 +2,13 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
+use TechChallenge\Domain\Product\UseCase\DtoInput;
+use TechChallenge\Domain\Product\UseCase\Store as IProductUseCaseStore;
 
-
-class Store
+class Store extends IProductUseCaseStore
 {
-    private IProductRepository $ProductRepository;
-
-    public function __construct(IProductRepository $ProductRepository)
-    {
-        $this->ProductRepository = $ProductRepository;
-    }
-
-    public function execute(Dto $data)
+    public function execute(DtoInput $data): string
     {
         $product = (new ProductFactory())
             ->new()
@@ -23,7 +16,7 @@ class Store
             ->build();
 
         $this->ProductRepository->store($product);
-       
+
         return $product->getId();
     }
 }

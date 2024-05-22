@@ -2,18 +2,12 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
+use TechChallenge\Domain\Product\UseCase\Delete as IProductUseCaseDelete;
+use TechChallenge\Domain\Product\UseCase\DtoInput;
 
-class Delete
+class Delete extends IProductUseCaseDelete
 {
-    private IProductRepository $ProductRepository;
-
-    public function __construct(IProductRepository $ProductRepository)
-    {
-        $this->ProductRepository = $ProductRepository;
-    }
-
-    public function execute(Dto $data)
+    public function execute(DtoInput $data): void
     {
         $product = $this->ProductRepository->edit($data->id);
 

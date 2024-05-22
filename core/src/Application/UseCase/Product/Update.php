@@ -3,19 +3,13 @@
 namespace TechChallenge\Application\UseCase\Product;
 
 use DateTime;
-use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
+use TechChallenge\Domain\Product\UseCase\DtoInput;
+use TechChallenge\Domain\Product\UseCase\Update as IProductUseCaseUpdate;
 
-class Update
+class Update extends IProductUseCaseUpdate
 {
-    private IProductRepository $ProductRepository;
-
-    public function __construct(IProductRepository $ProductRepository)
-    {
-        $this->ProductRepository = $ProductRepository;
-    }
-
-    public function execute(Dto $data)
+    public function execute(DtoInput $data): void
     {
         $product = (new ProductFactory())
             ->new($data->id, $data->created_at, $data->updated_at)
@@ -24,6 +18,6 @@ class Update
 
         $product->setUpdatedAt(new DateTime());
 
-        return $this->ProductRepository->update($product);
+        $this->ProductRepository->update($product);
     }
 }

@@ -2,19 +2,10 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
-use TechChallenge\Domain\Product\Entities\Product;
+use TechChallenge\Domain\Product\UseCase\Index as IProductUseCaseIndex;
 
-class Index
+class Index extends IProductUseCaseIndex
 {
-    private IProductRepository $ProductRepository;
-
-    public function __construct(IProductRepository $ProductRepository)
-    {
-        $this->ProductRepository = $ProductRepository;
-    }
-
-    /** @return Product[] */
     public function execute(array $filters = [], array|bool $append = []): array
     {
         return $this->ProductRepository->index($filters, $append);

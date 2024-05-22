@@ -2,19 +2,13 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use TechChallenge\Domain\Product\Entities\Product;
-use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
+use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
+use TechChallenge\Domain\Product\UseCase\DtoInput;
+use TechChallenge\Domain\Product\UseCase\Edit as IProductUseCaseEdit;
 
-class Edit
+class Edit extends IProductUseCaseEdit
 {
-    private IProductRepository $ProductRepository;
-
-    public function __construct(IProductRepository $ProductRepository)
-    {
-        $this->ProductRepository = $ProductRepository;
-    }
-
-    public function execute(Dto $data): Product
+    public function execute(DtoInput $data): ProductEntity
     {
         return $this->ProductRepository->edit($data->id);
     }

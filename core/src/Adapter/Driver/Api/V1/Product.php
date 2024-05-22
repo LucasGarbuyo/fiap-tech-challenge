@@ -3,12 +3,12 @@
 namespace TechChallenge\Adapter\Driver\Api\V1;
 
 use Illuminate\Http\Request;
-use TechChallenge\Application\UseCase\Product\Dto as ProductDto;
-use TechChallenge\Application\UseCase\Product\Index as ProductIndex;
-use TechChallenge\Application\UseCase\Product\Store as ProductStore;
-use TechChallenge\Application\UseCase\Product\Edit as ProductEdit;
-use TechChallenge\Application\UseCase\Product\Update as ProductUpdate;
-use TechChallenge\Application\UseCase\Product\Delete as ProductDelete;
+use TechChallenge\Application\UseCase\Product\DtoInput as ProductDtoInput;
+use TechChallenge\Domain\Product\UseCase\Index as IProductUseCaseIndex;
+use TechChallenge\Domain\Product\UseCase\Edit as IProductUseCaseEdit;
+use TechChallenge\Domain\Product\UseCase\Store as IProductUseCaseStore;
+use TechChallenge\Domain\Product\UseCase\Update as IProductUseCaseUpdate;
+use TechChallenge\Domain\Product\UseCase\Delete as IProductUseCaseDelete;
 use TechChallenge\Config\DIContainer;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
@@ -17,7 +17,7 @@ class Product extends Controller
     public function index(Request $request)
     {
         try {
-            $productIndex = DIContainer::create()->get(ProductIndex::class);
+            $productIndex = DIContainer::create()->get(IProductUseCaseIndex::class);
 
             $products = $productIndex->execute();
 
@@ -41,9 +41,9 @@ class Product extends Controller
     public function store(Request $request)
     {
         try {
-            $data = new ProductDto(null, $request->name, $request->description, $request->price);
+            $data = new ProductDtoInput(null, $request->name, $request->description, $request->price);
 
-            $productStore = DIContainer::create()->get(ProductStore::class);
+            $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
 
             $id = $productStore->execute($data);
 
@@ -63,9 +63,9 @@ class Product extends Controller
     public function edit(Request $request, string $id)
     {
         try {
-            $data = new ProductDto($id);
+            $data = new ProductDtoInput($id);
 
-            $productEdit = DIContainer::create()->get(ProductEdit::class);
+            $productEdit = DIContainer::create()->get(IProductUseCaseEdit::class);
 
             $product = $productEdit->execute($data);
 
@@ -85,9 +85,9 @@ class Product extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $data = new ProductDto($id, $request->name, $request->description, $request->price);
+            $data = new ProductDtoInput($id, $request->name, $request->description, $request->price);
 
-            $productUpdate = DIContainer::create()->get(ProductUpdate::class);
+            $productUpdate = DIContainer::create()->get(IProductUseCaseUpdate::class);
 
             $productUpdate->execute($data);
 
@@ -108,9 +108,9 @@ class Product extends Controller
     public function delete(Request $request, string $id)
     {
         try {
-            $data = new ProductDto($id);
+            $data = new ProductDtoInput($id);
 
-            $productDelete = DIContainer::create()->get(ProductDelete::class);
+            $productDelete = DIContainer::create()->get(IProductUseCaseDelete::class);
 
             $productDelete->execute($data);
 
