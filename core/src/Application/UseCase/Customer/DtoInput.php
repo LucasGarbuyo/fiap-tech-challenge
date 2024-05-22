@@ -2,7 +2,9 @@
 
 namespace TechChallenge\Application\UseCase\Customer;
 
-class Dto
+use TechChallenge\Domain\Customer\UseCase\DtoInput as ICustomerUseCaseDtoInput;
+
+class DtoInput implements ICustomerUseCaseDtoInput
 {
     public readonly ?string $id;
     public readonly ?string $name;

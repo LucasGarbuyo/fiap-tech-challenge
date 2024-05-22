@@ -2,20 +2,14 @@
 
 namespace TechChallenge\Application\UseCase\Customer;
 
-use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
+use TechChallenge\Domain\Customer\UseCase\DtoInput;
 use TechChallenge\Domain\Customer\ValueObjects\Cpf;
+use TechChallenge\Domain\Customer\UseCase\EditByCpf as ICustomerUseCaseEditByCpf;
 
-class EditByCpf
+class EditByCpf extends ICustomerUseCaseEditByCpf
 {
-    private ICustomerRepository $CustomerRepository;
-
-    public function __construct(ICustomerRepository $CustomerRepository)
-    {
-        $this->CustomerRepository = $CustomerRepository;
-    }
-
-    public function execute(Dto $data): CustomerEntity
+    public function execute(DtoInput $data): CustomerEntity
     {
         $cpf = new Cpf($data->cpf);
 

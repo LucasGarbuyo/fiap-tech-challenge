@@ -4,18 +4,12 @@ namespace TechChallenge\Application\UseCase\Customer;
 
 use DateTime;
 use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
-use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
+use TechChallenge\Domain\Customer\UseCase\DtoInput;
+use TechChallenge\Domain\Customer\UseCase\Update as ICustomerUseCaseUpdate;
 
-class Update
+class Update extends ICustomerUseCaseUpdate
 {
-    private ICustomerRepository $CustomerRepository;
-
-    public function __construct(ICustomerRepository $CustomerRepository)
-    {
-        $this->CustomerRepository = $CustomerRepository;
-    }
-
-    public function execute(Dto $data)
+    public function execute(DtoInput $data): void
     {
         $customer = (new CustomerFactory())
             ->new($data->id, $data->created_at, $data->updated_at)
@@ -24,6 +18,6 @@ class Update
 
         $customer->setUpdatedAt(new DateTime());
 
-        return $this->CustomerRepository->update($customer);
+        $this->CustomerRepository->update($customer);
     }
 }

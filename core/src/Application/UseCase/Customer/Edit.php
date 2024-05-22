@@ -2,19 +2,13 @@
 
 namespace TechChallenge\Application\UseCase\Customer;
 
-use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
-use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
+use TechChallenge\Domain\Customer\UseCase\DtoInput;
+use TechChallenge\Domain\Customer\Entities\Customer;
+use TechChallenge\Domain\Customer\UseCase\Edit as ICustomerUseCaseEdit;
 
-class Edit
+class Edit extends ICustomerUseCaseEdit
 {
-    private ICustomerRepository $CustomerRepository;
-
-    public function __construct(ICustomerRepository $CustomerRepository)
-    {
-        $this->CustomerRepository = $CustomerRepository;
-    }
-
-    public function execute(Dto $data): CustomerEntity
+    public function execute(DtoInput $data): Customer
     {
         return $this->CustomerRepository->edit($data->id);
     }

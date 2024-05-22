@@ -3,18 +3,12 @@
 namespace TechChallenge\Application\UseCase\Customer;
 
 use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
-use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
+use TechChallenge\Domain\Customer\UseCase\DtoInput;
+use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
 
-class Store
+class Store extends ICustomerUseCaseStore
 {
-    private ICustomerRepository $CustomerRepository;
-
-    public function __construct(ICustomerRepository $CustomerRepository)
-    {
-        $this->CustomerRepository = $CustomerRepository;
-    }
-
-    public function execute(Dto $data): string
+    public function execute(DtoInput $data): string
     {
         $customer = (new CustomerFactory())
             ->new()

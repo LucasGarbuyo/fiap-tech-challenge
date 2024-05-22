@@ -3,15 +3,14 @@
 namespace TechChallenge\Adapter\Driver\Api\V1;
 
 use Illuminate\Http\Request;
-use Illuminate\Log\Logger;
-use TechChallenge\Application\UseCase\Customer\Dto as CustomerDTO;
+use TechChallenge\Application\UseCase\Customer\DtoInput as CustomerDtoInput;
 use TechChallenge\Config\DIContainer;
-use TechChallenge\Application\UseCase\Customer\Index as CustomerIndex;
-use TechChallenge\Application\UseCase\Customer\Store as CustomerStore;
-use TechChallenge\Application\UseCase\Customer\Edit as CustomerEdit;
-use TechChallenge\Application\UseCase\Customer\EditByCpf as CustomerEditByCpf;
-use TechChallenge\Application\UseCase\Customer\Update as CustomerUpdate;
-use TechChallenge\Application\UseCase\Customer\Delete as CustomerDelete;
+use TechChallenge\Domain\Customer\UseCase\Index as ICustomerUseCaseIndex;
+use TechChallenge\Domain\Customer\UseCase\Edit as ICustomerUseCaseEdit;
+use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
+use TechChallenge\Domain\Customer\UseCase\Update as ICustomerUseCaseUpdate;
+use TechChallenge\Domain\Customer\UseCase\Delete as ICustomerUseCaseDelete;
+use TechChallenge\Domain\Customer\UseCase\EditByCpf as ICustomerUseCaseEditByCpf;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Customer extends Controller
@@ -19,7 +18,7 @@ class Customer extends Controller
     public function index(Request $request)
     {
         try {
-            $customerIndex = DIContainer::create()->get(CustomerIndex::class);
+            $customerIndex = DIContainer::create()->get(ICustomerUseCaseIndex::class);
 
             $customers = $customerIndex->execute();
 
@@ -43,9 +42,9 @@ class Customer extends Controller
     public function store(Request $request)
     {
         try {
-            $data = new CustomerDTO(null, $request->name, $request->cpf, $request->email);
+            $data = new CustomerDtoInput(null, $request->name, $request->cpf, $request->email);
 
-            $customerStore = DIContainer::create()->get(CustomerStore::class);
+            $customerStore = DIContainer::create()->get(ICustomerUseCaseStore::class);
 
             $id = $customerStore->execute($data);
 
@@ -65,9 +64,9 @@ class Customer extends Controller
     public function edit(Request $request, string $id)
     {
         try {
-            $data = new CustomerDTO($id);
+            $data = new CustomerDtoInput($id);
 
-            $customerEdit = DIContainer::create()->get(CustomerEdit::class);
+            $customerEdit = DIContainer::create()->get(ICustomerUseCaseEdit::class);
 
             $customer = $customerEdit->execute($data);
 
@@ -87,9 +86,9 @@ class Customer extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $data = new CustomerDTO($id, $request->name, $request->cpf, $request->email);
+            $data = new CustomerDtoInput($id, $request->name, $request->cpf, $request->email);
 
-            $customerUpdate = DIContainer::create()->get(CustomerUpdate::class);
+            $customerUpdate = DIContainer::create()->get(ICustomerUseCaseUpdate::class);
 
             $customerUpdate->execute($data);
 
@@ -109,9 +108,9 @@ class Customer extends Controller
     public function delete(Request $request, string $id)
     {
         try {
-            $data = new CustomerDTO($id);
+            $data = new CustomerDtoInput($id);
 
-            $productDelete = DIContainer::create()->get(CustomerDelete::class);
+            $productDelete = DIContainer::create()->get(ICustomerUseCaseDelete::class);
 
             $productDelete->execute($data);
 
@@ -131,11 +130,9 @@ class Customer extends Controller
     public function editByCfp(Request $request, string $cpf)
     {
         try {
-            Logger("oi");
+            $data = new CustomerDtoInput(cpf: $cpf);
 
-            $data = new CustomerDTO(cpf: $cpf);
-
-            $CustomerEditByCpf = DIContainer::create()->get(CustomerEditByCpf::class);
+            $CustomerEditByCpf = DIContainer::create()->get(ICustomerUseCaseEditByCpf::class);
 
             $customer = $CustomerEditByCpf->execute($data);
 
