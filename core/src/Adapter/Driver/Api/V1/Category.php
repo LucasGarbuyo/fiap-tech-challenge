@@ -17,13 +17,13 @@ class Category extends Controller
     public function index(Request $request)
     {
         try {
-            $CategoryIndex = DIContainer::create()->get(ICategoryUseCaseIndex::class);
+            $categoryIndex = DIContainer::create()->get(ICategoryUseCaseIndex::class);
 
-            $Categorys = $CategoryIndex->execute();
+            $categorys = $categoryIndex->execute();
 
-            $results = array_map(function ($Category) {
-                return $Category->toArray();
-            }, $Categorys);
+            $results = array_map(function ($category) {
+                return $category->toArray();
+            }, $categorys);
 
             return $this->return($results, 200);
         } catch (DefaultException $e) {
@@ -43,9 +43,9 @@ class Category extends Controller
         try {
             $data = new CategoryDtoInput(null, $request->name, $request->type);
 
-            $CategoryStore = DIContainer::create()->get(ICategoryUseCaseStore::class);
+            $categoryStore = DIContainer::create()->get(ICategoryUseCaseStore::class);
 
-            $id = $CategoryStore->execute($data);
+            $id = $categoryStore->execute($data);
 
             return $this->return(["id" => $id], 201);
         } catch (DefaultException $e) {
@@ -65,11 +65,11 @@ class Category extends Controller
         try {
             $data = new CategoryDtoInput($id);
 
-            $CategoryEdit = DIContainer::create()->get(ICategoryUseCaseEdit::class);
+            $categoryEdit = DIContainer::create()->get(ICategoryUseCaseEdit::class);
 
-            $Category = $CategoryEdit->execute($data);
+            $category = $categoryEdit->execute($data);
 
-            return $this->return($Category->toArray(), 200);
+            return $this->return($category->toArray(), 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -87,9 +87,9 @@ class Category extends Controller
         try {
             $data = new CategoryDtoInput($id, $request->name, $request->type);
 
-            $CategoryUpdate = DIContainer::create()->get(ICategoryUseCaseUpdate::class);
+            $categoryUpdate = DIContainer::create()->get(ICategoryUseCaseUpdate::class);
 
-            $CategoryUpdate->execute($data);
+            $categoryUpdate->execute($data);
 
             return $this->return([], 204);
         } catch (DefaultException $e) {

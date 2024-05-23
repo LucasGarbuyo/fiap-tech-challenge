@@ -14,77 +14,77 @@ class Repository implements ICategoryRepository
     /** @return CategoryEntity[] */
     public function index(array $filters = [], array|bool $append = []): array
     {
-        $CategorysData = $this->query()->get();
+        $categoriesData = $this->query()->get();
 
-        $Categorys = [];
+        $categories = [];
 
-        $CategoryFactory = new CategoryFactory();
+        $categoryFactory = new CategoryFactory();
 
-        foreach ($CategorysData as $CategoryData)
-            $Categorys[] = $CategoryFactory
-                ->new($CategoryData->id, $CategoryData->created_at, $CategoryData->updated_at)
-                ->withNameType($CategoryData->name, $CategoryData->type)
+        foreach ($categoriesData as $categoryData)
+            $categories[] = $categoryFactory
+                ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)
+                ->withNameType($categoryData->name, $categoryData->type)
                 ->build();
 
-        return $Categorys;
+        return $categories;
     }
 
     public function edit(string $id): CategoryEntity
     {
-        $CategoryData = $this->query()->where('id', $id)->first();
+        $categoryData = $this->query()->where('id', $id)->first();
 
-        if (empty($CategoryData))
+        if (empty($categoryData))
             throw new CategoryNotFoundException();
 
         return (new CategoryFactory())
-            ->new($CategoryData->id, $CategoryData->created_at, $CategoryData->updated_at)
-            ->withNameType($CategoryData->name, $CategoryData->type)
+            ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)
+            ->withNameType($categoryData->name, $categoryData->type)
             ->build();
     }
 
-    public function store(CategoryEntity $Category): void
+    public function store(CategoryEntity $category): void
     {
         $this->query()
             ->insert(
                 [
-                    'id' => $Category->getId(),
-                    'name' => $Category->getName(),
-                    'type' => $Category->getType(),
-                    'created_at' => $Category->getCreatedAt(),
-                    'updated_at' => $Category->getUpdatedAt()
+                    'id' => $category->getId(),
+                    'name' => $category->getName(),
+                    'type' => $category->getType(),
+                    'created_at' => $category->getCreatedAt(),
+                    'updated_at' => $category->getUpdatedAt()
                 ]
             );
     }
 
-    public function update(CategoryEntity $Category): void
+    public function update(CategoryEntity $category): void
     {
-        if (!$this->query()->where('id', $Category->getId())->exists())
+        if (!$this->query()->where('id', $category->getId())->exists())
             throw new CategoryNotFoundException();
 
         $this->query()
-            ->where('id', $Category->getId())
+            ->where('id', $category->getId())
             ->update(
                 [
-                    'name' => $Category->getName(),
-                    'type' => $Category->getType(),
-                    'updated_at' => $Category->getUpdatedAt()
+                    'name' => $category->getName(),
+                    'type' => $category->getType(),
+                    'updated_at' => $category->getUpdatedAt()
                 ]
             );
     }
 
-    public function delete(CategoryEntity $Category): void
+    public function delete(CategoryEntity $category): void
     {
         $this->query()
-            ->where('id', $Category->getId())
+            ->where('id', $category->getId())
             ->update(
                 [
-                    "deleted_at" => $Category->getDeletedAt()->format("Y-m-d H:i:s")
+                    "deleted_at" => $category->getDeletedAt()->format("Y-m-d H:i:s")
                 ]
             );
     }
 
     protected function query(): Builder
     {
-        return DB::table("Categories")->whereNull('deleted_at');
+        return DB::table("categories")->whereNull('deleted_at');
     }
 }

@@ -13,7 +13,7 @@ class Category
     private ?DateTime $deleted_at;
 
     public function __construct(
-        string $id,
+        private string $id,
         DateTime $created_at,
         DateTime $updated_at
     ) {
