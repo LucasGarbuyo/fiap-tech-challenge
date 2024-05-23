@@ -8,6 +8,7 @@ use TechChallenge\Domain\Category\Entities\Category as CategoryEntity;
 use TechChallenge\Domain\Category\Factories\Category as CategoryFactory;
 use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
 use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
 
 class Repository implements ICategoryRepository
 {
@@ -20,25 +21,48 @@ class Repository implements ICategoryRepository
 
         $categoryFactory = new CategoryFactory();
 
-        foreach ($categoriesData as $categoryData)
+        foreach ($categoriesData as $categoryData) {
+            $productsData = $this->queryProduct()->where('category_id', $categoryData->id)->get();
+            $products = [];
+            
+            foreach ($productsData as $productData) {
+                $products[] = (new ProductFactory())
+                    ->new()
+                    ->withCategoryIdNameDescriptionPrice($categoryData->id, $productData->name, $productData->description, $productData->price)
+                    ->build()
+                    ->toArray(false);
+            }
+
             $categories[] = $categoryFactory
                 ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)
-                ->withNameType($categoryData->name, $categoryData->type)
+                ->withProductsNameType($products, $categoryData->name, $categoryData->type)
                 ->build();
+        }
 
         return $categories;
     }
 
-    public function edit(string $id): CategoryEntity
+    public function show(string $id): CategoryEntity
     {
         $categoryData = $this->query()->where('id', $id)->first();
 
         if (empty($categoryData))
             throw new CategoryNotFoundException();
 
+        $productsData = $this->queryProduct()->where('category_id', $categoryData->id)->get();
+        $products = [];
+        
+        foreach ($productsData as $productData) {
+            $products[] = (new ProductFactory())
+                ->new()
+                ->withCategoryIdNameDescriptionPrice($categoryData->id, $productData->name, $productData->description, $productData->price)
+                ->build()
+                ->toArray(false);
+        }
+
         return (new CategoryFactory())
             ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)
-            ->withNameType($categoryData->name, $categoryData->type)
+            ->withProductsNameType($products, $categoryData->name, $categoryData->type)
             ->build();
     }
 
@@ -86,5 +110,10 @@ class Repository implements ICategoryRepository
     protected function query(): Builder
     {
         return DB::table("categories")->whereNull('deleted_at');
+    }
+
+    protected function queryProduct(): Builder
+    {
+        return DB::table("products")->whereNull('deleted_at');
     }
 }

@@ -13,7 +13,7 @@ class Update extends IProductUseCaseUpdate
     {
         $product = (new ProductFactory())
             ->new($data->id, $data->created_at, $data->updated_at)
-            ->withNameDescriptionPrice($data->name, $data->description, $data->price)
+            ->withCategoryIdNameDescriptionPrice($data->category_id, $data->name, $data->description, $data->price)
             ->build();
 
         $product->setUpdatedAt(new DateTime());

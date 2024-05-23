@@ -12,7 +12,7 @@ class Store extends IProductUseCaseStore
     {
         $product = (new ProductFactory())
             ->new()
-            ->withNameDescriptionPrice($data->name, $data->description, $data->price)
+            ->withCategoryIdNameDescriptionPrice($data->category_id, $data->name, $data->description, $data->price)
             ->build();
 
         $this->ProductRepository->store($product);

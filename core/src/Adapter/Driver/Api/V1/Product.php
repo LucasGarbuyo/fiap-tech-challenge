@@ -5,7 +5,7 @@ namespace TechChallenge\Adapter\Driver\Api\V1;
 use Illuminate\Http\Request;
 use TechChallenge\Application\UseCase\Product\DtoInput as ProductDtoInput;
 use TechChallenge\Domain\Product\UseCase\Index as IProductUseCaseIndex;
-use TechChallenge\Domain\Product\UseCase\Edit as IProductUseCaseEdit;
+use TechChallenge\Domain\Product\UseCase\Show as IProductUseCaseShow;
 use TechChallenge\Domain\Product\UseCase\Store as IProductUseCaseStore;
 use TechChallenge\Domain\Product\UseCase\Update as IProductUseCaseUpdate;
 use TechChallenge\Domain\Product\UseCase\Delete as IProductUseCaseDelete;
@@ -41,7 +41,7 @@ class Product extends Controller
     public function store(Request $request)
     {
         try {
-            $data = new ProductDtoInput(null, $request->name, $request->description, $request->price);
+            $data = new ProductDtoInput(null, $request->category_id, $request->name, $request->description, $request->price);
 
             $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
 
@@ -60,12 +60,12 @@ class Product extends Controller
         }
     }
 
-    public function edit(Request $request, string $id)
+    public function show(Request $request, string $id)
     {
         try {
             $data = new ProductDtoInput($id);
 
-            $productEdit = DIContainer::create()->get(IProductUseCaseEdit::class);
+            $productEdit = DIContainer::create()->get(IProductUseCaseShow::class);
 
             $product = $productEdit->execute($data);
 
@@ -85,7 +85,7 @@ class Product extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $data = new ProductDtoInput($id, $request->name, $request->description, $request->price);
+            $data = new ProductDtoInput($id, $request->category_id, $request->name, $request->description, $request->price);
 
             $productUpdate = DIContainer::create()->get(IProductUseCaseUpdate::class);
 
