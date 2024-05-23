@@ -8,6 +8,10 @@ use DI\ContainerBuilder;
 use TechChallenge\Adapter\Driven\Infra\Repository\Product\Repository as ProductRepository;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 
+//Category
+use TechChallenge\Adapter\Driven\Infra\Repository\Category\Repository as CategoryRepository;
+use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+
 //Customer
 use TechChallenge\Adapter\Driven\Infra\Repository\Customer\Repository as CustomerRepository;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
@@ -47,6 +51,22 @@ use TechChallenge\Application\UseCase\Product\Update as ProductUseCaseUpdate;
 use TechChallenge\Domain\Product\UseCase\Delete as IProductUseCaseDelete;
 use TechChallenge\Application\UseCase\Product\Delete as ProductUseCaseDelete;
 
+//Category UseCase
+use TechChallenge\Domain\Category\UseCase\Index as ICategoryUseCaseIndex;
+use TechChallenge\Application\UseCase\Category\Index as CategoryUseCaseIndex;
+
+use TechChallenge\Domain\Category\UseCase\Edit as ICategoryUseCaseEdit;
+use TechChallenge\Application\UseCase\Category\Edit as CategoryUseCaseEdit;
+
+use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
+use TechChallenge\Application\UseCase\Category\Store as CategoryUseCaseStore;
+
+use TechChallenge\Domain\Category\UseCase\Update as ICategoryUseCaseUpdate;
+use TechChallenge\Application\UseCase\Category\Update as CategoryUseCaseUpdate;
+
+use TechChallenge\Domain\Category\UseCase\Delete as ICategoryUseCaseDelete;
+use TechChallenge\Application\UseCase\Category\Delete as CategoryUseCaseDelete;
+
 class DIContainer
 {
     private static ?ContainerBuilder $containerBuild = null;
@@ -71,6 +91,7 @@ class DIContainer
             //Entities
             IProductRepository::class => \DI\get(ProductRepository::class),
             ICustomerRepository::class => \DI\get(CustomerRepository::class),
+            ICategoryRepository::class => \DI\get(CategoryRepository::class),
 
             //Customer UseCase
             ICustomerUseCaseIndex::class => \DI\get(CustomerUseCaseIndex::class),
@@ -86,6 +107,13 @@ class DIContainer
             IProductUseCaseStore::class => \DI\get(ProductUseCaseStore::class),
             IProductUseCaseUpdate::class => \DI\get(ProductUseCaseUpdate::class),
             IProductUseCaseDelete::class => \DI\get(ProductUseCaseDelete::class),
+
+            //Category UseCase
+            ICategoryUseCaseIndex::class => \DI\get(CategoryUseCaseIndex::class),
+            ICategoryUseCaseEdit::class => \DI\get(CategoryUseCaseEdit::class),
+            ICategoryUseCaseStore::class => \DI\get(CategoryUseCaseStore::class),
+            ICategoryUseCaseUpdate::class => \DI\get(CategoryUseCaseUpdate::class),
+            ICategoryUseCaseDelete::class => \DI\get(CategoryUseCaseDelete::class),
         ]);
     }
 }

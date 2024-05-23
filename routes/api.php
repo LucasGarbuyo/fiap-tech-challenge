@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use TechChallenge\Adapter\Driver\Api\V1\Product;
 use TechChallenge\Adapter\Driver\Api\V1\Customer;
+use TechChallenge\Adapter\Driver\Api\V1\Category;
 
 Route::controller(Product::class)
     ->prefix('/product')
@@ -24,3 +25,14 @@ Route::controller(Customer::class)
         Route::delete('/delete/{id}', [Customer::class, "delete"]);
         Route::get('/edit/cpf/{cpf}', [Customer::class, "editByCfp"]);
     });
+
+
+Route::controller(Category::class)
+    ->prefix('/category')
+    ->group(function () {
+        Route::get('/index', [Category::class, "index"]);
+        Route::get('/edit/{id}', [Category::class, "edit"]);
+        Route::post('/store', [Category::class, "store"]);
+        Route::put('/update/{id}', [Category::class, "update"]);
+        Route::delete('/delete/{id}', [Category::class, "delete"]);
+});
