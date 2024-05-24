@@ -53,16 +53,30 @@ class GeralTest extends TestCase
             items: [
                 [
                     'productId' =>  $productId,
-                    'quantity' => 1,
+                    'quantity' => random_int(1, 99),
                 ],
                 [
                     'productId' =>  $productId,
-                    'quantity' => 2,
+                    'quantity' => random_int(1, 99),
                 ]
             ],
         );
         // $this->expectException(InvalidItemQuantityException::class);
         $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
-        $res = $orderStore->execute($orderDto);
+        $orderStore->execute($orderDto);
+
+        $this->post('api/orders', [
+            'customerId' => $customer->getId(),
+            'items' => [
+                [
+                    'productId' =>  $productId,
+                    'quantity' => random_int(1, 99),
+                ],
+                [
+                    'productId' =>  $productId,
+                    'quantity' => random_int(1, 99),
+                ]
+            ]
+        ])->assertStatus(201)->assertSessionHasNoErrors();
     }
 }
