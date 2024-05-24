@@ -14,6 +14,7 @@ use TechChallenge\Domain\Product\UseCase\Store as IProductUseCaseStore;
 use TechChallenge\Domain\Product\UseCase\Edit as IProductUseCaseEdit;
 use TechChallenge\Application\UseCase\Order\DtoInput as OrderDtoInput;
 use TechChallenge\Domain\Order\Exceptions\InvalidItemQuantityException;
+use TechChallenge\Domain\Order\Exceptions\InvalidOrderItemQuantityException;
 use TechChallenge\Domain\Order\UseCase\Store as IOrderUseCaseStore;
 
 class GeralTest extends TestCase
@@ -48,7 +49,9 @@ class GeralTest extends TestCase
         $this->assertSame($productDto->name, $product->getName());
         $this->assertSame($productDto->description, $product->getDescription());
         $this->assertSame($productDto->price, $product->getPrice()->getValue());
-        $orderDto = new OrderDtoInput(
+        $this->expectException(InvalidItemQuantityException::class);
+        $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
+        $orderStore->execute(new OrderDtoInput(
             customerId: $customer->getId(),
             items: [
                 [
@@ -60,11 +63,15 @@ class GeralTest extends TestCase
                     'quantity' => random_int(1, 99),
                 ]
             ],
-        );
-        // $this->expectException(InvalidItemQuantityException::class);
+        ));
+        $this->expectException(InvalidOrderItemQuantityException::class);
         $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
-        $orderStore->execute($orderDto);
-
+        $orderStore->execute(
+            new OrderDtoInput(
+                customerId: $customer->getId(),
+                items: [],
+            )
+        );
         $this->post('api/orders', [
             'customerId' => $customer->getId(),
             'items' => [
@@ -78,5 +85,24 @@ class GeralTest extends TestCase
                 ]
             ]
         ])->assertStatus(201)->assertSessionHasNoErrors();
+
+        $this->post('api/orders', [
+            'customerId' => $customer->getId(),
+            'items' => []
+        ])->assertStatus(400);
+
+        $this->post('api/orders', [
+            'customerId' => $customer->getId(),
+            'items' => [
+                [
+                    'productId' =>  $productId,
+                    'quantity' => random_int(1, 99),
+                ],
+                [
+                    'productId' =>  $productId,
+                    'quantity' => random_int(1, 99),
+                ]
+            ]
+        ])->assertStatus(201);
     }
 }
