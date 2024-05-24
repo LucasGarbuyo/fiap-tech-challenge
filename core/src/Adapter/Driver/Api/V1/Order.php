@@ -18,9 +18,9 @@ class Order extends Controller
                 items: $request->items
             );
 
-            $categoryStore = DIContainer::create()->get(IOrderUseCaseStore::class);
+            $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
 
-            $id = $categoryStore->execute($data);
+            $id = $orderStore->execute($data);
 
             return $this->return(["id" => $id], 201);
         } catch (DefaultException $e) {
