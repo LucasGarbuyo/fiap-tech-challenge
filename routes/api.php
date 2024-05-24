@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use TechChallenge\Adapter\Driver\Api\V1\Product;
 use TechChallenge\Adapter\Driver\Api\V1\Customer;
 use TechChallenge\Adapter\Driver\Api\V1\Category;
+use TechChallenge\Adapter\Driver\Api\V1\Order;
 
 Route::controller(Product::class)
     ->prefix('/product')
@@ -35,4 +36,11 @@ Route::controller(Category::class)
         Route::post('/store', [Category::class, "store"]);
         Route::put('/update/{id}', [Category::class, "update"]);
         Route::delete('/delete/{id}', [Category::class, "delete"]);
-});
+    });
+
+
+Route::controller(Order::class)
+    ->prefix('/orders')
+    ->group(function () {
+        Route::post('/', "store");
+    });
