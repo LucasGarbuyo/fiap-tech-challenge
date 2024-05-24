@@ -3,6 +3,7 @@
 namespace TechChallenge\Domain\Order\Entities;
 
 use DateTime;
+use TechChallenge\Domain\Order\Exceptions\InvalidOrderItemQuantityException;
 
 class Order
 {
@@ -86,6 +87,17 @@ class Order
     public function getCustomerId(): string
     {
         return $this->customerId;
+    }
+
+    public function setItems(array $items): self
+    {
+        if (empty($items)) {
+            throw new InvalidOrderItemQuantityException();
+        }
+        foreach ($items as $item) {
+            $this->items[] = new Item($item['productId'], $item['quantity']);
+        }
+        return $this;
     }
 
     public function setItem(string $productId, int $quantity): self

@@ -27,11 +27,8 @@ class Order
     public function withCustomerIdItems(string $customerId, array $items): self
     {
         $this->order
-            ->setCustomerId($customerId);
-
-        foreach ($items as $item) {
-            $this->order->setItem($item['productId'], $item['quantity']);
-        }
+            ->setCustomerId($customerId)
+            ->setItems($items);
         return $this;
     }
 
