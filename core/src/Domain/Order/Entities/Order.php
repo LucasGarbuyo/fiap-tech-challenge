@@ -3,13 +3,18 @@
 namespace TechChallenge\Domain\Order\Entities;
 
 use DateTime;
-use TechChallenge\Domain\Order\Exceptions\InvalidOrderItemQuantityException;
-use TechChallenge\Domain\Order\Exceptions\MissingItemKeysException;
+use TechChallenge\Domain\Order\Exceptions\{
+    InvalidItemOrder,
+    InvalidOrderItemQuantityException
+};
+use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Order
 {
     private string $customerId;
-    private array $items;
+    private Price $total;
+    private array $items = [];
+    private string $status;
     private readonly DateTime $created_at;
     private readonly DateTime $updated_at;
     private ?DateTime $deleted_at = null;
@@ -18,20 +23,13 @@ class Order
         private readonly string $id,
         DateTime $created_at,
         DateTime $updated_at,
-        string $customerId,
-        array $items
     ) {
         $this
             ->setCreatedAt($created_at)
-            ->setUpdatedAt($updated_at)
-            ->setCustomerId($customerId)
-            ->setItems($items);
-        $this->items = [];
+            ->setUpdatedAt($updated_at);
     }
 
     public static function create(
-        string $customerId,
-        array $items,
         ?string $id = null,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
@@ -40,8 +38,6 @@ class Order
             id: $id ?? uniqid("ORDE_", true),
             created_at: $created_at ?? new DateTime(),
             updated_at: $updated_at ?? new DateTime(),
-            customerId: $customerId,
-            items: $items
         );
     }
 
@@ -100,21 +96,23 @@ class Order
 
     public function setItems(array $items): self
     {
-        if (empty($items)) {
+        if (empty($items))
             throw new InvalidOrderItemQuantityException();
-        }
+
         foreach ($items as $item) {
-            if (!isset($item['productId'], $item['quantity'])) {
-                throw new MissingItemKeysException();
-            }
-            $this->items[] = new Item($item['productId'], $item['quantity']);
+            if (!$item instanceof Item)
+                throw new InvalidItemOrder();
+
+            $this->items[] = $item;
         }
+
         return $this;
     }
 
-    public function setItem(string $productId, int $quantity): self
+    public function setItem(Item $item): self
     {
-        $this->items[] = new Item($productId, $quantity);
+        $this->items[] = $item;
+
         return $this;
     }
 

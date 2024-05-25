@@ -10,6 +10,11 @@ class Store extends IOrderUseCaseStore
 {
     public function execute(DtoInput $data): string
     {
+        $items = [];
+
+        if (count($data->getItems()) > 0) {
+        }
+
         $order = (new OrderFactory())
             ->withCustomerId($data->getCustomerId())
             ->withItems($data->getItems())

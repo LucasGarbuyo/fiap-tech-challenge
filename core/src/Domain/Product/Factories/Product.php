@@ -3,7 +3,7 @@
 namespace TechChallenge\Domain\Product\Factories;
 
 use DateTime;
-use TechChallenge\Domain\Product\ValueObjects\Price;
+use TechChallenge\Domain\Shared\ValueObjects\Price;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 
 class Product

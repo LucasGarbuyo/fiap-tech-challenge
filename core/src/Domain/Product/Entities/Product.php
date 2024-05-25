@@ -4,7 +4,7 @@ namespace TechChallenge\Domain\Product\Entities;
 
 use DateTime;
 use TechChallenge\Domain\Product\Exceptions\ProductException;
-use TechChallenge\Domain\Product\ValueObjects\Price;
+use TechChallenge\Domain\SHared\ValueObjects\Price;
 
 class Product
 {

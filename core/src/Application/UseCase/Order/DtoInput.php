@@ -8,6 +8,8 @@ class DtoInput implements IOrderUseCaseDtoInput
 {
     public readonly string $customerId;
     public readonly array $items;
+    public readonly string $status;
+    public readonly float $total;
 
     public function __construct(
         string $customerId,

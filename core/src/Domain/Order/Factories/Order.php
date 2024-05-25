@@ -3,57 +3,43 @@
 namespace TechChallenge\Domain\Order\Factories;
 
 use DateTime;
+use TechChallenge\Domain\Order\Entities\Item;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
+use TechChallenge\Domain\Order\Exceptions\InvalidItemOrder;
 
 class Order
 {
-    private ?string $id;
-    private ?DateTime $created_at;
-    private ?DateTime $updated_at;
-    private string $customerId;
-    private array $items;
+    private OrderEntity $order;
 
-    public function __construct()
+    public function new(?string $id = null, String|DateTime $created_at = null, String|DateTime $updated_at = null): self
     {
-        $this->id = null;
-        $this->created_at = null;
-        $this->updated_at = null;
-        $this->items = [];
-    }
+        if (!is_null($created_at))
+            $created_at = is_string($created_at) ? new DateTime($created_at) : $created_at;
 
-    public function withId(?string $id): self
-    {
-        $this->id = $id;
-        return $this;
-    }
+        if (!is_null($updated_at))
+            $updated_at = is_string($updated_at) ? new DateTime($updated_at) : $updated_at;
 
-    public function withTimestamps(?DateTime $created_at, ?DateTime $updated_at): self
-    {
-        $this->created_at = $created_at;
-        $this->updated_at = $updated_at;
+        $this->order = OrderEntity::create($id, $created_at, $updated_at);
+
         return $this;
     }
 
     public function withCustomerId(string $customerId): self
     {
-        $this->customerId = $customerId;
+        $this->order->setCustomerId($customerId);
+
         return $this;
     }
 
     public function withItems(array $items): self
     {
-        $this->items = $items;
+        $this->order->setItems($items);
+
         return $this;
     }
 
     public function build(): OrderEntity
     {
-        return OrderEntity::create(
-            $this->customerId,
-            $this->items,
-            $this->id,
-            $this->created_at,
-            $this->updated_at
-        );
+        return $this->order;
     }
 }

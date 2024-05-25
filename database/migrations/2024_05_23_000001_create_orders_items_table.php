@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignUuid('order_id')->constrained('orders', 'id');
             $table->foreignUuid('product_id')->constrained('products', 'id');
             $table->integer('quantity');
+            $table->integer('price');
         });
     }
 

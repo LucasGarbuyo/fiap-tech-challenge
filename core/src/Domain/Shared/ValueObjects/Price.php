@@ -1,6 +1,6 @@
 <?php
 
-namespace TechChallenge\Domain\Product\ValueObjects;
+namespace TechChallenge\Domain\Shared\ValueObjects;
 
 class Price
 {
