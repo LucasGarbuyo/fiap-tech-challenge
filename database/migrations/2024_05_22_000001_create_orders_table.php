@@ -17,7 +17,7 @@ return new class extends Migration
             $table->float('price')->nullable();
             $table->enum('status', [
                 'Recebido',
-                'Em preparacao',
+                'Em preparação',
                 'Pronto',
                 'Finalizado',
             ]);
