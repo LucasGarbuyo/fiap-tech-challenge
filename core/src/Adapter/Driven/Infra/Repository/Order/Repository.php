@@ -20,7 +20,8 @@ class Repository implements IOrderRepository
     public function index(array $filters = [], array|bool $append = []): array
     {
         $orderData = $this->query()->get();
-        dd($orderData);die;
+        dd($orderData);
+        die;
         //parei aqui neste retorno
 
     }
@@ -32,22 +33,24 @@ class Repository implements IOrderRepository
         if (empty($orderData))
             throw new OrderNotFoundException('Not found', 404);
 
+        $orderFactory = (new OrderFactory())
+            ->new($orderData->id, $orderData->created_at, $orderData->updated_at);
+
         $customerRepository = DIContainer::create()->get(ICustomerRepository::class);
-        $customer = $customerRepository->show([$orderData->customer_id]);
-        
+
+        if ($orderData->customer_id) {
+            $customer = $customerRepository->show([$orderData->customer_id]);
+            $orderFactory->withCustomer($customer);
+        }
+
         $itemsData = $this->queryItems()->where('order_id', $id)->get();
         $items = [];
         foreach ($itemsData as $itemData) {
-            // dd($itemData->order_id, $itemData->product_id, $itemData->quantity, new Price($itemData->price), $itemData->id);
             $items[] = (new ItemFactory())
                 ->new($itemData->product_id, $itemData->quantity, new Price($itemData->price), $itemData->id)
                 ->build();
         }
-        return (new OrderFactory())
-            ->new($orderData->id, $orderData->created_at, $orderData->updated_at)
-            ->withCustomer($customer)
-            ->withItems($items)
-            ->build();
+        return $orderFactory->withItems($items)->build();
     }
 
     public function store(OrderEntity $order): void

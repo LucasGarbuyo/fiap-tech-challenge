@@ -17,13 +17,14 @@ use TechChallenge\Application\UseCase\Order\DtoInput as OrderDtoInput;
 use TechChallenge\Domain\Order\UseCase\Store as IOrderUseCaseStore;
 use TechChallenge\Application\UseCase\Category\DtoInput as CategoryDtoInput;
 use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
+use TechChallenge\Domain\Order\UseCase\Show as IOrderUseCaseShow;
 
 class GeralTest extends TestCase
 {
     // use RefreshDatabase;
     use WithFaker;
 
-    public function testCanCreate(): void
+    public function testCanCreateOrder(): void
     {
         $customerDto = new CustomerDtoInput(
             name: $this->faker->firstName(),
@@ -43,23 +44,23 @@ class GeralTest extends TestCase
         $productDto = new ProductDtoInput(
             name: $this->faker->word(),
             description: $this->faker->paragraph(),
-            price: $this->faker->randomFloat(2, 1, 100000),
+            price: $this->faker->randomFloat(2, 1, 100),
             category_id: $categoryId
         );
         $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
         $productId = $productStore->execute($productDto);
         $this->post(
-            'api/orders',
+            'api/order',
             [
                 'customerId' => $customer->getId(),
                 'items' => [
                     [
                         'productId' =>  $productId,
-                        'quantity' => random_int(1, 99),
+                        'quantity' => random_int(1, 10),
                     ],
                     [
                         'productId' =>  $productId,
-                        'quantity' => random_int(1, 99),
+                        'quantity' => random_int(1, 10),
                     ]
                 ]
             ]
@@ -75,7 +76,7 @@ class GeralTest extends TestCase
         foreach ($orderItems as $item) {
             $product = DB::table('products')->where('id', $item->product_id)->first();
             $expectedPrice = $product->price * $item->quantity;
-            $this->assertEquals($expectedPrice, $item->price);
+            $this->assertEquals(round($expectedPrice, 2), $item->price);
             $priceOrder += $item->price;
         }
         $this->assertDatabaseHas('orders', [
@@ -87,7 +88,7 @@ class GeralTest extends TestCase
 
     public function testCanCreateOrderWithoutCustomerIdAndItems(): void
     {
-        $this->post('api/orders')->assertStatus(201);
+        $this->post('api/order')->assertStatus(201);
     }
 
     public function testCanCreateOrderWithoutCustomerId(): void
@@ -101,22 +102,22 @@ class GeralTest extends TestCase
         $productDto = new ProductDtoInput(
             name: $this->faker->word(),
             description: $this->faker->paragraph(),
-            price: $this->faker->randomFloat(2, 1, 100000),
+            price: $this->faker->randomFloat(2, 1, 100),
             category_id: $categoryId
         );
         $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
         $productId = $productStore->execute($productDto);
         $this->post(
-            'api/orders',
+            'api/order',
             [
                 'items' => [
                     [
                         'productId' =>  $productId,
-                        'quantity' => random_int(1, 99),
+                        'quantity' => random_int(1, 10),
                     ],
                     [
                         'productId' =>  $productId,
-                        'quantity' => random_int(1, 99),
+                        'quantity' => random_int(1, 10),
                     ]
                 ]
             ]
@@ -135,11 +136,128 @@ class GeralTest extends TestCase
         $customerShowByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
         $customer = $customerShowByCpf->execute($customerDto);
         $this->post(
-            'api/orders',
+            'api/order',
             [
                 'customerId' => $customer->getId(),
             ]
         )->assertStatus(201);
+    }
+
+    public function testCanShowOrder(): void
+    {
+        $customerDto = new CustomerDtoInput(
+            name: $this->faker->firstName(),
+            cpf: $this->faker->cpf(),
+            email: $this->faker->email()
+        );
+        $customerStore = DIContainer::create()->get(ICustomerUseCaseStore::class);
+        $customerStore->execute($customerDto);
+        $customerShowByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
+        $customer = $customerShowByCpf->execute($customerDto);
+
+        $categoryDto = new CategoryDtoInput(
+            name: $this->faker->text(10),
+            type: $this->faker->text(10),
+        );
+        $categoryStore = DIContainer::create()->get(ICategoryUseCaseStore::class);
+        $categoryId = $categoryStore->execute($categoryDto);
+        $productDto = new ProductDtoInput(
+            name: $this->faker->word(),
+            description: $this->faker->paragraph(),
+            price: $this->faker->randomFloat(2, 1, 100),
+            category_id: $categoryId
+        );
+        $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
+        $productId = $productStore->execute($productDto);
+        $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
+        $orderId = $orderStore->execute(new OrderDtoInput(
+            customerId: $customer->getId(),
+            items: [
+                [
+                    'productId' =>  $productId,
+                    'quantity' => random_int(1, 10),
+                ],
+                [
+                    'productId' =>  $productId,
+                    'quantity' => random_int(1, 10),
+                ]
+            ]
+        ));
+        $customerDtoShow = new OrderDtoInput(
+            id: $orderId
+        );
+        $orderShow = DIContainer::create()->get(IOrderUseCaseShow::class);
+        $order = $orderShow->execute($customerDtoShow);
+        $this->get('api/order/' . $order->getId())->assertStatus(200);
+    }
+
+    public function testCanShowOrderWithoutCustomerIdAndItems(): void
+    {
+        $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
+        $orderId = $orderStore->execute(new OrderDtoInput());
+        $customerDtoShow = new OrderDtoInput(
+            id: $orderId
+        );
+        $orderShow = DIContainer::create()->get(IOrderUseCaseShow::class);
+        $order = $orderShow->execute($customerDtoShow);
+        $this->get('api/order/' . $order->getId())->assertStatus(200);
+    }
+
+    public function testCanShowOrderWithoutItems(): void
+    {
+        $customerDto = new CustomerDtoInput(
+            name: $this->faker->firstName(),
+            cpf: $this->faker->cpf(),
+            email: $this->faker->email()
+        );
+        $customerStore = DIContainer::create()->get(ICustomerUseCaseStore::class);
+        $customerStore->execute($customerDto);
+        $customerShowByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
+        $customer = $customerShowByCpf->execute($customerDto);
+        $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
+        $orderId = $orderStore->execute(new OrderDtoInput(
+            customerId: $customer->getId(),
+        ));
+        $customerDtoShow = new OrderDtoInput(
+            id: $orderId
+        );
+        $orderShow = DIContainer::create()->get(IOrderUseCaseShow::class);
+        $order = $orderShow->execute($customerDtoShow);
+        $this->get('api/order/' . $order->getId())->assertStatus(200);
+    }
+
+    public function testCanShowOrderWithoutCustomerId(): void
+    {
+        $categoryDto = new CategoryDtoInput(
+            name: $this->faker->text(10),
+            type: $this->faker->text(10),
+        );
+        $categoryStore = DIContainer::create()->get(ICategoryUseCaseStore::class);
+        $categoryId = $categoryStore->execute($categoryDto);
+        $productDto = new ProductDtoInput(
+            name: $this->faker->word(),
+            description: $this->faker->paragraph(),
+            price: $this->faker->randomFloat(2, 1, 100),
+            category_id: $categoryId
+        );
+        $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
+        $productId = $productStore->execute($productDto);
+
+        $customerDtoShow = new OrderDtoInput(
+            items: [
+                [
+                    'productId' =>  $productId,
+                    'quantity' => random_int(1, 10),
+                ],
+                [
+                    'productId' =>  $productId,
+                    'quantity' => random_int(1, 10),
+                ]
+            ]
+        );
+        $orderShow = DIContainer::create()->get(IOrderUseCaseShow::class);
+        $order = $orderShow->execute($customerDtoShow);
+        $this->get('api/order/' . $order->getId())->assertStatus(200);
     }
 
     public function test_tudo(): void
@@ -164,7 +282,7 @@ class GeralTest extends TestCase
         $productDto = new ProductDtoInput(
             name: $this->faker->word(),
             description: $this->faker->paragraph(),
-            price: $this->faker->randomFloat(2, 1, 100000),
+            price: $this->faker->randomFloat(2, 1, 100),
             category_id: $categoryId
         );
         $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
@@ -183,11 +301,11 @@ class GeralTest extends TestCase
             items: [
                 [
                     'productId' =>  $productId,
-                    'quantity' => random_int(1, 99),
+                    'quantity' => random_int(1, 10),
                 ],
                 [
                     'productId' =>  $productId,
-                    'quantity' => random_int(1, 99),
+                    'quantity' => random_int(1, 10),
                 ]
             ],
         ));

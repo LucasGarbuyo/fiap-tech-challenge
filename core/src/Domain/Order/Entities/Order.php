@@ -4,17 +4,14 @@ namespace TechChallenge\Domain\Order\Entities;
 
 use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
-use TechChallenge\Domain\Order\Exceptions\{
-    InvalidItemOrder,
-    InvalidOrderItemQuantityException
-};
+use TechChallenge\Domain\Order\Exceptions\InvalidItemOrder;
 use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Order
 {
     private ?string $customerId = null;
     private ?Customer $customer = null;
-    private Price $total;
+    private Price $price;
     private array $items = [];
     private string $status;
     private readonly DateTime $created_at;
@@ -98,11 +95,11 @@ class Order
         return $this;
     }
 
-    public function getCustomer(): Customer
+    public function getCustomer(): Customer|null
     {
         return $this->customer;
     }
-    
+
     public function setCustomerId(string $customerId): self
     {
         $this->customerId = $customerId;
@@ -117,9 +114,6 @@ class Order
 
     public function setItems(array $items): self
     {
-        if (empty($items))
-            throw new InvalidOrderItemQuantityException();
-
         foreach ($items as $item) {
             if (!$item instanceof Item)
                 throw new InvalidItemOrder();
@@ -140,14 +134,7 @@ class Order
     /** @return Item[] */
     public function getItems(): array
     {
-        $return = [];
-        foreach ($this->items as $item) {
-            if (!$item instanceof Item)
-                throw new InvalidItemOrder();
-
-            $return[] = $item->toArray();
-        }
-        return $return;
+        return $this->items;
     }
 
     public function toArray($complete = true): array
