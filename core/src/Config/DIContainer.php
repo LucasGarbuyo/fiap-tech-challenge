@@ -36,8 +36,8 @@ use TechChallenge\Application\UseCase\Customer\Update as CustomerUseCaseUpdate;
 use TechChallenge\Domain\Customer\UseCase\Delete as ICustomerUseCaseDelete;
 use TechChallenge\Application\UseCase\Customer\Delete as CustomerUseCaseDelete;
 
-use TechChallenge\Domain\Customer\UseCase\EditByCpf as ICustomerUseCaseEditByCpf;
-use TechChallenge\Application\UseCase\Customer\EditByCpf as CustomerUseCaseEditByCpf;
+use TechChallenge\Domain\Customer\UseCase\ShowByCpf as ICustomerUseCaseShowByCpf;
+use TechChallenge\Application\UseCase\Customer\ShowByCpf as CustomerUseCaseShowByCpf;
 
 //Product UseCase
 use TechChallenge\Domain\Product\UseCase\Index as IProductUseCaseIndex;
@@ -112,7 +112,7 @@ class DIContainer
             ICustomerUseCaseStore::class => \DI\get(CustomerUseCaseStore::class),
             ICustomerUseCaseUpdate::class => \DI\get(CustomerUseCaseUpdate::class),
             ICustomerUseCaseDelete::class => \DI\get(CustomerUseCaseDelete::class),
-            ICustomerUseCaseEditByCpf::class => \DI\get(CustomerUseCaseEditByCpf::class),
+            ICustomerUseCaseShowByCpf::class => \DI\get(CustomerUseCaseShowByCpf::class),
 
             //Product UseCase
             IProductUseCaseIndex::class => \DI\get(ProductUseCaseIndex::class),

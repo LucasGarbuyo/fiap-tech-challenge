@@ -19,12 +19,12 @@ Route::controller(Product::class)
 Route::controller(Customer::class)
     ->prefix('/customer')
     ->group(function () {
-        Route::get('/index', [Customer::class, "index"]);
-        Route::get('/show/{id}', [Customer::class, "show"]);
-        Route::post('/store', [Customer::class, "store"]);
-        Route::put('/update/{id}', [Customer::class, "update"]);
-        Route::delete('/delete/{id}', [Customer::class, "delete"]);
-        Route::get('/edit/cpf/{cpf}', [Customer::class, "editByCfp"]);
+        Route::get('', [Customer::class, "index"]);
+        Route::get('/{id}', [Customer::class, "show"]);
+        Route::post('', [Customer::class, "store"]);
+        Route::put('/{id}', [Customer::class, "update"]);
+        Route::delete('/{id}', [Customer::class, "delete"]);
+        Route::get('/cpf/{cpf}', [Customer::class, "showByCfp"]);
     });
 
 
