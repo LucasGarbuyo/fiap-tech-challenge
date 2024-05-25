@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use TechChallenge\Config\DIContainer;
 use TechChallenge\Application\UseCase\Customer\DtoInput as CustomerDtoInput;
 use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
@@ -63,6 +64,18 @@ class GeralTest extends TestCase
                 ]
             ]
         )->assertStatus(201);
+        $order = DB::table('orders')->latest()->first();
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'customer_id' => $customer->getId(),
+        ]);
+        $orderItems = DB::table('orders_items')->where('order_id', $order->id)->get();
+        $this->assertNotEmpty($orderItems);
+        foreach ($orderItems as $item) {
+            $product = DB::table('products')->where('id', $item->product_id)->first();
+            $expectedPrice = $product->price * $item->quantity;
+            $this->assertEquals($expectedPrice, $item->price);
+        }
     }
 
     public function testCanCreateOrderWithoutCustomerIdAndItems(): void
