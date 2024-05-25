@@ -32,10 +32,7 @@ class Repository implements ICustomerRepository
 
     public function show(string $id): CustomerEntity
     {
-        $customerData = $this->query()->where('id', $id)->first();
-
-        if (empty($customerData))
-            throw new CustomerNotFoundException();
+        $customerData = $this->filters($this->query(), ["id" => $id])->first();
 
         return (new CustomerFactory())
             ->new($customerData->id, $customerData->created_at, $customerData->updated_at)
