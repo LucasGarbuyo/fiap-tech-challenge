@@ -7,33 +7,53 @@ use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 
 class Order
 {
-    private OrderEntity $order;
+    private ?string $id;
+    private ?DateTime $created_at;
+    private ?DateTime $updated_at;
+    private string $customerId;
+    private array $items;
 
-    public function new(?string $id = null, String|DateTime $created_at = null, String|DateTime $updated_at = null): self
+    public function __construct()
     {
-        if (!is_null($created_at)) {
-            $created_at = is_string($created_at) ? new DateTime($created_at) : $created_at;
-        }
+        $this->id = null;
+        $this->created_at = null;
+        $this->updated_at = null;
+        $this->items = [];
+    }
 
-        if (!is_null($updated_at)) {
-            $updated_at = is_string($updated_at) ? new DateTime($updated_at) : $updated_at;
-        }
-
-        $this->order = OrderEntity::create($id, $created_at, $updated_at);
-
+    public function withId(?string $id): self
+    {
+        $this->id = $id;
         return $this;
     }
 
-    public function withCustomerIdItems(string $customerId, array $items): self
+    public function withTimestamps(?DateTime $created_at, ?DateTime $updated_at): self
     {
-        $this->order
-            ->setCustomerId($customerId)
-            ->setItems($items);
+        $this->created_at = $created_at;
+        $this->updated_at = $updated_at;
+        return $this;
+    }
+
+    public function withCustomerId(string $customerId): self
+    {
+        $this->customerId = $customerId;
+        return $this;
+    }
+
+    public function withItems(array $items): self
+    {
+        $this->items = $items;
         return $this;
     }
 
     public function build(): OrderEntity
     {
-        return $this->order;
+        return OrderEntity::create(
+            $this->customerId,
+            $this->items,
+            $this->id,
+            $this->created_at,
+            $this->updated_at
+        );
     }
 }
