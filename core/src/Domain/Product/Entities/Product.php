@@ -10,7 +10,7 @@ use TechChallenge\Domain\SHared\ValueObjects\Price;
 class Product
 {
     private ?Category $category;
-    private ?string $categoryId;
+    private ?string $categoryId = null;
     private ?string $name;
     private ?string $description;
     private ?Price $price;

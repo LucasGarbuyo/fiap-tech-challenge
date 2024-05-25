@@ -12,9 +12,12 @@ return new class extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->char('category_id', 28)->after('id')->constrained(
-                table: 'categories', indexName: 'posts_category_id'
-            );
+            $table->char('category_id', 28)
+                ->after('id')
+                ->constrained(
+                    table: 'categories',
+                    indexName: 'posts_category_id'
+                )->nullable();
         });
     }
 
