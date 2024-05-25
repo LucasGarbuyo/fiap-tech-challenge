@@ -20,7 +20,7 @@ use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
 
 class GeralTest extends TestCase
 {
-    use RefreshDatabase;
+    // use RefreshDatabase;
     use WithFaker;
 
     public function testCanCreate(): void
@@ -71,11 +71,18 @@ class GeralTest extends TestCase
         ]);
         $orderItems = DB::table('orders_items')->where('order_id', $order->id)->get();
         $this->assertNotEmpty($orderItems);
+        $priceOrder = 0;
         foreach ($orderItems as $item) {
             $product = DB::table('products')->where('id', $item->product_id)->first();
             $expectedPrice = $product->price * $item->quantity;
             $this->assertEquals($expectedPrice, $item->price);
+            $priceOrder += $item->price;
         }
+        $this->assertDatabaseHas('orders', [
+            'id' => $order->id,
+            'customer_id' => $customer->getId(),
+            'price' => $priceOrder
+        ]);
     }
 
     public function testCanCreateOrderWithoutCustomerIdAndItems(): void
