@@ -68,11 +68,7 @@ class Repository implements ICustomerRepository
 
     public function update(CustomerEntity $customer): void
     {
-        if (!$this->query()->where('id', $customer->getId())->exists())
-            throw new CustomerNotFoundException();
-
-        $this->query()
-            ->where('id', $customer->getId())
+        $this->filters($this->query(), ["id" => $customer->getId()])
             ->update(
                 [
                     "name" => $customer->getName(),
