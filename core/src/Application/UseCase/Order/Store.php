@@ -11,8 +11,8 @@ class Store extends IOrderUseCaseStore
     public function execute(DtoInput $data): string
     {
         $order = (new OrderFactory())
-            ->new()
-            ->withCustomerIdItems($data->customerId, $data->items)
+            ->withCustomerId($data->getCustomerId())
+            ->withItems($data->getItems())
             ->build();
 
         $this->orderRepository->store($order);
