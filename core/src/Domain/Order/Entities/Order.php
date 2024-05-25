@@ -4,6 +4,7 @@ namespace TechChallenge\Domain\Order\Entities;
 
 use DateTime;
 use TechChallenge\Domain\Order\Exceptions\InvalidOrderItemQuantityException;
+use TechChallenge\Domain\Order\Exceptions\MissingItemKeysException;
 
 class Order
 {
@@ -103,6 +104,9 @@ class Order
             throw new InvalidOrderItemQuantityException();
         }
         foreach ($items as $item) {
+            if (!isset($item['productId'], $item['quantity'])) {
+                throw new MissingItemKeysException();
+            }
             $this->items[] = new Item($item['productId'], $item['quantity']);
         }
         return $this;
