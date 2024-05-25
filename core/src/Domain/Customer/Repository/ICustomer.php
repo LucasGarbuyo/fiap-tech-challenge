@@ -19,4 +19,6 @@ interface ICustomer
     public function delete(Customer $customer): void;
 
     public function editByCpf(Cpf $cpf): Customer;
+
+    public function exist(array $filters = []): bool;
 }

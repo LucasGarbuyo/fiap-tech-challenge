@@ -98,7 +98,31 @@ class Repository implements ICustomerRepository
             );
     }
 
-    protected function query(): Builder
+    public function exist(array $filters = []): bool
+    {
+        return $this->filters($this->query(), $filters)->exists();
+    }
+
+    public function filters(Builder $query, array $filters = []): Builder
+    {
+        if (!empty($filters["id"])) {
+            if (!is_array($filters["id"]))
+                $filters["id"] = [$filters["id"]];
+
+            $query->whereIn('id', $filters["id"]);
+        }
+
+        if (!empty($filters["cpf"])) {
+            if (!is_array($filters["cpf"]))
+                $filters["cpf"] = [$filters["cpf"]];
+
+            $query->whereIn('cpf', $filters["cpf"]);
+        }
+
+        return $query;
+    }
+
+    public function query(): Builder
     {
         return DB::table('customers')->whereNull('deleted_at');
     }
