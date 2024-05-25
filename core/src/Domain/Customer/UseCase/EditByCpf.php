@@ -2,9 +2,12 @@
 
 namespace TechChallenge\Domain\Customer\UseCase;
 
+use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
 
-abstract class EditByCpf extends Standard
+interface EditByCpf
 {
-    abstract public function execute(DtoInput $data): CustomerEntity;
+    public function __construct(ICustomerRepository $CustomerRepository);
+
+    public function execute(DtoInput $data): CustomerEntity;
 }

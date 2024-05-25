@@ -6,9 +6,14 @@ use DateTime;
 use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
 use TechChallenge\Domain\Customer\UseCase\DtoInput;
 use TechChallenge\Domain\Customer\UseCase\Update as ICustomerUseCaseUpdate;
+use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 
-class Update extends ICustomerUseCaseUpdate
+class Update implements ICustomerUseCaseUpdate
 {
+    public function __construct(protected readonly ICustomerRepository $CustomerRepository)
+    {
+    }
+
     public function execute(DtoInput $data): void
     {
         $customer = (new CustomerFactory())
