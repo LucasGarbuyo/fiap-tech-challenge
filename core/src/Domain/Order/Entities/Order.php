@@ -12,7 +12,7 @@ use TechChallenge\Domain\Shared\ValueObjects\Price;
 class Order
 {
     private ?string $customerId = null;
-    private Price $total;
+    private Price $price;
     private array $items = [];
     private string $status;
     private readonly DateTime $created_at;
@@ -120,5 +120,15 @@ class Order
     public function getItems(): array
     {
         return $this->items;
+    }
+
+    public function getPrice(): Price
+    {
+        $price = 0;
+        foreach ($this->items as $item) {
+            $price += $item->getPrice()->getValue();
+        }
+        $this->price = new Price($price);
+        return $this->price;
     }
 }
