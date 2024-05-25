@@ -11,21 +11,23 @@ class Repository implements IOrderRepository
 {
     public function store(OrderEntity $order): void
     {
-        $this->query()
-            ->insert([
-                "id" => $order->getId(),
-                "customer_id" => $order->getCustomerId(),
-                "created_at" => $order->getCreatedAt(),
-                "updated_at" => $order->getUpdatedAt(),
-            ]);
-        foreach ($order->getItems() as $item) {
-            DB::table('orders_items')->insert([
-                'id' => $item->getId(),
-                'order_id' => $order->getId(),
-                'product_id' => $item->getProductId(),
-                'quantity' => $item->getQuantity(),
-            ]);
-        }
+        DB::transaction(function () use ($order) {
+            $this->query()
+                ->insert([
+                    "id" => $order->getId(),
+                    "customer_id" => $order->getCustomerId(),
+                    "created_at" => $order->getCreatedAt(),
+                    "updated_at" => $order->getUpdatedAt(),
+                ]);
+            foreach ($order->getItems() as $item) {
+                DB::table('orders_items')->insert([
+                    'id' => $item->getId(),
+                    'order_id' => $order->getId(),
+                    'product_id' => $item->getProductId(),
+                    'quantity' => $item->getQuantity(),
+                ]);
+            }
+        });
     }
 
     protected function query(): Builder
