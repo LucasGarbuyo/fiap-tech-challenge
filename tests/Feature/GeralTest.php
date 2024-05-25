@@ -22,6 +22,49 @@ class GeralTest extends TestCase
     use RefreshDatabase;
     use WithFaker;
 
+    public function testCanCreate(): void
+    {
+        $customerDto = new CustomerDtoInput(
+            name: $this->faker->firstName(),
+            cpf: $this->faker->cpf(),
+            email: $this->faker->email()
+        );
+        $customerStore = DIContainer::create()->get(ICustomerUseCaseStore::class);
+        $customerStore->execute($customerDto);
+        $customerShowByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
+        $customer = $customerShowByCpf->execute($customerDto);
+        $categoryDto = new CategoryDtoInput(
+            name: $this->faker->text(10),
+            type: $this->faker->text(10),
+        );
+        $categoryStore = DIContainer::create()->get(ICategoryUseCaseStore::class);
+        $categoryId = $categoryStore->execute($categoryDto);
+        $productDto = new ProductDtoInput(
+            name: $this->faker->word(),
+            description: $this->faker->paragraph(),
+            price: $this->faker->randomFloat(2, 1, 100000),
+            category_id: $categoryId
+        );
+        $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
+        $productId = $productStore->execute($productDto);
+        $this->post(
+            'api/orders',
+            [
+                'customerId' => $customer->getId(),
+                'items' => [
+                    [
+                        'productId' =>  $productId,
+                        'quantity' => random_int(1, 99),
+                    ],
+                    [
+                        'productId' =>  $productId,
+                        'quantity' => random_int(1, 99),
+                    ]
+                ]
+            ]
+        )->assertStatus(201);
+    }
+
     public function testCanCreateOrderWithoutCustomerIdAndItems(): void
     {
         $this->post('api/orders')->assertStatus(201);
