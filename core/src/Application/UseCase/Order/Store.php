@@ -10,17 +10,20 @@ class Store extends IOrderUseCaseStore
 {
     public function execute(DtoInput $data): string
     {
-        $items = [];
+        $orderFactory = (new OrderFactory())
+            ->new();
 
-        if (count($data->getItems()) > 0) {
+        if (!is_null($data->getCustomerId())) {
+            $orderFactory->withCustomerId($data->getCustomerId());
         }
 
-        $order = (new OrderFactory())
-            ->withCustomerId($data->getCustomerId())
-            ->withItems($data->getItems())
-            ->build();
+        if (!empty($data->getItems())) {
+            $orderFactory->withItems($data->getItems());
+        }
 
-        $this->orderRepository->store($order);
+        $order = $orderFactory->build();
+
+        $this->OrderRepository->store($order);
 
         return $order->getId();
     }

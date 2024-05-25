@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid("id")->primary();
-            $table->foreignUuid('customer_id')->constrained('customers', 'id');
+            $table->foreignUuid('customer_id')->nullable()->constrained('customers', 'id');
             $table->timestamps();
             $table->softDeletes();
         });

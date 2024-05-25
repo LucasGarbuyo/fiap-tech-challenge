@@ -11,7 +11,7 @@ use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Order
 {
-    private string $customerId;
+    private ?string $customerId = null;
     private Price $total;
     private array $items = [];
     private string $status;
@@ -89,13 +89,14 @@ class Order
         return $this;
     }
 
-    public function getCustomerId(): string
+    public function getCustomerId(): string|null
     {
         return $this->customerId;
     }
 
     public function setItems(array $items): self
     {
+        dd($items);
         if (empty($items))
             throw new InvalidOrderItemQuantityException();
 

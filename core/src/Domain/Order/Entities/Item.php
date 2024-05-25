@@ -19,21 +19,19 @@ class Item
         string $productId,
         int $quantity,
         Price $price,
-        DateTime $created_at,
-        DateTime $updated_at,
+        ?DateTime $created_at = null,
+        ?DateTime $updated_at = null
     ) {
         $this->setProductId($productId)
             ->setQuantity($quantity)
-            ->setPrice($price)
-            ->setCreatedAt($created_at)
-            ->setUpdatedAt($updated_at);
+            ->setPrice($price);
     }
 
     public static function create(
-        ?string $id = null,
         string $productId,
         int $quantity,
         Price $price,
+        ?string $id = null,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
     ): self {

@@ -35,6 +35,7 @@ class Repository implements IOrderRepository
                     'order_id' => $order->getId(),
                     'product_id' => $item->getProductId(),
                     'quantity' => $item->getQuantity(),
+                    'price' => $item->getPrice(),
                 ]);
             }
         });
