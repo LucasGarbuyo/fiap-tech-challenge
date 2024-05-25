@@ -16,13 +16,21 @@ use TechChallenge\Domain\Shared\ValueObjects\Price;
 class Repository implements IOrderRepository
 {
 
-    /** @return Customer[] */
+    /** @return Order[] */
     public function index(array $filters = [], array|bool $append = []): array
     {
-        $orderData = $this->query()->get();
-        dd($orderData);die;
-        //parei aqui neste retorno
+        $ordersData = $this->query()->get();
 
+        $OrderFactory = new OrderFactory();
+
+        $orders = [];
+        foreach ($ordersData as $orderData) {
+            $OrderFactory
+                ->new()
+                ->withIdCustomerId($orderData->id, $orderData->customer_id)
+                ->build();
+        }
+        return $orders;
     }
 
     public function show(string $id): OrderEntity
@@ -34,11 +42,10 @@ class Repository implements IOrderRepository
 
         $customerRepository = DIContainer::create()->get(ICustomerRepository::class);
         $customer = $customerRepository->show([$orderData->customer_id]);
-        
+
         $itemsData = $this->queryItems()->where('order_id', $id)->get();
         $items = [];
         foreach ($itemsData as $itemData) {
-            // dd($itemData->order_id, $itemData->product_id, $itemData->quantity, new Price($itemData->price), $itemData->id);
             $items[] = (new ItemFactory())
                 ->new($itemData->product_id, $itemData->quantity, new Price($itemData->price), $itemData->id)
                 ->build();

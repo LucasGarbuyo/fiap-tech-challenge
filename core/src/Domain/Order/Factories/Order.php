@@ -46,6 +46,14 @@ class Order
         return $this;
     }
 
+    public function withIdCustomerId(string $id, string $customerId): self
+    {
+        $this->order
+            ->setCustomerId($customerId);
+            
+        return $this;
+    }
+
     public function build(): OrderEntity
     {
         return $this->order;

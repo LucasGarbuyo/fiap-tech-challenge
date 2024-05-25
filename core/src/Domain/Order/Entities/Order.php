@@ -12,7 +12,7 @@ use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Order
 {
-    private ?string $customerId = null;
+    private ?string $customer_id = null;
     private ?Customer $customer = null;
     private Price $total;
     private array $items = [];
@@ -98,21 +98,21 @@ class Order
         return $this;
     }
 
-    public function getCustomer(): Customer
+    public function getCustomer(): ?Customer
     {
         return $this->customer;
     }
-    
-    public function setCustomerId(string $customerId): self
+
+    public function setCustomerId(string $customer_id): self
     {
-        $this->customerId = $customerId;
+        $this->customer_id = $customer_id;
 
         return $this;
     }
 
     public function getCustomerId(): string|null
     {
-        return $this->customerId;
+        return $this->customer_id;
     }
 
     public function setItems(array $items): self
@@ -154,7 +154,7 @@ class Order
     {
         $return = [
             "id" => $this->getId(),
-            "customer" => $this->getCustomer()->toArray(false),
+            "customer" => $this->getCustomer(),
             "items" => $this->getItems(),
         ];
 
@@ -171,7 +171,7 @@ class Order
         foreach ($this->items as $item) {
             $price += $item->getPrice()->getValue();
         }
-        $this->price = new Price($price);
-        return $this->price;
+        $this->total = new Price($price);
+        return $this->total;
     }
 }

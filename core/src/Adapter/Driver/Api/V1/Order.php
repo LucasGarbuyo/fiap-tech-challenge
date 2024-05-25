@@ -16,16 +16,15 @@ class Order extends Controller
 
     public function index(Request $request)
     {
-       
+
         try {
             $orderIndex = DIContainer::create()->get(IOrderUseCaseIndex::class);
-            
-            dd($orderIndex);die;
-            $customers = $customerIndex->execute();
 
-            $results = array_map(function ($customer) {
-                return $customer->toArray();
-            }, $customers);
+            $orders = $orderIndex->execute();
+
+            $results = array_map(function ($order) {
+                return $order->toArray();
+            }, $orders);
 
             return $this->return($results, 200);
         } catch (DefaultException $e) {
