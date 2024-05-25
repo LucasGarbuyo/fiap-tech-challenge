@@ -3,11 +3,14 @@
 namespace TechChallenge\Domain\Product\Entities;
 
 use DateTime;
+use TechChallenge\Domain\Category\Entities\Category;
 use TechChallenge\Domain\Product\Exceptions\ProductException;
 use TechChallenge\Domain\SHared\ValueObjects\Price;
 
 class Product
 {
+    private ?Category $category;
+    private ?string $categoryId;
     private ?string $name;
     private ?string $description;
     private ?Price $price;
@@ -37,6 +40,30 @@ class Product
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function setCategoryId(string $categoryId): self
+    {
+        $this->categoryId = $categoryId;
+
+        return $this;
+    }
+
+    public function getCategoryId(): string|null
+    {
+        return $this->categoryId;
+    }
+
+    public function setCategory(Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getCategory(): Category|null
+    {
+        return $this->category;
     }
 
     public function setName(string $name): self
@@ -114,15 +141,21 @@ class Product
         return $this->deleted_at;
     }
 
-    public function toArray(): array
+    public function toArray($complete = true): array
     {
-        return [
+        $return = [
             "id" => $this->getId(),
             "name" => $this->getName(),
             "description" => $this->getDescription(),
             "price" => $this->getPrice()->getValue(),
-            "created_at" => $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null,
-            "updated_at" => $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null
         ];
+
+        if ($complete) {
+            $reutnr["category"] = $this->getCategory()->toArray();
+            $reutnr["created_at"] = $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null;
+            $reutnr["updated_at"] = $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null;
+        }
+
+        return $return;
     }
 }

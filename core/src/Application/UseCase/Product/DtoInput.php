@@ -7,6 +7,7 @@ use TechChallenge\Domain\Product\UseCase\DtoInput as IProductUseCaseDtoInput;
 class DtoInput implements IProductUseCaseDtoInput
 {
     public readonly ?string $id;
+    public readonly ?string $category_id;
     public readonly ?string $name;
     public readonly ?string $description;
     public readonly ?float $price;
@@ -15,6 +16,7 @@ class DtoInput implements IProductUseCaseDtoInput
 
     public function __construct(
         ?string $id = null,
+        ?string $category_id = null,
         ?string $name = null,
         ?string $description = null,
         ?float $price = null,
@@ -22,6 +24,7 @@ class DtoInput implements IProductUseCaseDtoInput
         ?string $updated_at = null
     ) {
         $this->id = $id;
+        $this->category_id = $category_id;
         $this->name = $name;
         $this->description = $description;
         $this->price = $price;

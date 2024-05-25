@@ -10,7 +10,7 @@ interface ICustomer
     /** @return Customer[] */
     public function index(array $filters = [], array|bool $append = []): array;
 
-    public function edit(string $id): Customer;
+    public function show(string $id): Customer;
 
     public function store(Customer $customer): void;
 

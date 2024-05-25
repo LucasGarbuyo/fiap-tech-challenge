@@ -10,7 +10,7 @@ Route::controller(Product::class)
     ->prefix('/product')
     ->group(function () {
         Route::get('/index', [Product::class, "index"]);
-        Route::get('/edit/{id}', [Product::class, "edit"]);
+        Route::get('/show/{id}', [Product::class, "show"]);
         Route::post('/store', [Product::class, "store"]);
         Route::put('/update/{id}', [Product::class, "update"]);
         Route::delete('/delete/{id}', [Product::class, "delete"]);
@@ -20,7 +20,7 @@ Route::controller(Customer::class)
     ->prefix('/customer')
     ->group(function () {
         Route::get('/index', [Customer::class, "index"]);
-        Route::get('/edit/{id}', [Customer::class, "edit"]);
+        Route::get('/show/{id}', [Customer::class, "show"]);
         Route::post('/store', [Customer::class, "store"]);
         Route::put('/update/{id}', [Customer::class, "update"]);
         Route::delete('/delete/{id}', [Customer::class, "delete"]);
@@ -32,7 +32,7 @@ Route::controller(Category::class)
     ->prefix('/category')
     ->group(function () {
         Route::get('/index', [Category::class, "index"]);
-        Route::get('/edit/{id}', [Category::class, "edit"]);
+        Route::get('/show/{id}', [Category::class, "show"]);
         Route::post('/store', [Category::class, "store"]);
         Route::put('/update/{id}', [Category::class, "update"]);
         Route::delete('/delete/{id}', [Category::class, "delete"]);

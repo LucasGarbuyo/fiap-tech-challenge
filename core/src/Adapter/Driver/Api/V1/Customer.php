@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use TechChallenge\Application\UseCase\Customer\DtoInput as CustomerDtoInput;
 use TechChallenge\Config\DIContainer;
 use TechChallenge\Domain\Customer\UseCase\Index as ICustomerUseCaseIndex;
-use TechChallenge\Domain\Customer\UseCase\Edit as ICustomerUseCaseEdit;
+use TechChallenge\Domain\Customer\UseCase\Show as ICustomerUseCaseShow;
 use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
 use TechChallenge\Domain\Customer\UseCase\Update as ICustomerUseCaseUpdate;
 use TechChallenge\Domain\Customer\UseCase\Delete as ICustomerUseCaseDelete;
@@ -61,14 +61,14 @@ class Customer extends Controller
         }
     }
 
-    public function edit(Request $request, string $id)
+    public function show(Request $request, string $id)
     {
         try {
             $data = new CustomerDtoInput($id);
 
-            $customerEdit = DIContainer::create()->get(ICustomerUseCaseEdit::class);
+            $customerShow = DIContainer::create()->get(ICustomerUseCaseShow::class);
 
-            $customer = $customerEdit->execute($data);
+            $customer = $customerShow->execute($data);
 
             return $this->return($customer->toArray(), 200);
         } catch (DefaultException $e) {

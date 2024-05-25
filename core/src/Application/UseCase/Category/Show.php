@@ -4,12 +4,12 @@ namespace TechChallenge\Application\UseCase\Category;
 
 use TechChallenge\Domain\Category\UseCase\DtoInput;
 use TechChallenge\Domain\Category\Entities\Category;
-use TechChallenge\Domain\Category\UseCase\Edit as ICategoryUseCaseEdit;
+use TechChallenge\Domain\Category\UseCase\Show as ICategoryUseCaseShow;
 
-class Edit extends ICategoryUseCaseEdit
+class Show extends ICategoryUseCaseShow
 {
     public function execute(DtoInput $data): Category
     {
-        return $this->CategoryRepository->edit($data->id);
+        return $this->CategoryRepository->show($data->id);
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use TechChallenge\Application\UseCase\Category\DtoInput as CategoryDtoInput;
 use TechChallenge\Config\DIContainer;
 use TechChallenge\Domain\Category\UseCase\Index as ICategoryUseCaseIndex;
-use TechChallenge\Domain\Category\UseCase\Edit as ICategoryUseCaseEdit;
+use TechChallenge\Domain\Category\UseCase\Show as ICategoryUseCaseShow;
 use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
 use TechChallenge\Domain\Category\UseCase\Update as ICategoryUseCaseUpdate;
 use TechChallenge\Domain\Category\UseCase\Delete as ICategoryUseCaseDelete;
@@ -60,14 +60,14 @@ class Category extends Controller
         }
     }
 
-    public function edit(Request $request, string $id)
+    public function show(Request $request, string $id)
     {
         try {
             $data = new CategoryDtoInput($id);
 
-            $categoryEdit = DIContainer::create()->get(ICategoryUseCaseEdit::class);
+            $categoryShow = DIContainer::create()->get(ICategoryUseCaseShow::class);
 
-            $category = $categoryEdit->execute($data);
+            $category = $categoryShow->execute($data);
 
             return $this->return($category->toArray(), 200);
         } catch (DefaultException $e) {

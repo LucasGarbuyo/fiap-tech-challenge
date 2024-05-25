@@ -1,12 +1,14 @@
 <?php
 
 namespace TechChallenge\Domain\Category\Entities;
+use TechChallenge\Domain\Category\Exceptions\CategoryException;
 
 use DateTime;
 
 class Category
 {
     private string $name;
+    private array $products;
     private string $type;
     private DateTime $created_at;
     private DateTime $updated_at;
@@ -36,6 +38,19 @@ class Category
         return $this->id;
     }
 
+    public function setProducts(array $products): self
+    {
+        $this->products = $products;
+
+        return $this;
+    }
+
+    public function getProducts(): array|null
+    {
+        return $this->products;
+    }
+
+
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -50,6 +65,8 @@ class Category
 
     public function setType(string $type): self
     {
+        if (strlen($type) > 11)
+            throw new CategoryException("A categoria não pode haver mais de 12 caracteres!");
         $this->type = $type;
 
         return $this;
@@ -96,14 +113,19 @@ class Category
         return $this->deleted_at;
     }
 
-    public function toArray(): array
+    public function toArray($complete = true): array
     {
-        return [
+        $return = [
             "id" => $this->getId(),
             "name" => $this->getName(),
             "type" => $this->getType(),
-            "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),
-            "updated_at" => $this->getUpdatedAt()->format("Y-m-d H:i:s"),
+            "products" => $this->getProducts()
         ];
+
+        if ($complete) {
+            $return["created_at"] = $this->getCreatedAt()->format("Y-m-d H:i:s");
+            $return["updated_at"] = $this->getUpdatedAt()->format("Y-m-d H:i:s");
+        }
+        return $return;
     }
 }

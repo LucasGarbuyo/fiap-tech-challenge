@@ -24,8 +24,8 @@ use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 use TechChallenge\Domain\Customer\UseCase\Index as ICustomerUseCaseIndex;
 use TechChallenge\Application\UseCase\Customer\Index as CustomerUseCaseIndex;
 
-use TechChallenge\Domain\Customer\UseCase\Edit as ICustomerUseCaseEdit;
-use TechChallenge\Application\UseCase\Customer\Edit as CustomerUseCaseEdit;
+use TechChallenge\Domain\Customer\UseCase\Show as ICustomerUseCaseShow;
+use TechChallenge\Application\UseCase\Customer\Show as CustomerUseCaseShow;
 
 use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
 use TechChallenge\Application\UseCase\Customer\Store as CustomerUseCaseStore;
@@ -43,8 +43,8 @@ use TechChallenge\Application\UseCase\Customer\EditByCpf as CustomerUseCaseEditB
 use TechChallenge\Domain\Product\UseCase\Index as IProductUseCaseIndex;
 use TechChallenge\Application\UseCase\Product\Index as ProductUseCaseIndex;
 
-use TechChallenge\Domain\Product\UseCase\Edit as IProductUseCaseEdit;
-use TechChallenge\Application\UseCase\Product\Edit as ProductUseCaseEdit;
+use TechChallenge\Domain\Product\UseCase\Show as IProductUseCaseShow;
+use TechChallenge\Application\UseCase\Product\Show as ProductUseCaseShow;
 
 use TechChallenge\Domain\Product\UseCase\Store as IProductUseCaseStore;
 use TechChallenge\Application\UseCase\Product\Store as ProductUseCaseStore;
@@ -59,8 +59,8 @@ use TechChallenge\Application\UseCase\Product\Delete as ProductUseCaseDelete;
 use TechChallenge\Domain\Category\UseCase\Index as ICategoryUseCaseIndex;
 use TechChallenge\Application\UseCase\Category\Index as CategoryUseCaseIndex;
 
-use TechChallenge\Domain\Category\UseCase\Edit as ICategoryUseCaseEdit;
-use TechChallenge\Application\UseCase\Category\Edit as CategoryUseCaseEdit;
+use TechChallenge\Domain\Category\UseCase\Show as ICategoryUseCaseShow;
+use TechChallenge\Application\UseCase\Category\Show as CategoryUseCaseShow;
 
 use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
 use TechChallenge\Application\UseCase\Category\Store as CategoryUseCaseStore;
@@ -104,7 +104,7 @@ class DIContainer
 
             //Customer UseCase
             ICustomerUseCaseIndex::class => \DI\get(CustomerUseCaseIndex::class),
-            ICustomerUseCaseEdit::class => \DI\get(CustomerUseCaseEdit::class),
+            ICustomerUseCaseShow::class => \DI\get(CustomerUseCaseShow::class),
             ICustomerUseCaseStore::class => \DI\get(CustomerUseCaseStore::class),
             ICustomerUseCaseUpdate::class => \DI\get(CustomerUseCaseUpdate::class),
             ICustomerUseCaseDelete::class => \DI\get(CustomerUseCaseDelete::class),
@@ -112,14 +112,14 @@ class DIContainer
 
             //Product UseCase
             IProductUseCaseIndex::class => \DI\get(ProductUseCaseIndex::class),
-            IProductUseCaseEdit::class => \DI\get(ProductUseCaseEdit::class),
+            IProductUseCaseShow::class => \DI\get(ProductUseCaseShow::class),
             IProductUseCaseStore::class => \DI\get(ProductUseCaseStore::class),
             IProductUseCaseUpdate::class => \DI\get(ProductUseCaseUpdate::class),
             IProductUseCaseDelete::class => \DI\get(ProductUseCaseDelete::class),
 
             //Category UseCase
             ICategoryUseCaseIndex::class => \DI\get(CategoryUseCaseIndex::class),
-            ICategoryUseCaseEdit::class => \DI\get(CategoryUseCaseEdit::class),
+            ICategoryUseCaseShow::class => \DI\get(CategoryUseCaseShow::class),
             ICategoryUseCaseStore::class => \DI\get(CategoryUseCaseStore::class),
             ICategoryUseCaseUpdate::class => \DI\get(CategoryUseCaseUpdate::class),
             ICategoryUseCaseDelete::class => \DI\get(CategoryUseCaseDelete::class),

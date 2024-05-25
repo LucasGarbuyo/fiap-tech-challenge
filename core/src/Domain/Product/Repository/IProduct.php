@@ -9,7 +9,7 @@ interface IProduct
     /** @return Product[] */
     public function index(array $filters = [], array|bool $append = []): array;
 
-    public function edit(string $id): Product;
+    public function show(string $id): Product;
 
     public function store(Product $product): void;
 

@@ -4,12 +4,12 @@ namespace TechChallenge\Application\UseCase\Customer;
 
 use TechChallenge\Domain\Customer\UseCase\DtoInput;
 use TechChallenge\Domain\Customer\Entities\Customer;
-use TechChallenge\Domain\Customer\UseCase\Edit as ICustomerUseCaseEdit;
+use TechChallenge\Domain\Customer\UseCase\Show as ICustomerUseCaseShow;
 
-class Edit extends ICustomerUseCaseEdit
+class Show extends ICustomerUseCaseShow
 {
     public function execute(DtoInput $data): Customer
     {
-        return $this->CustomerRepository->edit($data->id);
+        return $this->CustomerRepository->show($data->id);
     }
 }

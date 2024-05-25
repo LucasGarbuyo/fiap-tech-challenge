@@ -30,7 +30,7 @@ class Repository implements ICustomerRepository
         return $customers;
     }
 
-    public function edit(string $id): CustomerEntity
+    public function show(string $id): CustomerEntity
     {
         $customerData = $this->query()->where('id', $id)->first();
 

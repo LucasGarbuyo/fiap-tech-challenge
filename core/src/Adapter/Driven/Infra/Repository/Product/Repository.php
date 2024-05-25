@@ -4,6 +4,7 @@ namespace TechChallenge\Adapter\Driven\Infra\Repository\Product;
 
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
+use TechChallenge\Domain\Category\Factories\Category as CategoryFactory;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
 use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
@@ -15,30 +16,42 @@ class Repository implements IProductRepository
     public function index(array $filters = [], array|bool $append = []): array
     {
         $productsData = $this->query()->get();
-
         $products = [];
 
         $ProductFactory = new ProductFactory();
 
-        foreach ($productsData as $productData)
+        foreach ($productsData as $productData) {
+            $categoryData = $this->queryCategory()->where('id', $productData->category_id)->first();
+            $category = (new CategoryFactory())
+                ->new()
+                ->withNameType($categoryData->name, $categoryData->type)
+                ->build();
+
             $products[] = $ProductFactory
                 ->new($productData->id, $productData->created_at, $productData->updated_at)
-                ->withNameDescriptionPrice($productData->name, $productData->description, $productData->price)
+                ->withCategoryNameDescriptionPrice($category, $productData->name, $productData->description, $productData->price)
                 ->build();
+        }
 
         return $products;
     }
 
-    public function edit(string $id): ProductEntity
+    public function show(string $id): ProductEntity
     {
         $productData = $this->query()->where('id', $id)->first();
 
         if (empty($productData))
             throw new ProductNotFoundException();
 
+        $categoryData = $this->queryCategory()->where('id', $productData->category_id)->first();
+        $category = (new CategoryFactory())
+            ->new()
+            ->withNameType($categoryData->name, $categoryData->type)
+            ->build();
+
         return (new ProductFactory())
             ->new($productData->id, $productData->created_at, $productData->updated_at)
-            ->withNameDescriptionPrice($productData->name, $productData->description, $productData->price)
+            ->withCategoryNameDescriptionPrice($category, $productData->name, $productData->description, $productData->price)
             ->build();
     }
 
@@ -48,6 +61,7 @@ class Repository implements IProductRepository
             ->insert(
                 [
                     'id' => $product->getId(),
+                    'category_id' => $product->getCategoryId(),
                     'name' => $product->getName(),
                     'description' => $product->getDescription(),
                     'price' =>  $product->getPrice()->getValue(),
@@ -66,6 +80,7 @@ class Repository implements IProductRepository
             ->where('id', $product->getId())
             ->update(
                 [
+                    'category_id' => $product->getCategoryId(),
                     'name' => $product->getName(),
                     'description' => $product->getDescription(),
                     'price' => $product->getPrice()->getValue(),
@@ -88,5 +103,10 @@ class Repository implements IProductRepository
     protected function query(): Builder
     {
         return DB::table("products")->whereNull('deleted_at');
+    }
+
+    protected function queryCategory(): Builder
+    {
+        return DB::table("categories")->whereNull('deleted_at');
     }
 }
