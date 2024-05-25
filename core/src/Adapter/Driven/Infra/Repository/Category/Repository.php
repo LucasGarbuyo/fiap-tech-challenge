@@ -24,7 +24,7 @@ class Repository implements ICategoryRepository
         foreach ($categoriesData as $categoryData) {
             $productsData = $this->queryProduct()->where('category_id', $categoryData->id)->get();
             $products = [];
-            
+
             foreach ($productsData as $productData) {
                 $products[] = (new ProductFactory())
                     ->new()
@@ -49,20 +49,9 @@ class Repository implements ICategoryRepository
         if (empty($categoryData))
             throw new CategoryNotFoundException();
 
-        $productsData = $this->queryProduct()->where('category_id', $categoryData->id)->get();
-        $products = [];
-        
-        foreach ($productsData as $productData) {
-            $products[] = (new ProductFactory())
-                ->new()
-                ->withCategoryIdNameDescriptionPrice($categoryData->id, $productData->name, $productData->description, $productData->price)
-                ->build()
-                ->toArray(false);
-        }
-
         return (new CategoryFactory())
             ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)
-            ->withProductsNameType($products, $categoryData->name, $categoryData->type)
+            ->withNameType($categoryData->name, $categoryData->type)
             ->build();
     }
 
@@ -105,6 +94,11 @@ class Repository implements ICategoryRepository
                     "deleted_at" => $category->getDeletedAt()->format("Y-m-d H:i:s")
                 ]
             );
+    }
+
+    public function exist(string $id): bool
+    {
+        return $this->query()->where('id', $id)->exists();
     }
 
     protected function query(): Builder

@@ -16,21 +16,30 @@ class Repository implements IProductRepository
     public function index(array $filters = [], array|bool $append = []): array
     {
         $productsData = $this->query()->get();
+
         $products = [];
 
         $ProductFactory = new ProductFactory();
 
         foreach ($productsData as $productData) {
-            $categoryData = $this->queryCategory()->where('id', $productData->category_id)->first();
-            $category = (new CategoryFactory())
-                ->new()
-                ->withNameType($categoryData->name, $categoryData->type)
-                ->build();
-
-            $products[] = $ProductFactory
+            $ProductFactory
                 ->new($productData->id, $productData->created_at, $productData->updated_at)
-                ->withCategoryNameDescriptionPrice($category, $productData->name, $productData->description, $productData->price)
-                ->build();
+                ->withCategoryIdNameDescriptionPrice($productData->category_id, $productData->name, $productData->description, $productData->price);
+
+            if (!empty($productData->category_id)) {
+                $categoryData = $this->queryCategory()->where('id', $productData->category_id)->first();
+
+                if (!empty($categoryData)) {
+                    $category = (new CategoryFactory())
+                        ->new()
+                        ->withNameType($categoryData->name, $categoryData->type)
+                        ->build();
+
+                    $ProductFactory->withCategory($category);
+                }
+            }
+
+            $products[] = $ProductFactory->build();
         }
 
         return $products;
@@ -44,6 +53,7 @@ class Repository implements IProductRepository
             throw new ProductNotFoundException();
 
         $categoryData = $this->queryCategory()->where('id', $productData->category_id)->first();
+
         $category = (new CategoryFactory())
             ->new()
             ->withNameType($categoryData->name, $categoryData->type)

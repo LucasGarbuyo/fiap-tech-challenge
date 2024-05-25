@@ -35,6 +35,31 @@ class Product
         return $this;
     }
 
+    public function withCategory(Category $category): self
+    {
+        $this->product
+            ->setCategory($category);
+
+        return $this;
+    }
+
+    public function withNameDescriptionPrice(string $name, string $description, float $price): self
+    {
+        $this->product
+            ->setName($name)
+            ->setDescription($description)
+            ->setPrice(new Price($price));
+
+        return $this;
+    }
+
+    public function withCategoryId(string $categoryId): self
+    {
+        $this->product->setCategoryId($categoryId);
+
+        return $this;
+    }
+
     public function withCategoryIdNameDescriptionPrice(?string $categoryId, string $name, string $description, float $price): self
     {
         $this->product
