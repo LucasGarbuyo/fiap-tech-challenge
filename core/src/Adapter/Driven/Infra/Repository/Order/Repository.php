@@ -61,6 +61,7 @@ class Repository implements IOrderRepository
                     "id" => $order->getId(),
                     "customer_id" => $order->getCustomerId(),
                     "price" => $order->getPrice(),
+                    "status" => $order->getStatus(),
                     "created_at" => $order->getCreatedAt(),
                     "updated_at" => $order->getUpdatedAt(),
                 ]);

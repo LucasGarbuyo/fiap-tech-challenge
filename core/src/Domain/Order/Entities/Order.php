@@ -4,6 +4,7 @@ namespace TechChallenge\Domain\Order\Entities;
 
 use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
+use TechChallenge\Domain\Order\Enum\OrderStatus;
 use TechChallenge\Domain\Order\Exceptions\InvalidItemOrder;
 use TechChallenge\Domain\Shared\ValueObjects\Price;
 
@@ -13,7 +14,7 @@ class Order
     private ?Customer $customer = null;
     private Price $price;
     private array $items = [];
-    private string $status;
+    private OrderStatus $status = OrderStatus::RECEIVED;
     private readonly DateTime $created_at;
     private readonly DateTime $updated_at;
     private ?DateTime $deleted_at = null;
@@ -103,6 +104,18 @@ class Order
     public function setCustomerId(string $customerId): self
     {
         $this->customerId = $customerId;
+
+        return $this;
+    }
+
+    public function getStatus(): OrderStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(OrderStatus $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
