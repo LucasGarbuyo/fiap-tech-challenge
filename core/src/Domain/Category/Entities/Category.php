@@ -1,6 +1,7 @@
 <?php
 
 namespace TechChallenge\Domain\Category\Entities;
+
 use TechChallenge\Domain\Category\Exceptions\CategoryException;
 
 use DateTime;
@@ -22,6 +23,7 @@ class Category
         $this
             ->setCreatedAt($created_at)
             ->setUpdatedAt($updated_at);
+        $this->products = [];
     }
 
     public static function create(?string $id = null, ?DateTime $created_at = null, ?DateTime $updated_at = null): self
@@ -119,7 +121,7 @@ class Category
             "id" => $this->getId(),
             "name" => $this->getName(),
             "type" => $this->getType(),
-            "products" => $this->getProducts()
+            "products" => $this->getProducts(),
         ];
 
         if ($complete) {
