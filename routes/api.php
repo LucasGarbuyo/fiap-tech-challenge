@@ -42,5 +42,6 @@ Route::controller(Category::class)
 Route::controller(Order::class)
     ->prefix('/orders')
     ->group(function () {
+        Route::get('/index', [Order::class, "index"]);
         Route::post('/', "store");
     });

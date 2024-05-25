@@ -9,6 +9,16 @@ use Illuminate\Database\Query\Builder;
 
 class Repository implements IOrderRepository
 {
+
+    /** @return Customer[] */
+    public function index(array $filters = [], array|bool $append = []): array
+    {
+        $orderData = $this->query()->get();
+        dd($orderData);die;
+        //parei aqui neste retorno
+
+    }
+
     public function store(OrderEntity $order): void
     {
         DB::transaction(function () use ($order) {

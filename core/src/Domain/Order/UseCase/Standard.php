@@ -6,10 +6,10 @@ use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 
 abstract class Standard
 {
-    protected IOrderRepository $orderRepository;
+    protected IOrderRepository $OrderRepository;
 
-    public function __construct(IOrderRepository $orderRepository)
+    public function __construct(IOrderRepository $OrderRepository)
     {
-        $this->orderRepository = $orderRepository;
+        $this->OrderRepository = $OrderRepository;
     }
 }

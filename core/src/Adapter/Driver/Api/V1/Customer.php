@@ -19,7 +19,7 @@ class Customer extends Controller
     {
         try {
             $customerIndex = DIContainer::create()->get(ICustomerUseCaseIndex::class);
-
+           
             $customers = $customerIndex->execute();
 
             $results = array_map(function ($customer) {

@@ -72,6 +72,10 @@ use TechChallenge\Domain\Category\UseCase\Delete as ICategoryUseCaseDelete;
 use TechChallenge\Application\UseCase\Category\Delete as CategoryUseCaseDelete;
 
 //Order UseCase
+
+use TechChallenge\Domain\Order\UseCase\Index as IOrderUseCaseIndex;
+use TechChallenge\Application\UseCase\Order\Index as OrderUseCaseIndex;
+
 use TechChallenge\Domain\Order\UseCase\Store as IOrderUseCaseStore;
 use TechChallenge\Application\UseCase\Order\Store as OrderUseCaseStore;
 
@@ -125,6 +129,7 @@ class DIContainer
             ICategoryUseCaseDelete::class => \DI\get(CategoryUseCaseDelete::class),
 
             //Order UseCase
+            IOrderUseCaseIndex::class => \DI\get(OrderUseCaseIndex::class),
             IOrderUseCaseStore::class => \DI\get(OrderUseCaseStore::class),
         ]);
     }
