@@ -3,9 +3,7 @@
 namespace TechChallenge\Domain\Order\Factories;
 
 use DateTime;
-use TechChallenge\Domain\Order\Entities\Item;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
-use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Order
 {
@@ -33,16 +31,7 @@ class Order
 
     public function withItems(array $items): self
     {
-        //Factory pro item
-        //Move pro \Application\UseCase
-        //Show productId e quantity
-        foreach ($items as $item) {
-            $this->order->setItem(Item::create(
-                productId: $item['productId'],
-                quantity: $item['quantity'],
-                price: new Price($item['price']),
-            ));
-        }
+        $this->order->setItems($items);
 
         return $this;
     }

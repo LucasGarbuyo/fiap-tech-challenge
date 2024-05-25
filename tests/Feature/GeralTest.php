@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use TechChallenge\Config\DIContainer;
 use TechChallenge\Application\UseCase\Customer\DtoInput as CustomerDtoInput;
 use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
-use TechChallenge\Domain\Customer\UseCase\EditByCpf as ICustomerUseCaseEditByCpf;
+use TechChallenge\Domain\Customer\UseCase\ShowByCpf as ICustomerUseCaseShowByCpf;
 use TechChallenge\Application\UseCase\Product\DtoInput as ProductDtoInput;
 use TechChallenge\Domain\Product\UseCase\Store as IProductUseCaseStore;
 use TechChallenge\Domain\Product\UseCase\Show as IProductUseCaseEdit;
@@ -34,7 +34,7 @@ class GeralTest extends TestCase
         );
         $customerStore = DIContainer::create()->get(ICustomerUseCaseStore::class);
         $customerStore->execute($customerDto);
-        $customerShowByCpf = DIContainer::create()->get(ICustomerUseCaseEditByCpf::class);
+        $customerShowByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
         $customer = $customerShowByCpf->execute($customerDto);
         $this->assertSame($customerDto->name, $customer->getName());
         $this->assertSame($customerDto->email, (string)$customer->getEmail());
@@ -67,12 +67,10 @@ class GeralTest extends TestCase
                 [
                     'productId' =>  $productId,
                     'quantity' => random_int(1, 99),
-                    'price' => random_int(1, 99),
                 ],
                 [
                     'productId' =>  $productId,
                     'quantity' => random_int(1, 99),
-                    'price' => random_int(1, 99),
                 ]
             ],
         ));

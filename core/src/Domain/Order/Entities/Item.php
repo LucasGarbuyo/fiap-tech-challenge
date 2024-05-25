@@ -10,7 +10,7 @@ class Item
 {
     private string $productId;
     private int $quantity;
-    private Price $price;
+    private Price $productPrice;
     private readonly DateTime $created_at;
     private readonly DateTime $updated_at;
 
@@ -18,19 +18,19 @@ class Item
         private readonly string $id,
         string $productId,
         int $quantity,
-        Price $price,
+        Price $productPrice,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
     ) {
         $this->setProductId($productId)
             ->setQuantity($quantity)
-            ->setPrice($price);
+            ->setProductPrice($productPrice);
     }
 
     public static function create(
         string $productId,
         int $quantity,
-        Price $price,
+        Price $productPrice,
         ?string $id = null,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
@@ -39,7 +39,7 @@ class Item
             id: $id ?? uniqid("ORDE_ITEM", true),
             productId: $productId,
             quantity: $quantity,
-            price: $price,
+            productPrice: $productPrice,
             created_at: $created_at ?? new DateTime(),
             updated_at: $updated_at ?? new DateTime(),
         );
@@ -91,15 +91,21 @@ class Item
         return $this;
     }
 
-    public function setPrice(Price $price): self
+    public function setProductPrice(Price $price): self
     {
-        $this->price = $price;
+        $this->productPrice = $price;
 
         return $this;
     }
 
+    public function getProductPrice(): Price
+    {
+        return $this->productPrice;
+    }
+
     public function getPrice(): Price
     {
-        return $this->price;
+        $total = $this->productPrice->getValue() * $this->quantity;
+        return new Price($total);
     }
 }

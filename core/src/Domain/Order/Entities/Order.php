@@ -96,7 +96,6 @@ class Order
 
     public function setItems(array $items): self
     {
-        dd($items);
         if (empty($items))
             throw new InvalidOrderItemQuantityException();
 
