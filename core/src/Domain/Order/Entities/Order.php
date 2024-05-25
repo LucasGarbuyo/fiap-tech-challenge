@@ -11,20 +11,26 @@ class Order
     private array $items;
     private readonly DateTime $created_at;
     private readonly DateTime $updated_at;
-    private readonly DateTime $deleted_at;
+    private ?DateTime $deleted_at = null;
 
     public function __construct(
         private readonly string $id,
         DateTime $created_at,
         DateTime $updated_at,
+        string $customerId,
+        array $items
     ) {
         $this
             ->setCreatedAt($created_at)
-            ->setUpdatedAt($updated_at);
+            ->setUpdatedAt($updated_at)
+            ->setCustomerId($customerId)
+            ->setItems($items);
         $this->items = [];
     }
 
     public static function create(
+        string $customerId,
+        array $items,
         ?string $id = null,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
@@ -32,7 +38,9 @@ class Order
         return new self(
             id: $id ?? uniqid("ORDE_", true),
             created_at: $created_at ?? new DateTime(),
-            updated_at: $updated_at ?? new DateTime()
+            updated_at: $updated_at ?? new DateTime(),
+            customerId: $customerId,
+            items: $items
         );
     }
 
