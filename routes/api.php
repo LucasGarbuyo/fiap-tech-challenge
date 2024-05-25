@@ -31,17 +31,20 @@ Route::controller(Customer::class)
 Route::controller(Category::class)
     ->prefix('/category')
     ->group(function () {
-        Route::get('/index', [Category::class, "index"]);
-        Route::get('/show/{id}', [Category::class, "show"]);
-        Route::post('/store', [Category::class, "store"]);
-        Route::put('/update/{id}', [Category::class, "update"]);
-        Route::delete('/delete/{id}', [Category::class, "delete"]);
+        Route::get('/', [Category::class, "index"]);
+        Route::get('/{id}', [Category::class, "show"]);
+        Route::post('/', [Category::class, "store"]);
+        Route::put('/{id}', [Category::class, "update"]);
+        Route::delete('/{id}', [Category::class, "delete"]);
     });
 
 
 Route::controller(Order::class)
-    ->prefix('/orders')
+    ->prefix('/order')
     ->group(function () {
-        Route::get('/index', [Order::class, "index"]);
-        Route::post('/', "store");
+        Route::get('', [Order::class, "index"]);
+        Route::get('/{id}', [Order::class, "show"]);
+        Route::post('', [Order::class, "store"]);
+        // Route::put('/{id}', [Order::class, "update"]);
+        Route::delete('/{id}', [Order::class, "delete"]);
     });

@@ -20,7 +20,7 @@ class Update implements ICustomerUseCaseUpdate
     public function execute(DtoInput $data): void
     {
         if (!$this->CustomerRepository->exist(["id" => $data->id]))
-            throw new CustomerNotFoundException();
+            throw new CustomerNotFoundException('Not found', 404);
 
         $cpf = new Cpf($data->cpf);
 

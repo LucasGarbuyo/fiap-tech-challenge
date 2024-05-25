@@ -3,6 +3,8 @@
 namespace TechChallenge\Domain\Order\Factories;
 
 use DateTime;
+use TechChallenge\Domain\Customer\Entities\Customer;
+use TechChallenge\Domain\Order\Entities\Item;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 
 class Order
@@ -28,6 +30,14 @@ class Order
 
         return $this;
     }
+
+    public function withCustomer(Customer $customer): self
+    {
+        $this->order->setCustomer($customer);
+
+        return $this;
+    }
+
 
     public function withItems(array $items): self
     {

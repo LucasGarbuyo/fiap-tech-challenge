@@ -6,6 +6,12 @@ use Illuminate\Support\Facades\DB;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 use Illuminate\Database\Query\Builder;
+use TechChallenge\Config\DIContainer;
+use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
+use TechChallenge\Domain\Order\Factories\Order as OrderFactory;
+use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
+use TechChallenge\Domain\Order\Factories\Item as ItemFactory;
+use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Repository implements IOrderRepository
 {
@@ -17,6 +23,31 @@ class Repository implements IOrderRepository
         dd($orderData);die;
         //parei aqui neste retorno
 
+    }
+
+    public function show(string $id): OrderEntity
+    {
+        $orderData = $this->query()->where('id', $id)->first();
+
+        if (empty($orderData))
+            throw new OrderNotFoundException('Not found', 404);
+
+        $customerRepository = DIContainer::create()->get(ICustomerRepository::class);
+        $customer = $customerRepository->show([$orderData->customer_id]);
+        
+        $itemsData = $this->queryItems()->where('order_id', $id)->get();
+        $items = [];
+        foreach ($itemsData as $itemData) {
+            // dd($itemData->order_id, $itemData->product_id, $itemData->quantity, new Price($itemData->price), $itemData->id);
+            $items[] = (new ItemFactory())
+                ->new($itemData->product_id, $itemData->quantity, new Price($itemData->price), $itemData->id)
+                ->build();
+        }
+        return (new OrderFactory())
+            ->new($orderData->id, $orderData->created_at, $orderData->updated_at)
+            ->withCustomer($customer)
+            ->withItems($items)
+            ->build();
     }
 
     public function store(OrderEntity $order): void
@@ -41,8 +72,24 @@ class Repository implements IOrderRepository
         });
     }
 
+    public function delete(OrderEntity $order): void
+    {
+        $this->query()
+            ->where('id', $order->getId())
+            ->update(
+                [
+                    "deleted_at" => $order->getDeletedAt()->format("Y-m-d H:i:s")
+                ]
+            );
+    }
+
     protected function query(): Builder
     {
         return DB::table('orders')->whereNull('deleted_at');
+    }
+
+    protected function queryItems(): Builder
+    {
+        return DB::table('orders_items');
     }
 }

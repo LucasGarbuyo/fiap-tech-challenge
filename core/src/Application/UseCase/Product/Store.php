@@ -25,7 +25,7 @@ class Store implements IProductUseCaseStore
 
         if (!empty($data->category_id)) {
             if (!$this->CategoryRepository->exist($data->category_id))
-                throw new CategoryNotFoundException();
+                throw new CategoryNotFoundException('Not found', 404);
 
             $productFactory->withCategoryId($data->category_id);
         }

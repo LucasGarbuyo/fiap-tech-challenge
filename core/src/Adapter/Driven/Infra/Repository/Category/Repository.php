@@ -47,7 +47,7 @@ class Repository implements ICategoryRepository
         $categoryData = $this->query()->where('id', $id)->first();
 
         if (empty($categoryData))
-            throw new CategoryNotFoundException();
+            throw new CategoryNotFoundException('Not found', 404);
 
         return (new CategoryFactory())
             ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)
@@ -72,7 +72,7 @@ class Repository implements ICategoryRepository
     public function update(CategoryEntity $category): void
     {
         if (!$this->query()->where('id', $category->getId())->exists())
-            throw new CategoryNotFoundException();
+            throw new CategoryNotFoundException('Not found', 404);
 
         $this->query()
             ->where('id', $category->getId())

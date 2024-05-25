@@ -108,4 +108,16 @@ class Item
         $total = $this->productPrice->getValue() * $this->quantity;
         return new Price($total);
     }
+
+    public function toArray(): array
+    {
+        $return = [
+            "id" => $this->getId(),
+            "product_id" => $this->getProductId(),
+            "quantity" => $this->getQuantity(),
+            "price" => $this->getPrice()->getValue(),
+        ];
+
+        return $return;
+    }
 }

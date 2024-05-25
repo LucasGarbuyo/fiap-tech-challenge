@@ -10,4 +10,8 @@ interface IOrder
     public function index(array $filters = [], array|bool $append = []): array;
 
     public function store(Order $order): void;
+
+    public function show(string $id): Order;
+
+    public function delete(Order $order): void;
 }

@@ -50,7 +50,7 @@ class Repository implements IProductRepository
         $productData = $this->query()->where('id', $id)->first();
 
         if (empty($productData))
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException('Not found', 404);
 
         $categoryData = $this->queryCategory()->where('id', $productData->category_id)->first();
 
@@ -84,7 +84,7 @@ class Repository implements IProductRepository
     public function update(ProductEntity $product): void
     {
         if (!$this->query()->where('id', $product->getId())->exists())
-            throw new ProductNotFoundException();
+            throw new ProductNotFoundException('Not found', 404);
 
         $this->query()
             ->where('id', $product->getId())

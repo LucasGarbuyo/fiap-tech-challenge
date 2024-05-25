@@ -16,7 +16,7 @@ class Delete implements ICustomerUseCaseDelete
     public function execute(DtoInput $data): void
     {
         if (!$this->CustomerRepository->exist(["id" => $data->id]))
-            throw new CustomerNotFoundException();
+            throw new CustomerNotFoundException('Not found', 404);
 
         $customer = $this->CustomerRepository->show(["id" => $data->id]);
 

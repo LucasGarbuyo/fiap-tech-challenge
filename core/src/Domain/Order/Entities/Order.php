@@ -3,6 +3,7 @@
 namespace TechChallenge\Domain\Order\Entities;
 
 use DateTime;
+use TechChallenge\Domain\Customer\Entities\Customer;
 use TechChallenge\Domain\Order\Exceptions\{
     InvalidItemOrder,
     InvalidOrderItemQuantityException
@@ -12,6 +13,7 @@ use TechChallenge\Domain\Shared\ValueObjects\Price;
 class Order
 {
     private ?string $customerId = null;
+    private ?Customer $customer = null;
     private Price $total;
     private array $items = [];
     private string $status;
@@ -82,6 +84,25 @@ class Order
         return $this->deleted_at;
     }
 
+    public function delete(): self
+    {
+        $this->deleted_at = new DateTime();
+
+        return $this;
+    }
+
+    public function setCustomer(Customer $customer): self
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getCustomer(): Customer
+    {
+        return $this->customer;
+    }
+    
     public function setCustomerId(string $customerId): self
     {
         $this->customerId = $customerId;
@@ -119,6 +140,28 @@ class Order
     /** @return Item[] */
     public function getItems(): array
     {
-        return $this->items;
+        $return = [];
+        foreach ($this->items as $item) {
+            if (!$item instanceof Item)
+                throw new InvalidItemOrder();
+
+            $return[] = $item->toArray();
+        }
+        return $return;
+    }
+
+    public function toArray($complete = true): array
+    {
+        $return = [
+            "id" => $this->getId(),
+            "customer" => $this->getCustomer()->toArray(false),
+            "items" => $this->getItems(),
+        ];
+
+        if ($complete) {
+            $return["created_at"] = $this->getCreatedAt()->format("Y-m-d H:i:s");
+            $return["updated_at"] = $this->getUpdatedAt()->format("Y-m-d H:i:s");
+        }
+        return $return;
     }
 }
