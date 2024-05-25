@@ -2,20 +2,18 @@
 
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Customer;
 
-use Illuminate\Support\Facades\DB;
 use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
 use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
-use TechChallenge\Domain\Customer\Exceptions\CustomerNotFoundException;
-use TechChallenge\Domain\Customer\ValueObjects\Cpf;
 
 class Repository implements ICustomerRepository
 {
     /** @return Customer[] */
     public function index(array $filters = [], array|bool $append = []): array
     {
-        $customersData = $this->query()->get();
+        $customersData = $this->filters($this->query($append), $filters)->get();
 
         $customers = [];
 
@@ -30,22 +28,9 @@ class Repository implements ICustomerRepository
         return $customers;
     }
 
-    public function show(string $id): CustomerEntity
+    public function show(array $filters = [], array|bool $append = []): CustomerEntity
     {
-        $customerData = $this->filters($this->query(), ["id" => $id])->first();
-
-        return (new CustomerFactory())
-            ->new($customerData->id, $customerData->created_at, $customerData->updated_at)
-            ->withNameCpfEmail($customerData->name, $customerData->cpf, $customerData->email)
-            ->build();
-    }
-
-    public function editByCpf(Cpf $cpf): CustomerEntity
-    {
-        $customerData = $this->query()->where('cpf', $cpf)->first();
-
-        if (empty($customerData))
-            throw new CustomerNotFoundException();
+        $customerData = $this->filters($this->query($append), $filters)->first();
 
         return (new CustomerFactory())
             ->new($customerData->id, $customerData->created_at, $customerData->updated_at)
@@ -82,8 +67,7 @@ class Repository implements ICustomerRepository
 
     public function delete(CustomerEntity $customer): void
     {
-        $this->query()
-            ->where('id', $customer->getId())
+        $this->filters($this->query(), ["id" => $customer->getId()])
             ->update(
                 [
                     "deleted_at" => $customer->getDeletedAt()->format("Y-m-d H:i:s")
@@ -105,6 +89,13 @@ class Repository implements ICustomerRepository
             $query->whereIn('id', $filters["id"]);
         }
 
+        if (!empty($filters["not-id"])) {
+            if (!is_array($filters["not-id"]))
+                $filters["not-id"] = [$filters["not-id"]];
+
+            $query->whereNotIn('id', $filters["not-id"]);
+        }
+
         if (!empty($filters["cpf"])) {
             if (!is_array($filters["cpf"]))
                 $filters["cpf"] = [$filters["cpf"]];
@@ -115,7 +106,7 @@ class Repository implements ICustomerRepository
         return $query;
     }
 
-    public function query(): Builder
+    public function query(array|bool $append = []): Builder
     {
         return DB::table('customers')->whereNull('deleted_at');
     }

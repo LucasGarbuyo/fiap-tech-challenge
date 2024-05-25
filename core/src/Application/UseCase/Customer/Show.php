@@ -19,6 +19,6 @@ class Show implements ICustomerUseCaseShow
         if (!$this->CustomerRepository->exist(["id" => $data->id]))
             throw new CustomerNotFoundException();
 
-        return $this->CustomerRepository->show($data->id);
+        return $this->CustomerRepository->show(["id" => $data->id]);
     }
 }
