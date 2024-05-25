@@ -15,6 +15,12 @@ return new class extends Migration
             $table->uuid("id")->primary();
             $table->foreignUuid('customer_id')->nullable()->constrained('customers', 'id');
             $table->float('price')->nullable();
+            $table->enum('status', [
+                'Recebido',
+                'Em preparação',
+                'Pronto',
+                'Finalizado',
+            ]);
             $table->timestamps();
             $table->softDeletes();
         });

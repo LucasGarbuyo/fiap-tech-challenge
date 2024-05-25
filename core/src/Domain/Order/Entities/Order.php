@@ -4,19 +4,17 @@ namespace TechChallenge\Domain\Order\Entities;
 
 use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
-use TechChallenge\Domain\Order\Exceptions\{
-    InvalidItemOrder,
-    InvalidOrderItemQuantityException
-};
+use TechChallenge\Domain\Order\Enum\OrderStatus;
+use TechChallenge\Domain\Order\Exceptions\InvalidItemOrder;
 use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Order
 {
     private ?string $customer_id = null;
     private ?Customer $customer = null;
-    private Price $total;
+    private Price $price;
     private array $items = [];
-    private string $status;
+    private OrderStatus $status = OrderStatus::RECEIVED;
     private readonly DateTime $created_at;
     private readonly DateTime $updated_at;
     private ?DateTime $deleted_at = null;
@@ -98,14 +96,26 @@ class Order
         return $this;
     }
 
-    public function getCustomer(): ?Customer
+    public function getCustomer(): Customer
     {
         return $this->customer;
     }
-
-    public function setCustomerId(string $customer_id): self
+    
+    public function setCustomerId(string $customerId): self
     {
         $this->customer_id = $customer_id;
+
+        return $this;
+    }
+
+    public function getStatus(): OrderStatus
+    {
+        return $this->status;
+    }
+
+    public function setStatus(OrderStatus $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
@@ -117,9 +127,6 @@ class Order
 
     public function setItems(array $items): self
     {
-        if (empty($items))
-            throw new InvalidOrderItemQuantityException();
-
         foreach ($items as $item) {
             if (!$item instanceof Item)
                 throw new InvalidItemOrder();
@@ -140,14 +147,7 @@ class Order
     /** @return Item[] */
     public function getItems(): array
     {
-        $return = [];
-        foreach ($this->items as $item) {
-            if (!$item instanceof Item)
-                throw new InvalidItemOrder();
-
-            $return[] = $item->toArray();
-        }
-        return $return;
+        return $this->items;
     }
 
     public function toArray($complete = true): array

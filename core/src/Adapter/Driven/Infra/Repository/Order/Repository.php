@@ -20,7 +20,7 @@ class Repository implements IOrderRepository
     public function index(array $filters = [], array|bool $append = []): array
     {
         $ordersData = $this->query()->get();
-
+       
         $OrderFactory = new OrderFactory();
 
         $orders = [];
@@ -40,8 +40,15 @@ class Repository implements IOrderRepository
         if (empty($orderData))
             throw new OrderNotFoundException('Not found', 404);
 
+        $orderFactory = (new OrderFactory())
+            ->new($orderData->id, $orderData->created_at, $orderData->updated_at);
+
         $customerRepository = DIContainer::create()->get(ICustomerRepository::class);
-        $customer = $customerRepository->show([$orderData->customer_id]);
+
+        if ($orderData->customer_id) {
+            $customer = $customerRepository->show([$orderData->customer_id]);
+            $orderFactory->withCustomer($customer);
+        }
 
         $itemsData = $this->queryItems()->where('order_id', $id)->get();
         $items = [];
@@ -50,11 +57,7 @@ class Repository implements IOrderRepository
                 ->new($itemData->product_id, $itemData->quantity, new Price($itemData->price), $itemData->id)
                 ->build();
         }
-        return (new OrderFactory())
-            ->new($orderData->id, $orderData->created_at, $orderData->updated_at)
-            ->withCustomer($customer)
-            ->withItems($items)
-            ->build();
+        return $orderFactory->withItems($items)->build();
     }
 
     public function store(OrderEntity $order): void
@@ -65,6 +68,7 @@ class Repository implements IOrderRepository
                     "id" => $order->getId(),
                     "customer_id" => $order->getCustomerId(),
                     "price" => $order->getPrice(),
+                    "status" => $order->getStatus(),
                     "created_at" => $order->getCreatedAt(),
                     "updated_at" => $order->getUpdatedAt(),
                 ]);
