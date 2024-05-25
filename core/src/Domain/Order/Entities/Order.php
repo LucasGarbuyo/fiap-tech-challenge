@@ -164,4 +164,14 @@ class Order
         }
         return $return;
     }
+
+    public function getPrice(): Price
+    {
+        $price = 0;
+        foreach ($this->items as $item) {
+            $price += $item->getPrice()->getValue();
+        }
+        $this->price = new Price($price);
+        return $this->price;
+    }
 }
