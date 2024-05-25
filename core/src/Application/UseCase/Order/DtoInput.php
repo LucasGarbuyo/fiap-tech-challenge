@@ -24,7 +24,7 @@ class DtoInput implements IOrderUseCaseDtoInput
         return $this->customerId;
     }
 
-    public function getItems(): array
+    public function getItems(): array|null
     {
         return $this->items;
     }

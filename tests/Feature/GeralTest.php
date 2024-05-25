@@ -13,9 +13,6 @@ use TechChallenge\Application\UseCase\Product\DtoInput as ProductDtoInput;
 use TechChallenge\Domain\Product\UseCase\Store as IProductUseCaseStore;
 use TechChallenge\Domain\Product\UseCase\Show as IProductUseCaseEdit;
 use TechChallenge\Application\UseCase\Order\DtoInput as OrderDtoInput;
-use TechChallenge\Domain\Order\Exceptions\InvalidItemQuantityException;
-use TechChallenge\Domain\Order\Exceptions\InvalidOrderItemQuantityException;
-use TechChallenge\Domain\Order\Exceptions\MissingItemKeysException;
 use TechChallenge\Domain\Order\UseCase\Store as IOrderUseCaseStore;
 use TechChallenge\Application\UseCase\Category\DtoInput as CategoryDtoInput;
 use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
@@ -24,6 +21,63 @@ class GeralTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
+
+    public function testCanCreateOrderWithoutCustomerIdAndItems(): void
+    {
+        $this->post('api/orders')->assertStatus(201);
+    }
+
+    public function testCanCreateOrderWithoutCustomerId(): void
+    {
+        $categoryDto = new CategoryDtoInput(
+            name: $this->faker->text(10),
+            type: $this->faker->text(10),
+        );
+        $categoryStore = DIContainer::create()->get(ICategoryUseCaseStore::class);
+        $categoryId = $categoryStore->execute($categoryDto);
+        $productDto = new ProductDtoInput(
+            name: $this->faker->word(),
+            description: $this->faker->paragraph(),
+            price: $this->faker->randomFloat(2, 1, 100000),
+            category_id: $categoryId
+        );
+        $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
+        $productId = $productStore->execute($productDto);
+        $this->post(
+            'api/orders',
+            [
+                'items' => [
+                    [
+                        'productId' =>  $productId,
+                        'quantity' => random_int(1, 99),
+                    ],
+                    [
+                        'productId' =>  $productId,
+                        'quantity' => random_int(1, 99),
+                    ]
+                ]
+            ]
+        )->assertStatus(201);
+    }
+
+    public function testCanCreateOrderWithoutItems(): void
+    {
+        $customerDto = new CustomerDtoInput(
+            name: $this->faker->firstName(),
+            cpf: $this->faker->cpf(),
+            email: $this->faker->email()
+        );
+        $customerStore = DIContainer::create()->get(ICustomerUseCaseStore::class);
+        $customerStore->execute($customerDto);
+        $customerShowByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
+        $customer = $customerShowByCpf->execute($customerDto);
+        $this->post(
+            'api/orders',
+            [
+                'customerId' => $customer->getId(),
+            ]
+        )->assertStatus(201);
+    }
 
     public function test_tudo(): void
     {
@@ -62,7 +116,7 @@ class GeralTest extends TestCase
         $this->assertSame($productDto->price, $product->getPrice()->getValue());
         $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
         $orderStore->execute(new OrderDtoInput(
-            // customerId: $customer->getId(),
+            customerId: $customer->getId(),
             items: [
                 [
                     'productId' =>  $productId,
@@ -74,59 +128,5 @@ class GeralTest extends TestCase
                 ]
             ],
         ));
-        // $this->expectException(InvalidOrderItemQuantityException::class);
-        // $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
-        // $orderStore->execute(
-        //     new OrderDtoInput(
-        //         customerId: $customer->getId(),
-        //         items: [],
-        //     )
-        // );
-        // $this->expectException(MissingItemKeysException::class);
-        // $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
-        // $orderStore->execute(
-        //     new OrderDtoInput(
-        //         customerId: $customer->getId(),
-        //         items: [
-        //             [
-        //                 'productId' =>  $productId,
-        //             ],
-        //         ],
-        //     )
-        // );
-        // $this->post('api/orders', [
-        //     'customerId' => $customer->getId(),
-        //     'items' => [
-        //         [
-        //             'productId' =>  $productId,
-        //             'quantity' => random_int(1, 99),
-        //         ],
-        //         [
-        //             'productId' =>  $productId,
-        //             'quantity' => random_int(1, 99),
-        //         ]
-        //     ]
-        // ])->assertStatus(201)->assertSessionHasNoErrors();
-
-        $this->post('api/orders', [
-            'customerId' => $customer->getId(),
-            'items' => []
-        ])->assertStatus(201);
-
-        $this->post('api/orders', [
-            'customerId' => $customer->getId(),
-            'items' => [
-                [
-                    'productId' =>  $productId,
-                    'quantity' => random_int(1, 99),
-                    'price' => random_int(1, 99),
-                ],
-                [
-                    'productId' =>  $productId,
-                    'quantity' => random_int(1, 99),
-                    'price' => random_int(1, 99),
-                ]
-            ]
-        ])->assertStatus(201);
     }
 }

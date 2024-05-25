@@ -18,8 +18,6 @@ class Store extends IOrderUseCaseStore
     }
     public function execute(DtoInput $data): string
     {
-
-
         $orderFactory = (new OrderFactory())
             ->new();
 
@@ -36,9 +34,9 @@ class Store extends IOrderUseCaseStore
                     productPrice: $product->getPrice(),
                 );
             }
-
             $orderFactory->withItems($items);
         }
+
 
         $order = $orderFactory->build();
 
