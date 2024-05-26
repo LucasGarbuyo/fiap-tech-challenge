@@ -47,10 +47,10 @@ class Order
     }
 
     public function withIdCustomerId(string $id, string $customerId): self
-    {
+    {       
         $this->order
-            ->setCustomerId($customerId);
-            
+            ->setCustomerId($customerId);       
+
         return $this;
     }
 

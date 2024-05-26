@@ -20,7 +20,6 @@ class Repository implements IOrderRepository
     public function index(array $filters = [], array|bool $append = []): array
     {
         $ordersData = $this->query()->get();
-       
         $OrderFactory = new OrderFactory();
 
         $orders = [];
@@ -29,7 +28,12 @@ class Repository implements IOrderRepository
                 ->new()
                 ->withIdCustomerId($orderData->id, $orderData->customer_id)
                 ->build();
+
+            $orders[] = $OrderFactory->build();
         }
+
+
+
         return $orders;
     }
 

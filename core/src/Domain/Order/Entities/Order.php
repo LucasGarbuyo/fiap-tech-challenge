@@ -96,14 +96,14 @@ class Order
         return $this;
     }
 
-    public function getCustomer(): Customer
+    public function getCustomer(): ?Customer
     {
         return $this->customer;
     }
     
     public function setCustomerId(string $customerId): self
     {
-        $this->customer_id = $customer_id;
+        $this->customer_id = $customerId;
 
         return $this;
     }
