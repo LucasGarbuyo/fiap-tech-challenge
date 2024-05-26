@@ -46,10 +46,10 @@ class Order
         return $this;
     }
 
-    public function withOrder(string $id, ?string $customerId = null): self
+    public function withOrder(?string $customerId = null): self
     {
         $this->order
-            ->getId($id);
+            ->getId();
 
         if (isset($customerId)) {
             $this->order->setCustomerId($customerId);

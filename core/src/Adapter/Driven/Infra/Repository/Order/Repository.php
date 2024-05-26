@@ -33,8 +33,8 @@ class Repository implements IOrderRepository
         $orders = [];
         foreach ($ordersData as $orderData) {
             $OrderFactory
-                ->new()
-                ->withOrder($orderData->id, $orderData->customer_id)
+                ->new($orderData->id)
+                ->withOrder($orderData->customer_id)
                 ->build();
 
             if (!empty($orderData->customer_id)) {
