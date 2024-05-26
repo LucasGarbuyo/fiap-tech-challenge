@@ -41,7 +41,7 @@ class Repository implements IOrderRepository
                 $customerData = $this->ICustomerRepository->show([$orderData->customer_id]);
                 if ($customerData) {
                     $customer = (new CustomerFactory())
-                        ->new()
+                        ->new($orderData->customer_id)
                         ->withNameCpfEmail($customerData->getName(), $customerData->getCpf(), $customerData->getEmail())
                         ->build();
 
