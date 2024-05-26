@@ -10,6 +10,7 @@ use TechChallenge\Config\DIContainer;
 use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
 use TechChallenge\Domain\Order\Factories\Order as OrderFactory;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
+use TechChallenge\Domain\Order\Repository\IItem as IItemRepository;
 use TechChallenge\Domain\Order\Factories\Item as ItemFactory;
 use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
 use TechChallenge\Domain\Shared\ValueObjects\Price;
@@ -18,10 +19,12 @@ class Repository implements IOrderRepository
 {
 
     private ICustomerRepository $ICustomerRepository;
+    private IItemRepository $IItemRepository;
 
-    public function __construct(ICustomerRepository $ICustomerRepository)
+    public function __construct(ICustomerRepository $ICustomerRepository, IItemRepository $IItemRepository)
     {
         $this->ICustomerRepository = $ICustomerRepository;
+        $this->IItemRepository = $IItemRepository;
     }
 
     /** @return Order[] */
@@ -37,7 +40,7 @@ class Repository implements IOrderRepository
                 ->withOrder($orderData->customer_id, $orderData->price, $orderData->status)
                 ->build();
 
-                // relacionamento com customer
+            // relacionamento com customer
             if (!empty($orderData->customer_id)) {
                 $customerData = $this->ICustomerRepository->show([$orderData->customer_id]);
                 if ($customerData) {
@@ -48,7 +51,12 @@ class Repository implements IOrderRepository
 
                     $OrderFactory->withCustomer($customer);
                 }
-            }           
+
+                $orderItems = $this->IItemRepository->show($orderData->id);
+                dd( $orderItems );die;
+                //parei aqui, precisa trazer a collection de todos as ordens de produtos.
+            }
+
 
             $orders[] = $OrderFactory->build();
         }

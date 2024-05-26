@@ -20,6 +20,10 @@ use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Adapter\Driven\Infra\Repository\Order\Repository as OrderRepository;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 
+//Order Items
+use TechChallenge\Adapter\Driven\Infra\Repository\Item\Repository as ItemRepository;
+use TechChallenge\Domain\Order\Repository\IItem as IItemRepository;
+
 //Customer UseCase
 use TechChallenge\Domain\Customer\UseCase\Index as ICustomerUseCaseIndex;
 use TechChallenge\Application\UseCase\Customer\Index as CustomerUseCaseIndex;
@@ -85,6 +89,10 @@ use TechChallenge\Application\UseCase\Order\Show as OrderUseCaseShow;
 use TechChallenge\Domain\Order\UseCase\Delete as IOrderUseCaseDelete;
 use TechChallenge\Application\UseCase\Order\Delete as OrderUseCaseDelete;
 
+//Order Items UseCase
+use TechChallenge\Domain\OrderItem\UseCase\Show as IOrderItemUseCaseShow;
+use TechChallenge\Application\UseCase\OrderItem\Show as OrderItemUseCaseShow;
+
 class DIContainer
 {
     private static ?ContainerBuilder $containerBuild = null;
@@ -111,6 +119,7 @@ class DIContainer
             ICustomerRepository::class => \DI\get(CustomerRepository::class),
             ICategoryRepository::class => \DI\get(CategoryRepository::class),
             IOrderRepository::class => \DI\get(OrderRepository::class),
+            IItemRepository::class => \DI\get(ItemRepository::class),
 
             //Customer UseCase
             ICustomerUseCaseIndex::class => \DI\get(CustomerUseCaseIndex::class),
@@ -139,6 +148,10 @@ class DIContainer
             IOrderUseCaseStore::class => \DI\get(OrderUseCaseStore::class),
             IOrderUseCaseShow::class => \DI\get(OrderUseCaseShow::class),
             IOrderUseCaseDelete::class => \DI\get(OrderUseCaseDelete::class),
+            IOrderUseCaseShow::class => \DI\get(OrderUseCaseShow::class),
+
+            //OrderItem UseCase
+            IOrderItemUseCaseShow::class => \DI\get(OrderItemUseCaseShow::class),
         ]);
     }
 }
