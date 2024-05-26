@@ -11,10 +11,18 @@ use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
 use TechChallenge\Domain\Order\Factories\Order as OrderFactory;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Order\Factories\Item as ItemFactory;
+use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
 use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Repository implements IOrderRepository
 {
+
+    private ICustomerRepository $ICustomerRepository;
+
+    public function __construct(ICustomerRepository $ICustomerRepository)
+    {
+        $this->ICustomerRepository = $ICustomerRepository;
+    }
 
     /** @return Order[] */
     public function index(array $filters = [], array|bool $append = []): array
@@ -26,13 +34,23 @@ class Repository implements IOrderRepository
         foreach ($ordersData as $orderData) {
             $OrderFactory
                 ->new()
-                ->withIdCustomerId($orderData->id, $orderData->customer_id)
+                ->withOrder($orderData->id, $orderData->customer_id)
                 ->build();
+
+            if (!empty($orderData->customer_id)) {
+                $customerData = $this->ICustomerRepository->show([$orderData->customer_id]);
+                if ($customerData) {
+                    $customer = (new CustomerFactory())
+                        ->new()
+                        ->withNameCpfEmail($customerData->getName(), $customerData->getCpf(), $customerData->getEmail())
+                        ->build();
+
+                    $OrderFactory->withCustomer($customer);
+                }
+            }
 
             $orders[] = $OrderFactory->build();
         }
-
-
 
         return $orders;
     }

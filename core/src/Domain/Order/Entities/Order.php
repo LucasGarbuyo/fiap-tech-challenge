@@ -100,7 +100,7 @@ class Order
     {
         return $this->customer;
     }
-    
+
     public function setCustomerId(string $customerId): self
     {
         $this->customer_id = $customerId;
@@ -154,7 +154,7 @@ class Order
     {
         $return = [
             "id" => $this->getId(),
-            "customer" => $this->getCustomer(),
+            "customer" => $this->getCustomer() ? $this->getCustomer()->toArray() : null,
             "items" => $this->getItems(),
         ];
 
