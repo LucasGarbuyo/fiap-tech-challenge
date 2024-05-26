@@ -101,7 +101,7 @@ class Order
         return $this->customer;
     }
 
-    public function setCustomerId(string $customerId): self
+    public function setCustomerId(?string $customerId = null): self
     {
         $this->customer_id = $customerId;
 
