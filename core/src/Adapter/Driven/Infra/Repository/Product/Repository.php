@@ -23,15 +23,20 @@ class Repository implements IProductRepository
 
         foreach ($productsData as $productData) {
             $ProductFactory
-                ->new($productData->id, $productData->created_at, $productData->updated_at)
-                ->withCategoryIdNameDescriptionPrice($productData->category_id, $productData->name, $productData->description, $productData->price);
+                ->new($productData->id)
+                ->withCategoryIdNameDescriptionPrice(
+                    $productData->category_id,
+                    $productData->name,
+                    $productData->description,
+                    $productData->price
+                );
 
             if (!empty($productData->category_id)) {
                 $categoryData = $this->queryCategory()->where('id', $productData->category_id)->first();
 
                 if (!empty($categoryData)) {
                     $category = (new CategoryFactory())
-                        ->new()
+                        ->new($productData->category_id)
                         ->withNameType($categoryData->name, $categoryData->type)
                         ->build();
 
