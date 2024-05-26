@@ -3,8 +3,8 @@
 namespace TechChallenge\Domain\Product\Factories;
 
 use DateTime;
+use TechChallenge\Domain\Shared\ValueObjects\Price;
 use TechChallenge\Domain\Category\Entities\Category;
-use TechChallenge\Domain\Product\ValueObjects\Price;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 
 class Product
@@ -35,13 +35,40 @@ class Product
         return $this;
     }
 
-    public function withCategoryIdNameDescriptionPrice(string $categoryId, string $name, string $description, float $price): self
+    public function withCategory(Category $category): self
     {
         $this->product
-            ->setCategoryId($categoryId)
+            ->setCategory($category);
+
+        return $this;
+    }
+
+    public function withNameDescriptionPrice(string $name, string $description, float $price): self
+    {
+        $this->product
             ->setName($name)
             ->setDescription($description)
             ->setPrice(new Price($price));
+
+        return $this;
+    }
+
+    public function withCategoryId(string $categoryId): self
+    {
+        $this->product->setCategoryId($categoryId);
+
+        return $this;
+    }
+
+    public function withCategoryIdNameDescriptionPrice(?string $categoryId, string $name, string $description, float $price): self
+    {
+        $this->product
+            ->setName($name)
+            ->setDescription($description)
+            ->setPrice(new Price($price));
+
+        if ($categoryId)
+            $this->product->setCategoryId($categoryId);
 
         return $this;
     }

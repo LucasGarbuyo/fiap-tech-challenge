@@ -24,7 +24,7 @@ class Repository implements ICategoryRepository
         foreach ($categoriesData as $categoryData) {
             $productsData = $this->queryProduct()->where('category_id', $categoryData->id)->get();
             $products = [];
-            
+
             foreach ($productsData as $productData) {
                 $products[] = (new ProductFactory())
                     ->new()
@@ -47,22 +47,11 @@ class Repository implements ICategoryRepository
         $categoryData = $this->query()->where('id', $id)->first();
 
         if (empty($categoryData))
-            throw new CategoryNotFoundException();
-
-        $productsData = $this->queryProduct()->where('category_id', $categoryData->id)->get();
-        $products = [];
-        
-        foreach ($productsData as $productData) {
-            $products[] = (new ProductFactory())
-                ->new()
-                ->withCategoryIdNameDescriptionPrice($categoryData->id, $productData->name, $productData->description, $productData->price)
-                ->build()
-                ->toArray(false);
-        }
+            throw new CategoryNotFoundException('Not found', 404);
 
         return (new CategoryFactory())
             ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)
-            ->withProductsNameType($products, $categoryData->name, $categoryData->type)
+            ->withNameType($categoryData->name, $categoryData->type)
             ->build();
     }
 
@@ -83,7 +72,7 @@ class Repository implements ICategoryRepository
     public function update(CategoryEntity $category): void
     {
         if (!$this->query()->where('id', $category->getId())->exists())
-            throw new CategoryNotFoundException();
+            throw new CategoryNotFoundException('Not found', 404);
 
         $this->query()
             ->where('id', $category->getId())
@@ -105,6 +94,11 @@ class Repository implements ICategoryRepository
                     "deleted_at" => $category->getDeletedAt()->format("Y-m-d H:i:s")
                 ]
             );
+    }
+
+    public function exist(string $id): bool
+    {
+        return $this->query()->where('id', $id)->exists();
     }
 
     protected function query(): Builder

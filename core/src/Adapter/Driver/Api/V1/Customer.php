@@ -10,7 +10,7 @@ use TechChallenge\Domain\Customer\UseCase\Show as ICustomerUseCaseShow;
 use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
 use TechChallenge\Domain\Customer\UseCase\Update as ICustomerUseCaseUpdate;
 use TechChallenge\Domain\Customer\UseCase\Delete as ICustomerUseCaseDelete;
-use TechChallenge\Domain\Customer\UseCase\EditByCpf as ICustomerUseCaseEditByCpf;
+use TechChallenge\Domain\Customer\UseCase\ShowByCpf as ICustomerUseCaseShowByCpf;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Customer extends Controller
@@ -127,12 +127,12 @@ class Customer extends Controller
         }
     }
 
-    public function editByCfp(Request $request, string $cpf)
+    public function showByCfp(Request $request, string $cpf)
     {
         try {
             $data = new CustomerDtoInput(cpf: $cpf);
 
-            $CustomerEditByCpf = DIContainer::create()->get(ICustomerUseCaseEditByCpf::class);
+            $CustomerEditByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
 
             $customer = $CustomerEditByCpf->execute($data);
 

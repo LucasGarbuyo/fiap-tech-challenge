@@ -16,4 +16,6 @@ interface ICategory
     public function update(Category $Category): void;
 
     public function delete(Category $Category): void;
+
+    public function exist(string $id): bool;
 }

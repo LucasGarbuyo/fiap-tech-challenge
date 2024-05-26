@@ -2,7 +2,11 @@
 
 namespace TechChallenge\Domain\Customer\UseCase;
 
-abstract class Delete extends Standard
+use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
+
+interface Delete
 {
-    abstract public function execute(DtoInput $data): void;
+    public function __construct(ICustomerRepository $CustomerRepository);
+
+    public function execute(DtoInput $data): void;
 }

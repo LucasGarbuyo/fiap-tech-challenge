@@ -109,15 +109,19 @@ class Customer
         return $this->deleted_at;
     }
 
-    public function toArray(): array
+    public function toArray($complete = true): array
     {
-        return [
+        $return = [
             "id" => $this->getId(),
             "name" => $this->getName(),
             "cpf" => (string) $this->getCpf(),
             "email" => (string) $this->getEmail(),
-            "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),
-            "updated_at" => $this->getUpdatedAt()->format("Y-m-d H:i:s"),
         ];
+
+        if ($complete) {
+            $return["created_at"] = $this->getCreatedAt()->format("Y-m-d H:i:s");
+            $return["updated_at"] = $this->getUpdatedAt()->format("Y-m-d H:i:s");
+        }
+        return $return;
     }
 }

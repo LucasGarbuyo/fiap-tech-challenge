@@ -2,7 +2,11 @@
 
 namespace TechChallenge\Domain\Customer\UseCase;
 
-abstract class Update extends Standard
+use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
+
+interface Update
 {
-    abstract public function execute(DtoInput $data): void;
+    public function __construct(ICustomerRepository $CustomerRepository);
+
+    public function execute(DtoInput $data): void;
 }

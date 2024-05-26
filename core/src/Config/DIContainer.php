@@ -16,6 +16,10 @@ use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
 use TechChallenge\Adapter\Driven\Infra\Repository\Customer\Repository as CustomerRepository;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 
+//Order
+use TechChallenge\Adapter\Driven\Infra\Repository\Order\Repository as OrderRepository;
+use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
+
 //Customer UseCase
 use TechChallenge\Domain\Customer\UseCase\Index as ICustomerUseCaseIndex;
 use TechChallenge\Application\UseCase\Customer\Index as CustomerUseCaseIndex;
@@ -32,8 +36,8 @@ use TechChallenge\Application\UseCase\Customer\Update as CustomerUseCaseUpdate;
 use TechChallenge\Domain\Customer\UseCase\Delete as ICustomerUseCaseDelete;
 use TechChallenge\Application\UseCase\Customer\Delete as CustomerUseCaseDelete;
 
-use TechChallenge\Domain\Customer\UseCase\EditByCpf as ICustomerUseCaseEditByCpf;
-use TechChallenge\Application\UseCase\Customer\EditByCpf as CustomerUseCaseEditByCpf;
+use TechChallenge\Domain\Customer\UseCase\ShowByCpf as ICustomerUseCaseShowByCpf;
+use TechChallenge\Application\UseCase\Customer\ShowByCpf as CustomerUseCaseShowByCpf;
 
 //Product UseCase
 use TechChallenge\Domain\Product\UseCase\Index as IProductUseCaseIndex;
@@ -67,6 +71,20 @@ use TechChallenge\Application\UseCase\Category\Update as CategoryUseCaseUpdate;
 use TechChallenge\Domain\Category\UseCase\Delete as ICategoryUseCaseDelete;
 use TechChallenge\Application\UseCase\Category\Delete as CategoryUseCaseDelete;
 
+//Order UseCase
+
+use TechChallenge\Domain\Order\UseCase\Index as IOrderUseCaseIndex;
+use TechChallenge\Application\UseCase\Order\Index as OrderUseCaseIndex;
+
+use TechChallenge\Domain\Order\UseCase\Store as IOrderUseCaseStore;
+use TechChallenge\Application\UseCase\Order\Store as OrderUseCaseStore;
+
+use TechChallenge\Domain\Order\UseCase\Show as IOrderUseCaseShow;
+use TechChallenge\Application\UseCase\Order\Show as OrderUseCaseShow;
+
+use TechChallenge\Domain\Order\UseCase\Delete as IOrderUseCaseDelete;
+use TechChallenge\Application\UseCase\Order\Delete as OrderUseCaseDelete;
+
 class DIContainer
 {
     private static ?ContainerBuilder $containerBuild = null;
@@ -92,6 +110,7 @@ class DIContainer
             IProductRepository::class => \DI\get(ProductRepository::class),
             ICustomerRepository::class => \DI\get(CustomerRepository::class),
             ICategoryRepository::class => \DI\get(CategoryRepository::class),
+            IOrderRepository::class => \DI\get(OrderRepository::class),
 
             //Customer UseCase
             ICustomerUseCaseIndex::class => \DI\get(CustomerUseCaseIndex::class),
@@ -99,7 +118,7 @@ class DIContainer
             ICustomerUseCaseStore::class => \DI\get(CustomerUseCaseStore::class),
             ICustomerUseCaseUpdate::class => \DI\get(CustomerUseCaseUpdate::class),
             ICustomerUseCaseDelete::class => \DI\get(CustomerUseCaseDelete::class),
-            ICustomerUseCaseEditByCpf::class => \DI\get(CustomerUseCaseEditByCpf::class),
+            ICustomerUseCaseShowByCpf::class => \DI\get(CustomerUseCaseShowByCpf::class),
 
             //Product UseCase
             IProductUseCaseIndex::class => \DI\get(ProductUseCaseIndex::class),
@@ -114,6 +133,12 @@ class DIContainer
             ICategoryUseCaseStore::class => \DI\get(CategoryUseCaseStore::class),
             ICategoryUseCaseUpdate::class => \DI\get(CategoryUseCaseUpdate::class),
             ICategoryUseCaseDelete::class => \DI\get(CategoryUseCaseDelete::class),
+
+            //Order UseCase
+            IOrderUseCaseIndex::class => \DI\get(OrderUseCaseIndex::class),
+            IOrderUseCaseStore::class => \DI\get(OrderUseCaseStore::class),
+            IOrderUseCaseShow::class => \DI\get(OrderUseCaseShow::class),
+            IOrderUseCaseDelete::class => \DI\get(OrderUseCaseDelete::class),
         ]);
     }
 }

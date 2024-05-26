@@ -2,7 +2,11 @@
 
 namespace TechChallenge\Domain\Customer\UseCase;
 
-abstract class Store extends Standard
+use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
+
+interface Store
 {
-    abstract public function execute(DtoInput $data): string;
+    public function __construct(ICustomerRepository $CustomerRepository);
+
+    public function execute(DtoInput $data): string;
 }

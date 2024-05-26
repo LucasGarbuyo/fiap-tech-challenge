@@ -109,9 +109,9 @@ class Category extends Controller
         try {
             $data = new CategoryDtoInput($id);
 
-            $productDelete = DIContainer::create()->get(ICategoryUseCaseDelete::class);
+            $categoryDelete = DIContainer::create()->get(ICategoryUseCaseDelete::class);
 
-            $productDelete->execute($data);
+            $categoryDelete->execute($data);
 
             return $this->return([], 204);
         } catch (DefaultException $e) {

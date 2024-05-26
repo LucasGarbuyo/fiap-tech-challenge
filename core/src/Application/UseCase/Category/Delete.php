@@ -9,7 +9,7 @@ class Delete extends ICategoryUseCaseDelete
 {
     public function execute(DtoInput $data): void
     {
-        $category = $this->CategoryRepository->edit($data->id);
+        $category = $this->CategoryRepository->show($data->id);
 
         $category->delete();
 

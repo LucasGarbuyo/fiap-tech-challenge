@@ -5,12 +5,12 @@ namespace TechChallenge\Domain\Product\Entities;
 use DateTime;
 use TechChallenge\Domain\Category\Entities\Category;
 use TechChallenge\Domain\Product\Exceptions\ProductException;
-use TechChallenge\Domain\Product\ValueObjects\Price;
+use TechChallenge\Domain\SHared\ValueObjects\Price;
 
 class Product
 {
-    private ?Category $category;
-    private ?string $categoryId;
+    private ?Category $category = null;
+    private ?string $categoryId = null;
     private ?string $name;
     private ?string $description;
     private ?Price $price;
@@ -148,12 +148,13 @@ class Product
             "name" => $this->getName(),
             "description" => $this->getDescription(),
             "price" => $this->getPrice()->getValue(),
+            "category_id" => $this->getCategoryId(),
         ];
 
         if ($complete) {
-            $reutnr["category"] = $this->getCategory()->toArray();
-            $reutnr["created_at"] = $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null;
-            $reutnr["updated_at"] = $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null;
+            $return["category"] = $this->getCategory() ? $this->getCategory()->toArray() : [];
+            $return["created_at"] = $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null;
+            $return["updated_at"] = $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null;
         }
 
         return $return;

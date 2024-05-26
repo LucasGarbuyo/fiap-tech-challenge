@@ -41,7 +41,13 @@ class Product extends Controller
     public function store(Request $request)
     {
         try {
-            $data = new ProductDtoInput(null, $request->category_id, $request->name, $request->description, $request->price);
+            $data = new ProductDtoInput(
+                null,
+                $request->category_id,
+                $request->name,
+                $request->description,
+                $request->price
+            );
 
             $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
 
