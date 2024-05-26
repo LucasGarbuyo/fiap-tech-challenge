@@ -28,15 +28,16 @@ class Repository implements IOrderRepository
     public function index(array $filters = [], array|bool $append = []): array
     {
         $ordersData = $this->query()->get();
-        $OrderFactory = new OrderFactory();
-
         $orders = [];
+
+        $OrderFactory = new OrderFactory();
         foreach ($ordersData as $orderData) {
             $OrderFactory
                 ->new($orderData->id)
-                ->withOrder($orderData->customer_id)
+                ->withOrder($orderData->customer_id, $orderData->price, $orderData->status)
                 ->build();
 
+                // relacionamento com customer
             if (!empty($orderData->customer_id)) {
                 $customerData = $this->ICustomerRepository->show([$orderData->customer_id]);
                 if ($customerData) {
@@ -47,7 +48,7 @@ class Repository implements IOrderRepository
 
                     $OrderFactory->withCustomer($customer);
                 }
-            }
+            }           
 
             $orders[] = $OrderFactory->build();
         }

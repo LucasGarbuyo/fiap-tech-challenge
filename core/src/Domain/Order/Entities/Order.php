@@ -150,11 +150,20 @@ class Order
         return $this->items;
     }
 
+    public function setPrice(?Price $price = null): self
+    {
+        $this->price = $price ?? new Price(0.0);
+        return $this;
+    }
+
+
     public function toArray($complete = true): array
     {
         $return = [
             "id" => $this->getId(),
             "customer" => $this->getCustomer() ? $this->getCustomer()->toArray() : null,
+            "price" => $this->getPrice(),
+            "status" => $this->getStatus(),
             "items" => $this->getItems(),
         ];
 
