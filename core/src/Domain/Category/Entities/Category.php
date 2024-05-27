@@ -9,7 +9,6 @@ use DateTime;
 class Category
 {
     private string $name;
-    private array $products;
     private string $type;
     private DateTime $created_at;
     private DateTime $updated_at;
@@ -23,7 +22,6 @@ class Category
         $this
             ->setCreatedAt($created_at)
             ->setUpdatedAt($updated_at);
-        $this->products = [];
     }
 
     public static function create(?string $id = null, ?DateTime $created_at = null, ?DateTime $updated_at = null): self
@@ -39,19 +37,6 @@ class Category
     {
         return $this->id;
     }
-
-    public function setProducts(array $products): self
-    {
-        $this->products = $products;
-
-        return $this;
-    }
-
-    public function getProducts(): array|null
-    {
-        return $this->products;
-    }
-
 
     public function setName(string $name): self
     {
@@ -121,7 +106,6 @@ class Category
             "id" => $this->getId(),
             "name" => $this->getName(),
             "type" => $this->getType(),
-            "products" => $this->getProducts(),
         ];
 
         if ($complete) {

@@ -2,9 +2,7 @@
 
 namespace TechChallenge\Domain\Category\Exceptions;
 
-use TechChallenge\Domain\Shared\Exceptions\DefaultException;
-
-class CategoryNotFoundException extends DefaultException
+class CategoryNotFoundException extends CategoryException
 {
     public function __construct()
     {

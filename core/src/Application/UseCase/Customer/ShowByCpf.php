@@ -20,7 +20,7 @@ class ShowByCpf implements ICustomerUseCaseShowByCpf
         $cpf = new Cpf($data->cpf);
 
         if (!$this->CustomerRepository->exist(["cpf" => (string) $cpf]))
-            throw new CustomerNotFoundException('Not found', 404);
+            throw new CustomerNotFoundException();
 
         return $this->CustomerRepository->show(["cpf" => (string) $cpf]);
     }

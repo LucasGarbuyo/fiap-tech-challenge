@@ -9,7 +9,7 @@ interface ICategory
     /** @return Category[] */
     public function index(array $filters = [], array|bool $append = []): array;
 
-    public function show(string $id): Category;
+    public function show(array $filters = [], array|bool $append = []): Category;
 
     public function store(Category $Category): void;
 
@@ -17,5 +17,5 @@ interface ICategory
 
     public function delete(Category $Category): void;
 
-    public function exist(string $id): bool;
+    public function exist(array $filters = []): bool;
 }

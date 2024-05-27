@@ -6,48 +6,32 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use TechChallenge\Domain\Category\Entities\Category as CategoryEntity;
 use TechChallenge\Domain\Category\Factories\Category as CategoryFactory;
-use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
 use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
-use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
 
 class Repository implements ICategoryRepository
 {
     /** @return CategoryEntity[] */
     public function index(array $filters = [], array|bool $append = []): array
     {
-        $categoriesData = $this->query()->get();
+        $categoriesData = $this->filters($this->query($append), $filters)->get();
 
         $categories = [];
 
         $categoryFactory = new CategoryFactory();
 
         foreach ($categoriesData as $categoryData) {
-            $productsData = $this->queryProduct()->where('category_id', $categoryData->id)->get();
-            $products = [];
-
-            foreach ($productsData as $productData) {
-                $products[] = (new ProductFactory())
-                    ->new()
-                    ->withCategoryIdNameDescriptionPrice($categoryData->id, $productData->name, $productData->description, $productData->price)
-                    ->build()
-                    ->toArray(false);
-            }
-
             $categories[] = $categoryFactory
                 ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)
-                ->withProductsNameType($products, $categoryData->name, $categoryData->type)
+                ->withNameType($categoryData->name, $categoryData->type)
                 ->build();
         }
 
         return $categories;
     }
 
-    public function show(string $id): CategoryEntity
+    public function show(array $filters = [], array|bool $append = []): CategoryEntity
     {
-        $categoryData = $this->query()->where('id', $id)->first();
-
-        if (empty($categoryData))
-            throw new CategoryNotFoundException('Not found', 404);
+        $categoryData = $this->filters($this->query($append), $filters)->first();
 
         return (new CategoryFactory())
             ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)
@@ -71,11 +55,7 @@ class Repository implements ICategoryRepository
 
     public function update(CategoryEntity $category): void
     {
-        if (!$this->query()->where('id', $category->getId())->exists())
-            throw new CategoryNotFoundException('Not found', 404);
-
-        $this->query()
-            ->where('id', $category->getId())
+        $this->filters($this->query(), ["id" => $category->getId()])
             ->update(
                 [
                     'name' => $category->getName(),
@@ -87,8 +67,7 @@ class Repository implements ICategoryRepository
 
     public function delete(CategoryEntity $category): void
     {
-        $this->query()
-            ->where('id', $category->getId())
+        $this->filters($this->query(), ["id" => $category->getId()])
             ->update(
                 [
                     "deleted_at" => $category->getDeletedAt()->format("Y-m-d H:i:s")
@@ -96,18 +75,25 @@ class Repository implements ICategoryRepository
             );
     }
 
-    public function exist(string $id): bool
+    public function exist(array $filters = []): bool
     {
-        return $this->query()->where('id', $id)->exists();
+        return $this->filters($this->query(), $filters)->exists();
     }
 
-    protected function query(): Builder
+    public function filters(Builder $query, array $filters = []): Builder
+    {
+        if (!empty($filters["id"])) {
+            if (!is_array($filters["id"]))
+                $filters["id"] = [$filters["id"]];
+
+            $query->whereIn('id', $filters["id"]);
+        }
+
+        return $query;
+    }
+
+    public function query(array|bool $append = []): Builder
     {
         return DB::table("categories")->whereNull('deleted_at');
-    }
-
-    protected function queryProduct(): Builder
-    {
-        return DB::table("products")->whereNull('deleted_at');
     }
 }

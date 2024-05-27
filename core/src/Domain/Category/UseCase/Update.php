@@ -2,7 +2,11 @@
 
 namespace TechChallenge\Domain\Category\UseCase;
 
-abstract class Update extends Standard
+use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+
+interface Update
 {
-    abstract public function execute(DtoInput $data): void;
+    public function __construct(ICategoryRepository $CategoryRepository);
+
+    public function execute(DtoInput $data): void;
 }

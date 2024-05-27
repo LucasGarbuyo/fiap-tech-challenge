@@ -2,7 +2,11 @@
 
 namespace TechChallenge\Domain\Category\UseCase;
 
-abstract class Store extends Standard
+use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+
+interface Store
 {
-    abstract public function execute(DtoInput $data): string;
+    public function __construct(ICategoryRepository $CategoryRepository);
+
+    public function execute(DtoInput $data): string;
 }

@@ -17,7 +17,7 @@ class Show implements ICustomerUseCaseShow
     public function execute(DtoInput $data): Customer
     {
         if (!$this->CustomerRepository->exist(["id" => $data->id]))
-            throw new CustomerNotFoundException('Not found', 404);
+            throw new CustomerNotFoundException();
 
         return $this->CustomerRepository->show(["id" => $data->id]);
     }

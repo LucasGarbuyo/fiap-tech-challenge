@@ -19,11 +19,11 @@ class Category extends Controller
         try {
             $categoryIndex = DIContainer::create()->get(ICategoryUseCaseIndex::class);
 
-            $categorys = $categoryIndex->execute();
+            $categories = $categoryIndex->execute();
 
             $results = array_map(function ($category) {
                 return $category->toArray();
-            }, $categorys);
+            }, $categories);
 
             return $this->return($results, 200);
         } catch (DefaultException $e) {

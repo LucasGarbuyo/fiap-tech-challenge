@@ -4,7 +4,6 @@ namespace TechChallenge\Domain\Category\Factories;
 
 use DateTime;
 use TechChallenge\Domain\Category\Entities\Category as CategoryEntity;
-use TechChallenge\Domain\Product\Entities\Product;
 
 class Category
 {
@@ -19,16 +18,6 @@ class Category
             $updated_at = is_string($updated_at) ? new DateTime($updated_at) : $updated_at;
 
         $this->category = CategoryEntity::create($id, $created_at, $updated_at);
-
-        return $this;
-    }
-
-    public function withProductsNameType(array $products, string $name, string $type): self
-    {
-        $this->category
-            ->setProducts($products)
-            ->setName($name)
-            ->setType($type);
 
         return $this;
     }
