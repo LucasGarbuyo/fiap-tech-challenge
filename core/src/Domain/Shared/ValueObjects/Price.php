@@ -25,7 +25,7 @@ class Price
         }
 
         $this->value = (float) $value;
-
+      
         return $this;
     }
 

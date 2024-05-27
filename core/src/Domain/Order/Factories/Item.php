@@ -13,11 +13,12 @@ class Item
     public function new(
         string $productId,
         int $quantity,
-        Price $price,
+        float $price,
         ?string $id = null,
         String|DateTime $created_at = null,
         String|DateTime $updated_at = null
-    ): self {
+    ): self { 
+
         if (!is_null($created_at))
             $created_at = is_string($created_at) ? new DateTime($created_at) : $created_at;
 

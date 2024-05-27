@@ -51,12 +51,18 @@ class Repository implements IOrderRepository
 
                     $OrderFactory->withCustomer($customer);
                 }
+                $orderItems = $this->IItemRepository->getByOrderId($orderData->id);
 
-                $orderItems = $this->IItemRepository->show($orderData->id);
-                dd( $orderItems );die;
-                //parei aqui, precisa trazer a collection de todos as ordens de produtos.
+                // relacionamento com OrderData
+                if (!$orderItems->isEmpty()) {
+                    $items = $orderItems->map(function ($itemData) {
+                        return (new ItemFactory())
+                            ->new($itemData->getProductId(), $itemData->getQuantity(), $itemData->getPrice()->getValue(), $itemData->getId())
+                            ->build();
+                    });
+                    $OrderFactory->withItems($items->toArray());
+                }
             }
-
 
             $orders[] = $OrderFactory->build();
         }
@@ -85,7 +91,7 @@ class Repository implements IOrderRepository
         $items = [];
         foreach ($itemsData as $itemData) {
             $items[] = (new ItemFactory())
-                ->new($itemData->product_id, $itemData->quantity, new Price($itemData->price), $itemData->id)
+                ->new($itemData->product_id, $itemData->quantity, $itemData->price, $itemData->id)
                 ->build();
         }
         return $orderFactory->withItems($items)->build();

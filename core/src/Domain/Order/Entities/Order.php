@@ -147,7 +147,7 @@ class Order
     /** @return Item[] */
     public function getItems(): array
     {
-        return $this->items;
+        return array_map(fn ($item) => $item->toArray(), $this->items);
     }
 
     public function setPrice(?Price $price = null): self

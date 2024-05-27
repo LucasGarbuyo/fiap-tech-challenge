@@ -93,6 +93,9 @@ use TechChallenge\Application\UseCase\Order\Delete as OrderUseCaseDelete;
 use TechChallenge\Domain\OrderItem\UseCase\Show as IOrderItemUseCaseShow;
 use TechChallenge\Application\UseCase\OrderItem\Show as OrderItemUseCaseShow;
 
+use TechChallenge\Domain\OrderItem\UseCase\GetByOrderId as IGetByOrderId;
+use TechChallenge\Application\UseCase\OrderItem\GetByOrderId as GetByOrderId;
+
 class DIContainer
 {
     private static ?ContainerBuilder $containerBuild = null;
@@ -152,6 +155,7 @@ class DIContainer
 
             //OrderItem UseCase
             IOrderItemUseCaseShow::class => \DI\get(OrderItemUseCaseShow::class),
+            IGetByOrderId::class => \DI\get(GetByOrderId::class),
         ]);
     }
 }

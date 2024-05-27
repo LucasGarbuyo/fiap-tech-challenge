@@ -10,7 +10,7 @@ class Item
 {
     private string $productId;
     private int $quantity;
-    private Price $productPrice;
+    private float $productPrice;
     private readonly DateTime $created_at;
     private readonly DateTime $updated_at;
 
@@ -18,7 +18,7 @@ class Item
         private readonly string $id,
         string $productId,
         int $quantity,
-        Price $productPrice,
+        float $productPrice,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
     ) {
@@ -30,11 +30,11 @@ class Item
     public static function create(
         string $productId,
         int $quantity,
-        Price $productPrice,
+        float $productPrice,
         ?string $id = null,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
-    ): self {
+    ): self {        
         return new self(
             id: $id ?? uniqid("ORDE_ITEM", true),
             productId: $productId,
@@ -91,26 +91,27 @@ class Item
         return $this;
     }
 
-    public function setProductPrice(Price $price): self
-    {
+    public function setProductPrice($price): self
+    {        
         $this->productPrice = $price;
-
         return $this;
     }
 
-    public function getProductPrice(): Price
+    public function getProductPrice(): float
     {
         return $this->productPrice;
     }
 
+
     public function getPrice(): Price
     {
-        $total = $this->productPrice->getValue() * $this->quantity;
+        $total = $this->productPrice * $this->quantity;
         return new Price($total);
     }
 
     public function toArray(): array
     {
+        
         $return = [
             "id" => $this->getId(),
             "product_id" => $this->getProductId(),

@@ -9,5 +9,5 @@ interface IItem
 {
     public function show(string $id): Item;
 
-    //public function getByOrderId(string $orderId): Collection|null;
+    public function getByOrderId(string $orderId): Collection;
 }
