@@ -4,9 +4,7 @@ namespace TechChallenge\Domain\Order\Factories;
 
 use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
-use TechChallenge\Domain\Order\Entities\Item;
 use TechChallenge\Domain\Order\Enum\OrderStatus;
-use TechChallenge\Domain\Shared\ValueObjects\Price;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 
 class Order
@@ -49,9 +47,9 @@ class Order
     }
 
     public function withOrder(?string $customerId = null, ?float $price, ?string $status): self
-    {
+    {        
         $orderStatus = $status !== null ? OrderStatus::from($status) : null;
-        $orderPrice = $price !== null ? new Price($price) : null;
+        $orderPrice = $price !== null ? $price : null;
 
         $this->order
             ->setStatus($orderStatus)

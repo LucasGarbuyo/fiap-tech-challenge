@@ -12,7 +12,8 @@ class Order
 {
     private ?string $customer_id = null;
     private ?Customer $customer = null;
-    private Price $price;
+    private float $price;
+    private float $total;
     private array $items = [];
     private OrderStatus $status = OrderStatus::RECEIVED;
     private readonly DateTime $created_at;
@@ -150,15 +151,16 @@ class Order
         return array_map(fn ($item) => $item->toArray(), $this->items);
     }
 
-    public function setPrice(?Price $price = null): self
+    public function setPrice(?float $price = null): self
     {
-        $this->price = $price ?? new Price(0.0);
+        $this->price = $price ?? 0.0;
         return $this;
     }
 
 
     public function toArray($complete = true): array
     {
+
         $return = [
             "id" => $this->getId(),
             "customer" => $this->getCustomer() ? $this->getCustomer()->toArray() : null,
@@ -166,7 +168,6 @@ class Order
             "status" => $this->getStatus(),
             "items" => $this->getItems(),
         ];
-
         if ($complete) {
             $return["created_at"] = $this->getCreatedAt()->format("Y-m-d H:i:s");
             $return["updated_at"] = $this->getUpdatedAt()->format("Y-m-d H:i:s");
@@ -174,13 +175,13 @@ class Order
         return $return;
     }
 
-    public function getPrice(): Price
+    public function getPrice(): float
     {
         $price = 0;
         foreach ($this->items as $item) {
             $price += $item->getPrice()->getValue();
         }
-        $this->total = new Price($price);
+        $this->total = $price;
         return $this->total;
     }
 }
