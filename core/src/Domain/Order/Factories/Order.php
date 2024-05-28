@@ -54,21 +54,6 @@ class Order
         return $this;
     }
 
-    public function withOrder(?string $customerId = null, ?float $price, ?string $status): self
-    {
-        $orderStatus = $status !== null ? OrderStatus::from($status) : null;
-        $orderPrice = $price !== null ? $price : null;
-
-        $this->order
-            ->setStatus($orderStatus)
-            ->setPrice($orderPrice);
-
-        if (isset($customerId)) {
-            $this->order->setCustomerId($customerId);
-        }
-        return $this;
-    }
-
     public function build(): OrderEntity
     {
         return $this->order;

@@ -9,7 +9,6 @@ use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Order\Repository\IItem as IItemRepository;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 use TechChallenge\Domain\Order\Factories\Order as OrderFactory;
-use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
 
 class Repository implements IOrderRepository
 {
@@ -26,38 +25,28 @@ class Repository implements IOrderRepository
 
         $orders = [];
 
-        $OrderFactory = new OrderFactory();
+        $orderFactory = new OrderFactory();
+
         foreach ($ordersData as $orderData) {
-            $OrderFactory
-                ->new($orderData->id)
-                ->withOrder($orderData->customer_id, $orderData->price, $orderData->status)
-                ->build();
+            $orderFactory
+                ->new($orderData->id, $orderData->total, $orderData->created_at, $orderData->updated_at);
 
-            // relacionamento com customer
-            if (!empty($orderData->customer_id)) {
-                $customerData = $this->CustomerRepository->show([$orderData->customer_id]);
-                if ($customerData) {
-                    $customer = (new CustomerFactory())
-                        ->new($orderData->customer_id)
-                        ->withNameCpfEmail($customerData->getName(), $customerData->getCpf(), $customerData->getEmail())
-                        ->build();
+            if (($append === true || in_array("customer", $append)) && !empty($orderData->customer_id)) {
 
-                    $OrderFactory->withCustomer($customer);
-                }
-                // $orderItems = $this->IItemRepository->getByOrderId($orderData->id);
+                $customer = $this->CustomerRepository->show(["id" => $orderData->customer_id]);
 
-                // relacionamento com OrderData
-                // if (!$orderItems->isEmpty()) {
-                //     $items = $orderItems->map(function ($itemData) {
-                //         return (new ItemFactory())
-                //             ->new($itemData->getProductId(), $itemData->getQuantity(), $itemData->getPrice()->getValue(), $itemData->getId())
-                //             ->build();
-                //     });
-                //     $OrderFactory->withItems($items->toArray());
-                // }
+                if (!empty($customer))
+                    $orderFactory->withCustomerIdCustomer($orderData->customer_id, $customer);
             }
 
-            $orders[] = $OrderFactory->build();
+            if ($append === true || in_array("items", $append)) {
+
+                $items = $this->ItemRepository->index(["order_id", $orderData->id]);
+
+                $orderFactory->withItems($items);
+            }
+
+            $orders[] = $orderFactory->build();
         }
 
         return $orders;

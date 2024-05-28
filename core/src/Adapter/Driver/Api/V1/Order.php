@@ -19,7 +19,7 @@ class Order extends Controller
         try {
             $orderIndex = DIContainer::create()->get(IOrderUseCaseIndex::class);
 
-            $orders = $orderIndex->execute();
+            $orders = $orderIndex->execute([], true);
 
             $results = array_map(function ($order) {
                 return $order->toArray();
