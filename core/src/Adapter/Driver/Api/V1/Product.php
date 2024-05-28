@@ -121,7 +121,7 @@ class Product extends Controller
 
             $productDelete->execute($data);
 
-            return $this->return('Produto deletado com sucesso!', 200);
+            return $this->return('Produto deletado com sucesso!', 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [
