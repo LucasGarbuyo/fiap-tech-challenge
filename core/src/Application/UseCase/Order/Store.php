@@ -53,6 +53,8 @@ class Store implements IOrderUseCaseStore
 
         $order->calcTotal();
 
+        $order->setAsNew();
+
         $this->OrderRepository->store($order);
 
         return $order->getId();

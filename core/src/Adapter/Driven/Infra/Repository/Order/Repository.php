@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
-use TechChallenge\Domain\Order\Repository\IItem as IItemRepository;
+use TechChallenge\Domain\Order\Repository\{IItem as IItemRepository, IStatus as IStatusRepository};
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 use TechChallenge\Domain\Order\Factories\Order as OrderFactory;
 
@@ -14,7 +14,8 @@ class Repository implements IOrderRepository
 {
     public function __construct(
         protected readonly ICustomerRepository $CustomerRepository,
-        protected readonly IItemRepository $ItemRepository
+        protected readonly IItemRepository $ItemRepository,
+        protected readonly IStatusRepository $StatusRepository
     ) {
     }
 
@@ -95,6 +96,9 @@ class Repository implements IOrderRepository
 
             foreach ($order->getItems() as $item)
                 $this->ItemRepository->store($item);
+
+            foreach ($order->getStatusHistory() as $status)
+                $this->StatusRepository->store($status);
         });
     }
 

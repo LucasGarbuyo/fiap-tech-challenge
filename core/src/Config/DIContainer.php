@@ -21,8 +21,11 @@ use TechChallenge\Adapter\Driven\Infra\Repository\Order\Repository as OrderRepos
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 
 //Order Items
-use TechChallenge\Adapter\Driven\Infra\Repository\Order\ItemRepository as ItemRepository;
+use TechChallenge\Adapter\Driven\Infra\Repository\Order\ItemRepository;
 use TechChallenge\Domain\Order\Repository\IItem as IItemRepository;
+
+use TechChallenge\Adapter\Driven\Infra\Repository\Order\StatusRepository;
+use TechChallenge\Domain\Order\Repository\IStatus as IStatusRepository;
 
 //Customer UseCase
 use TechChallenge\Domain\Customer\UseCase\Index as ICustomerUseCaseIndex;
@@ -119,6 +122,7 @@ class DIContainer
             ICategoryRepository::class => \DI\get(CategoryRepository::class),
             IOrderRepository::class => \DI\get(OrderRepository::class),
             IItemRepository::class => \DI\get(ItemRepository::class),
+            IStatusRepository::class => \DI\get(StatusRepository::class),
 
             //Customer UseCase
             ICustomerUseCaseIndex::class => \DI\get(CustomerUseCaseIndex::class),
