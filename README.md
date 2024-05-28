@@ -23,30 +23,34 @@ módulo de DDD, e utilizando a linguagem ubíqua, dos seguintes fluxos:
 
 ## Passo a passo para inicialização da aplicação
 
-1. Clone o repositório
-2. Acesse a pasta do projeto
-3. Para subir os containers:  
+1. Clone o repositório  
+   `git clone https://github.com/LucasGarbuyo/fiap-tech-challenge.git`
+2. Acesse a pasta do projeto com o terminal 
+3. Copie o arquivo `.env.example` para `.env`    
+   `cp .env.example .env`
+4. Iniciando os containers do Docker.  
+   Esse processo pode demorar um pouco na primeira vez que for executado, pois o docker irá baixar as imagens necessárias para a execução dos containers.  
+   Execute o comando:    
    `docker-compose up -d`
-4. Acesse o container da aplicação com o comando  
-   `docker exec -it fiap-tech-challenge-app bash`
-5. Para instalar as dependências do projeto, execute o comando  
+5. Acesse o container da aplicação com o comando:  
+   `docker exec -it fiap-tech-challenge-php-1 bash`
+6. Para instalar as dependências do projeto, execute o comando dentro do container:  
    `composer install`
-6. Copie o arquivo `.env.example` para `.env` e configure o banco de dados
-7. Crie uma chave para a aplicação com o comando  
+7. Crie uma chave para a aplicação com o comando:  
    `php artisan key:generate`
-8. Para criar as tabelas no banco de dados, execute o comando  
-   `php artisan migrate`
-7. Para popular o banco de dados, execute o comando  
+8. Para criar as tabelas no banco de dados, execute o comando:  
+   `php artisan migrate:fresh`
+9. Para popular o banco de dados, execute o comando:  
    `php artisan db:seed`
-8. Acesse a aplicação com o endereço  
-   [http://localhost:8000](http://localhost:8000)
-9. Acesse o Swagger com o endereço  
-   [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
+10. Acesse a aplicação com o endereço  
+    [http://localhost:8000](http://localhost:8000)
+11. Acesse o Swagger com o endereço  
+    [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
 
 ## Para remover a aplicação
 
 1. Execute o comando  
    `docker-compose down`
-2. Exclua a pasta do mysql dentro de ./docker/database/volumes/mysql (recomendado).  
+2. **(Recomendado)** excluir a pasta do mysql dentro de ./docker/database/volumes/mysql. Vai poupar espaço.  
    `rm -Rf ./docker/database/volumes/mysql`
-3. 
+
