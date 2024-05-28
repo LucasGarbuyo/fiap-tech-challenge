@@ -236,7 +236,7 @@
                 }
             }
         },
-        "/api/customer/index": {
+        "/api/customer": {
             "get": {
                 "tags": [
                     "Clientes"
@@ -254,7 +254,7 @@
                                         "type": "object",
                                         "properties": {
                                             "id": {
-                                                "type": "integer",
+                                                "type": "string",
                                                 "description": "ID único do cliente."
                                             },
                                             "name": {
@@ -263,11 +263,100 @@
                                             },
                                             "cpf": {
                                                 "type": "string",
-                                                "description": "Preço do cliente."
+                                                "description": "CPF do cliente."
                                             },
                                             "email": {
                                                 "type": "string",
-                                                "description": "Descrição do cliente."
+                                                "description": "Email do cliente."
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "Data e hora de criação do cliente."
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "Data e hora da última atualização do cliente."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Criar um novo cliente",
+                "description": "Este endpoint é usado para criar um novo cliente.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "description": "Nome do cliente.",
+                                        "example": "João"
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "description": "CPF do cliente.",
+                                        "example": "12345678901"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "description": "Email do cliente.",
+                                        "example": "joao@example.com"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "cpf",
+                                    "email"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cliente criado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string",
+                                            "description": "ID do cliente criado."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Parametros inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "description": "Descrição do erro",
+                                                    "example": "Já existe um cliente cadastrado com esse CPF"
+                                                }
                                             }
                                         }
                                     }
@@ -276,12 +365,12 @@
                         }
                     },
                     "404": {
-                        "description": "Nenhum cliente encontrado."
+                        "description": "Erro ao criar cliente"
                     }
                 }
             }
         },
-        "/api/customer/edit/{id}": {
+        "/api/customer/{id}": {
             "get": {
                 "tags": [
                     "Clientes"
@@ -290,19 +379,19 @@
                 "description": "Este endpoint é usado para buscar um cliente específico pelo seu ID.",
                 "parameters": [
                     {
-                        "in": "path",
                         "name": "id",
+                        "in": "path",
                         "required": true,
+                        "description": "ID do cliente a ser buscado.",
                         "schema": {
                             "type": "string",
                             "description": "ID único do cliente."
-                        },
-                        "description": "ID do cliente a ser buscado."
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Cliente encontrado com sucesso.",
+                        "description": "Detalhes do cliente encontrados com sucesso.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -323,6 +412,16 @@
                                         "email": {
                                             "type": "string",
                                             "description": "Email do cliente."
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Data e hora de criação do cliente."
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "description": "Data e hora da última atualização do cliente."
                                         }
                                     }
                                 }
@@ -333,55 +432,7 @@
                         "description": "Cliente não encontrado."
                     }
                 }
-            }
-        },
-        "/api/customer/store": {
-            "post": {
-                "tags": [
-                    "Clientes"
-                ],
-                "summary": "Criar novo cliente",
-                "description": "Este endpoint é usado para criar um novo cliente.",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "description": "Nome do cliente."
-                                    },
-                                    "cpf": {
-                                        "type": "string",
-                                        "description": "CPF do cliente."
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "description": "Email do cliente."
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "cpf",
-                                    "email"
-                                ]
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Cliente criado com sucesso."
-                    },
-                    "404": {
-                        "description": "Erro ao criar cliente."
-                    }
-                }
-            }
-        },
-        "/api/customer/update/{id}": {
+            },
             "put": {
                 "tags": [
                     "Clientes"
@@ -419,22 +470,47 @@
                                         "type": "string",
                                         "description": "Novo email do cliente."
                                     }
-                                }
+                                },
+                                "required": [
+                                    "name",
+                                    "cpf",
+                                    "email"
+                                ]
                             }
                         }
                     }
                 },
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "Cliente atualizado com sucesso."
                     },
+                    "400": {
+                        "description": "Parametros inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "description": "Descrição do erro.",
+                                                    "example": "Cpf inválido."
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "404": {
-                        "description": "Erro ao atualizar cliente."
+                        "description": "Cliente não encontrado."
                     }
                 }
-            }
-        },
-        "/api/customer/delete/{id}": {
+            },
             "delete": {
                 "tags": [
                     "Clientes"
@@ -454,11 +530,30 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "Cliente deletado com sucesso."
                     },
                     "404": {
-                        "description": "Cliente não encontrado."
+                        "description": "Cliente não encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "object",
+                                            "properties": {
+                                                "message": {
+                                                    "type": "string",
+                                                    "description": "Descrição do erro.",
+                                                    "example": "Cliente não encontrado."
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
