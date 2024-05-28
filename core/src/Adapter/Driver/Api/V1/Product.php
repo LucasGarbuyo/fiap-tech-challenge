@@ -92,7 +92,7 @@ class Product extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $data = new ProductDtoInput($id, $request->category_id, $request->name, $request->description, $request->price);
+            $data = new ProductDtoInput($id, $request->category_id, $request->name, $request->description, $request->price, $request->image);
 
             $productUpdate = DIContainer::create()->get(IProductUseCaseUpdate::class);
 

@@ -25,7 +25,7 @@ class Update implements IProductUseCaseUpdate
             throw new ProductNotFoundException();
 
         $productFactory = (new ProductFactory())
-            ->new()
+            ->new($data->id, $data->created_at, $data->updated_at)
             ->withNameDescriptionPriceImage($data->name, $data->description, $data->price, $data->image);
 
         if (!empty($data->category_id)) {
