@@ -4,28 +4,49 @@ namespace TechChallenge\Adapter\Driven\Infra\Repository\Order;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
-use TechChallenge\Domain\Order\Entities\{Item as ItemEntity, Order as OrderEntity};
+use TechChallenge\Domain\Order\Entities\Item as ItemEntity;
 use TechChallenge\Domain\Order\Repository\IItem as IItemRepository;
+use TechChallenge\Domain\Order\Factories\Item as ItemFactory;
 
 class ItemRepository implements IItemRepository
 {
+    public function index(array $filters = []): array
+    {
+        $itemsData = $this->filters($this->query(), $filters)->get();
+
+        if (count($itemsData) == 0)
+            return [];
+
+        $items = [];
+
+        $itemFactory = new ItemFactory();
+
+        foreach ($itemsData as $itemData) {
+            $items[] = $itemFactory
+                ->new($itemData->id, $itemData->product_id, $itemData->order_id, $itemData->created_at, $itemData->updated_at)
+                ->withQuantityPrice($itemData->quantity, $itemData->price)
+                ->build();
+        }
+
+        return $items;
+    }
+
     public function exist(array $filters = []): bool
     {
         return $this->filters($this->query(), $filters)->exists();
     }
 
-    public function store(ItemEntity $item, OrderEntity $order): void
+    public function store(ItemEntity $item): void
     {
         $this->query()
             ->insert([
                 "id" => $item->getId(),
-                "order_id" => $order->getId(),
+                "order_id" => $item->getOrderId(),
                 "product_id" => $item->getProductId(),
                 "quantity" => $item->getQuantity(),
                 "price" => $item->getPrice()->getValue(),
                 "created_at" => $item->getCreatedAt(),
-                "updated_at" => $item->getUpdatedAt(),
-                "deleted_at" => $item->getDeletedAt()
+                "updated_at" => $item->getUpdatedAt()
             ]);
     }
 

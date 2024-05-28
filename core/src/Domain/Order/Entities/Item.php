@@ -8,7 +8,6 @@ use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Item
 {
-    private string $product_id;
     private int $quantity;
     private Price $price;
     private readonly DateTime $created_at;
@@ -17,18 +16,26 @@ class Item
 
     public function __construct(
         private readonly string $id,
-        ?DateTime $created_at = null,
-        ?DateTime $updated_at = null
+        private readonly string $product_id,
+        private readonly string $order_id,
+        DateTime $created_at,
+        DateTime $updated_at
     ) {
+        $this->setCreatedAt($created_at)
+            ->setUpdatedAt($updated_at);
     }
 
     public static function create(
         ?string $id = null,
+        string $product_id,
+        string $order_id,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
     ): self {
         return new self(
             id: $id ?? uniqid("ORDE_ITEM", true),
+            product_id: $product_id,
+            order_id: $order_id,
             created_at: $created_at ?? new DateTime(),
             updated_at: $updated_at ?? new DateTime(),
         );
@@ -39,16 +46,14 @@ class Item
         return $this->id;
     }
 
-    public function setProductId(string $productId): self
-    {
-        $this->product_id = $productId;
-
-        return $this;
-    }
-
     public function getProductId(): string
     {
         return $this->product_id;
+    }
+
+    public function getOrderId(): string
+    {
+        return $this->order_id;
     }
 
     public function setQuantity(int $quantity): self

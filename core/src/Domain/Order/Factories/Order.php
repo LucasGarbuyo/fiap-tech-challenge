@@ -12,7 +12,7 @@ class Order
 {
     private ?OrderEntity $order = null;
 
-    public function new(?string $id = null, $total, String|DateTime $created_at = null, String|DateTime $updated_at = null): self
+    public function new(?string $id = null, $total = 0, String|DateTime $created_at = null, String|DateTime $updated_at = null): self
     {
         if (!is_null($created_at))
             $created_at = is_string($created_at) ? new DateTime($created_at) : $created_at;

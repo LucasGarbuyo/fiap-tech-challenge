@@ -148,10 +148,9 @@ class Order
         return $this;
     }
 
-    /** @return Item[] */
     public function getItems(): array
     {
-        return array_map(fn ($item) => $item->toArray(), $this->items);
+        return $this->items;
     }
 
     public function setTotal(Price $total): self

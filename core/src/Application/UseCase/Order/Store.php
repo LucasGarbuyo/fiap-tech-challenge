@@ -21,14 +21,15 @@ class Store implements IOrderUseCaseStore
 
     public function execute(DtoInput $data): string
     {
-        $orderFactory = (new OrderFactory())
-            ->new();
+        $order = (new OrderFactory())
+            ->new()
+            ->build();
 
         if (!is_null($data->getCustomerId())) {
             if (!$this->CustomerRepository->exist(["id" => $data->getCustomerId()]))
                 throw new CustomerNotFoundException();
 
-            $orderFactory->withCustomerId($data->getCustomerId());
+            $order->setCustomerId($data->getCustomerId());
         }
 
         if (!empty($data->getItems())) {
@@ -36,21 +37,19 @@ class Store implements IOrderUseCaseStore
 
             foreach ($data->getItems() as $item) {
 
-                $product = $this->productRepository->show($item['product_id']);
+                $product = $this->productRepository->show(["id" => $item['product_id']]);
 
                 if (empty($product))
                     throw new ProductNotFoundException();
 
                 $items[] = (new ItemFactory())
-                    ->new()
-                    ->withProductIdQuantityPrice($item['product_id'], $item['quantity'], $product->getPrice()->getValue())
+                    ->new(id: null, product_id: $product->getId(), order_id: $order->getId())
+                    ->withQuantityPrice($item['quantity'], $product->getPrice()->getValue())
                     ->build();
             }
 
-            $orderFactory->withItems($items);
+            $order->setItems($items);
         }
-
-        $order = $orderFactory->build();
 
         $this->orderRepository->store($order);
 

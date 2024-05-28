@@ -16,7 +16,7 @@ class Repository implements IOrderRepository
 {
     public function __construct(
         protected readonly ICustomerRepository $CustomerRepository,
-        protected readonly IItemRepository $IItemRepository
+        protected readonly IItemRepository $ItemRepository
     ) {
     }
 
@@ -36,7 +36,7 @@ class Repository implements IOrderRepository
 
             // relacionamento com customer
             if (!empty($orderData->customer_id)) {
-                $customerData = $this->ICustomerRepository->show([$orderData->customer_id]);
+                $customerData = $this->CustomerRepository->show([$orderData->customer_id]);
                 if ($customerData) {
                     $customer = (new CustomerFactory())
                         ->new($orderData->customer_id)
@@ -45,17 +45,17 @@ class Repository implements IOrderRepository
 
                     $OrderFactory->withCustomer($customer);
                 }
-                $orderItems = $this->IItemRepository->getByOrderId($orderData->id);
+                // $orderItems = $this->IItemRepository->getByOrderId($orderData->id);
 
                 // relacionamento com OrderData
-                if (!$orderItems->isEmpty()) {
-                    $items = $orderItems->map(function ($itemData) {
-                        return (new ItemFactory())
-                            ->new($itemData->getProductId(), $itemData->getQuantity(), $itemData->getPrice()->getValue(), $itemData->getId())
-                            ->build();
-                    });
-                    $OrderFactory->withItems($items->toArray());
-                }
+                // if (!$orderItems->isEmpty()) {
+                //     $items = $orderItems->map(function ($itemData) {
+                //         return (new ItemFactory())
+                //             ->new($itemData->getProductId(), $itemData->getQuantity(), $itemData->getPrice()->getValue(), $itemData->getId())
+                //             ->build();
+                //     });
+                //     $OrderFactory->withItems($items->toArray());
+                // }
             }
 
             $orders[] = $OrderFactory->build();
@@ -112,19 +112,8 @@ class Repository implements IOrderRepository
                     "updated_at" => $order->getUpdatedAt(),
                 ]);
 
-            foreach ($order->getItems() as $item) {
-                $this->queryItems()
-                    ->insert([
-                        "id" => $item->getId(),
-                        "order_id" => $order->getId(),
-                        "product_id" => $item->getProductId(),
-                        "quantity" => $item->getQuantity(),
-                        "price" => $item->getPrice()->getValue(),
-                        "created_at" => $item->getCreatedAt(),
-                        "updated_at" => $item->getUpdatedAt(),
-                        "deleted_at" => $item->getDeletedAt()
-                    ]);
-            }
+            foreach ($order->getItems() as $item)
+                $this->ItemRepository->store($item);
         });
     }
 

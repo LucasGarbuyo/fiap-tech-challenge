@@ -21,7 +21,7 @@ use TechChallenge\Adapter\Driven\Infra\Repository\Order\Repository as OrderRepos
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 
 //Order Items
-use TechChallenge\Adapter\Driven\Infra\Repository\Item\Repository as ItemRepository;
+use TechChallenge\Adapter\Driven\Infra\Repository\Order\ItemRepository as ItemRepository;
 use TechChallenge\Domain\Order\Repository\IItem as IItemRepository;
 
 //Customer UseCase
