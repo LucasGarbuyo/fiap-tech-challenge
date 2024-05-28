@@ -17,14 +17,10 @@ use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Repository implements IOrderRepository
 {
-
-    private ICustomerRepository $ICustomerRepository;
-    private IItemRepository $IItemRepository;
-
-    public function __construct(ICustomerRepository $ICustomerRepository, IItemRepository $IItemRepository)
-    {
-        $this->ICustomerRepository = $ICustomerRepository;
-        $this->IItemRepository = $IItemRepository;
+    public function __construct(
+        protected readonly ICustomerRepository $ICustomerRepository,
+        protected readonly IItemRepository $IItemRepository
+    ) {
     }
 
     /** @return Order[] */
@@ -70,7 +66,7 @@ class Repository implements IOrderRepository
         return $orders;
     }
 
-    public function show(string $id): OrderEntity
+    public function show(array $filters = [], array|bool $append = []): OrderEntity|null
     {
         $orderData = $this->query()->where('id', $id)->first();
 
@@ -115,16 +111,21 @@ class Repository implements IOrderRepository
                     'order_id' => $order->getId(),
                     'product_id' => $item->getProductId(),
                     'quantity' => $item->getQuantity(),
-                    'price' => $item->getPrice(),
+                    'price' => $item->getPrice()->getValue(),
+                    "created_at" => $item->getCreatedAt(),
+                    "updated_at" => $item->getUpdatedAt(),
                 ]);
             }
         });
     }
 
+    public function update(OrderEntity $order): void
+    {
+    }
+
     public function delete(OrderEntity $order): void
     {
-        $this->query()
-            ->where('id', $order->getId())
+        $this->filters($this->query(), ["id" => $order->getId()])
             ->update(
                 [
                     "deleted_at" => $order->getDeletedAt()->format("Y-m-d H:i:s")
@@ -132,7 +133,19 @@ class Repository implements IOrderRepository
             );
     }
 
-    protected function query(): Builder
+    public function filters(Builder $query, array $filters = []): Builder
+    {
+        if (!empty($filters["id"])) {
+            if (!is_array($filters["id"]))
+                $filters["id"] = [$filters["id"]];
+
+            $query->whereIn('id', $filters["id"]);
+        }
+
+        return $query;
+    }
+
+    public function query(array|bool $append = []): Builder
     {
         return DB::table('orders')->whereNull('deleted_at');
     }

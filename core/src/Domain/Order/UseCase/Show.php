@@ -2,9 +2,12 @@
 
 namespace TechChallenge\Domain\Order\UseCase;
 
+use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 
-abstract class Show extends Standard
+interface Show
 {
-    abstract public function execute(DtoInput $data): OrderEntity;
+    public function __construct(IOrderRepository $OrderRepository);
+
+    public function execute(DtoInput $data): OrderEntity;
 }

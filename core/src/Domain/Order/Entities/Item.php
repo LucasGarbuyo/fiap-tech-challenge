@@ -8,38 +8,27 @@ use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Item
 {
-    private string $productId;
+    private string $product_id;
     private int $quantity;
-    private float $productPrice;
+    private Price $price;
     private readonly DateTime $created_at;
     private readonly DateTime $updated_at;
+    private ?DateTime $deleted_at;
 
     public function __construct(
         private readonly string $id,
-        string $productId,
-        int $quantity,
-        float $productPrice,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
     ) {
-        $this->setProductId($productId)
-            ->setQuantity($quantity)
-            ->setProductPrice($productPrice);
     }
 
     public static function create(
-        string $productId,
-        int $quantity,
-        float $productPrice,
         ?string $id = null,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
-    ): self {        
+    ): self {
         return new self(
             id: $id ?? uniqid("ORDE_ITEM", true),
-            productId: $productId,
-            quantity: $quantity,
-            productPrice: $productPrice,
             created_at: $created_at ?? new DateTime(),
             updated_at: $updated_at ?? new DateTime(),
         );
@@ -52,14 +41,14 @@ class Item
 
     public function setProductId(string $productId): self
     {
-        $this->productId = $productId;
+        $this->product_id = $productId;
 
         return $this;
     }
 
     public function getProductId(): string
     {
-        return $this->productId;
+        return $this->product_id;
     }
 
     public function setQuantity(int $quantity): self
@@ -84,6 +73,16 @@ class Item
         return $this;
     }
 
+    public function getCreatedAt(): DateTime
+    {
+        return $this->created_at;
+    }
+
+    public function getUpdatedAt(): DateTime
+    {
+        return $this->updated_at;
+    }
+
     public function setUpdatedAt(DateTime $updated_at): self
     {
         $this->updated_at = $updated_at;
@@ -91,34 +90,44 @@ class Item
         return $this;
     }
 
-    public function setProductPrice($price): self
-    {        
-        $this->productPrice = $price;
+    public function delete(): self
+    {
+        $this->deleted_at = new DateTime();
+
         return $this;
     }
 
-    public function getProductPrice(): float
+    public function getDeletedAt(): DateTime|null
     {
-        return $this->productPrice;
+        return $this->deleted_at;
     }
 
+    public function setPrice(Price $price): self
+    {
+        $this->price = $price;
+
+        return $this;
+    }
 
     public function getPrice(): Price
     {
-        $total = $this->productPrice * $this->quantity;
+        return $this->price;
+    }
+
+    public function getTotal(): Price
+    {
+        $total = $this->getPrice()->getValue() * $this->getQuantity();
+
         return new Price($total);
     }
 
     public function toArray(): array
     {
-        
-        $return = [
+        return [
             "id" => $this->getId(),
             "product_id" => $this->getProductId(),
             "quantity" => $this->getQuantity(),
             "price" => $this->getPrice()->getValue(),
         ];
-
-        return $return;
     }
 }

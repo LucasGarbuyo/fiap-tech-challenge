@@ -9,7 +9,7 @@ interface ICustomer
     /** @return Customer[] */
     public function index(array $filters = [], array|bool $append = []): array;
 
-    public function show(array $filters = [], array|bool $append = []): Customer;
+    public function show(array $filters = [], array|bool $append = []): Customer|null;
 
     public function store(Customer $customer): void;
 

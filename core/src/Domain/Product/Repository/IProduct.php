@@ -12,7 +12,7 @@ interface IProduct
     /** @return Product[] */
     public function index(array $filters = [], array|bool $append = []): array;
 
-    public function show(array $filters = [], array|bool $append = []): Product;
+    public function show(array $filters = [], array|bool $append = []): Product|null;
 
     public function store(Product $product): void;
 

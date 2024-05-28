@@ -2,8 +2,10 @@
 
 namespace TechChallenge\Domain\Order\Exceptions;
 
-use TechChallenge\Domain\Shared\Exceptions\DefaultException;
-
-class OrderNotFoundException extends DefaultException
+class OrderNotFoundException extends OrderException
 {
+    public function __construct()
+    {
+        parent::__construct("Pedido não encontrado", 404);
+    }
 }

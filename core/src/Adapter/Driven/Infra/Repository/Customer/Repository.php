@@ -28,9 +28,12 @@ class Repository implements ICustomerRepository
         return $customers;
     }
 
-    public function show(array $filters = [], array|bool $append = []): CustomerEntity
+    public function show(array $filters = [], array|bool $append = []): CustomerEntity|null
     {
         $customerData = $this->filters($this->query($append), $filters)->first();
+
+        if (empty($customerData))
+            return null;
 
         return (new CustomerFactory())
             ->new($customerData->id, $customerData->created_at, $customerData->updated_at)

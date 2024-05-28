@@ -6,19 +6,19 @@ use TechChallenge\Domain\Order\UseCase\DtoInput as IOrderUseCaseDtoInput;
 
 class DtoInput implements IOrderUseCaseDtoInput
 {
-    public readonly ?string $id;
-    public readonly ?string $customerId;
-    public readonly ?array $items;
-    public readonly string $status;
-    public readonly float $total;
+    public $id;
+    public $customer_id;
+    public $items;
+    public $status;
+    public $total;
 
     public function __construct(
         ?string $id = null,
-        ?string $customerId = null,
+        ?string $customer_id = null,
         ?array $items = null,
     ) {
         $this->id = $id;
-        $this->customerId = $customerId;
+        $this->customer_id = $customer_id;
         $this->items = $items;
     }
 
@@ -29,7 +29,7 @@ class DtoInput implements IOrderUseCaseDtoInput
 
     public function getCustomerId(): string|null
     {
-        return $this->customerId;
+        return $this->customer_id;
     }
 
     public function getItems(): array|null

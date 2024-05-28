@@ -158,30 +158,33 @@ class Order
     }
 
 
-    public function toArray($complete = true): array
+    public function toArray(): array
     {
+        $items = array_map(function ($item) {
+            return $item->toArray();
+        }, $this->getItems());
 
-        $return = [
+        return [
             "id" => $this->getId(),
+            "customer_id" => $this->getCustomerId(),
             "customer" => $this->getCustomer() ? $this->getCustomer()->toArray() : null,
             "price" => $this->getPrice(),
             "status" => $this->getStatus(),
-            "items" => $this->getItems(),
+            "items" => $items,
+            "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),
+            "updated_at" => $this->getUpdatedAt()->format("Y-m-d H:i:s")
         ];
-        if ($complete) {
-            $return["created_at"] = $this->getCreatedAt()->format("Y-m-d H:i:s");
-            $return["updated_at"] = $this->getUpdatedAt()->format("Y-m-d H:i:s");
-        }
-        return $return;
     }
 
     public function getPrice(): float
     {
         $price = 0;
-        foreach ($this->items as $item) {
-            $price += $item->getPrice()->getValue();
-        }
+
+        foreach ($this->items as $item)
+            $price += $item->getTotal()->getValue();
+
         $this->total = $price;
+
         return $this->total;
     }
 }

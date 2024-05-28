@@ -43,7 +43,7 @@ class Order extends Controller
     {
         try {
             $data = new OrderDtoInput(
-                customerId: $request->customerId,
+                customer_id: $request->customerId,
                 items: $request->items
             );
 

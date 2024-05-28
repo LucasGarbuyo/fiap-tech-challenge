@@ -2,7 +2,11 @@
 
 namespace TechChallenge\Domain\Order\UseCase;
 
-abstract class Index extends Standard
+use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
+
+interface Index
 {
-    abstract public function execute(array $filters = [], array|bool $append = []): array;
+    public function __construct(IOrderRepository $OrderRepository);
+
+    public function execute(array $filters = [], array|bool $append = []): array;
 }

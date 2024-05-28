@@ -3,7 +3,6 @@
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Product;
 
 use Illuminate\Database\Query\Builder;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\DB;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
@@ -20,6 +19,9 @@ class Repository implements IProductRepository
     public function index(array $filters = [], array|bool $append = []): array
     {
         $productsData = $this->filters($this->query($append), $filters)->get();
+
+        if (count($productsData) == 0)
+            return [];
 
         $products = [];
 
@@ -48,9 +50,12 @@ class Repository implements IProductRepository
         return $products;
     }
 
-    public function show(array $filters = [], array|bool $append = []): ProductEntity
+    public function show(array $filters = [], array|bool $append = []): ProductEntity|null
     {
         $productData = $this->filters($this->query($append), $filters)->first();
+
+        if (empty($productData))
+            return null;
 
         $productFactory = (new ProductFactory())
             ->new($productData->id, $productData->created_at, $productData->updated_at)
