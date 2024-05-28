@@ -4,7 +4,7 @@
         "title": "TechChallenge - API Documentation"
     },
     "paths": {
-        "/api/product/index": {
+        "/api/product": {
             "get": {
                 "tags": [
                     "Produtos"
@@ -22,35 +22,73 @@
                                         "type": "object",
                                         "properties": {
                                             "id": {
-                                                "type": "integer",
+                                                "type": "string",
                                                 "description": "ID único do produto."
                                             },
                                             "name": {
                                                 "type": "string",
                                                 "description": "Nome do produto."
                                             },
+                                            "description": {
+                                                "type": "string",
+                                                "description": "Descrição do produto."
+                                            },
                                             "price": {
                                                 "type": "number",
                                                 "format": "float",
                                                 "description": "Preço do produto."
                                             },
-                                            "description": {
+                                            "category_id": {
                                                 "type": "string",
-                                                "description": "Descrição do produto."
+                                                "description": "ID da categoria do produto."
+                                            },
+                                            "category": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "description": "ID único da categoria."
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "Nome da categoria."
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "description": "Tipo da categoria."
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "description": "Data e hora de criação da categoria."
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "description": "Data e hora da última atualização da categoria."
+                                                    }
+                                                }
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "Data e hora de criação do produto."
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "Data e hora da última atualização do produto."
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    },
-                    "404": {
-                        "description": "Nenhum produto encontrado."
                     }
                 }
             }
         },
-        "/api/product/show/{id}": {
+        "/api/product/{id}": {
             "get": {
                 "tags": [
                     "Produtos"
@@ -103,9 +141,7 @@
                         "description": "Produto não encontrado."
                     }
                 }
-            }
-        },
-        "/api/product/store": {
+            },
             "post": {
                 "tags": [
                     "Produtos"
@@ -150,9 +186,7 @@
                         "description": "Nome do produto não pode ter mais que 255 caracteres."
                     }
                 }
-            }
-        },
-        "/api/product/update/{id}": {
+            },
             "put": {
                 "tags": [
                     "Produtos"
@@ -205,9 +239,7 @@
                         "description": "Produto não encontrado."
                     }
                 }
-            }
-        },
-        "/api/product/delete/{id}": {
+            },
             "delete": {
                 "tags": [
                     "Produtos"
@@ -229,9 +261,6 @@
                 "responses": {
                     "200": {
                         "description": "Produto deletado com sucesso."
-                    },
-                    "404": {
-                        "description": "Produto não encontrado."
                     }
                 }
             }
