@@ -498,6 +498,58 @@
                     }
                 }
             }
+        },
+        "/api/order": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Buscar pedidos",
+                "description": "Este endpoint é usado para buscar todos os pedidos cadastrados no sistema.",
+                "responses": {
+                    "200": {
+                        "description": "Listagem de pedidos encontrada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Pedido"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Criar um novo pedido",
+                "description": "Este endpoint é usado para criar um novo pedido.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/PedidoRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/definitions/Response201"
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -660,6 +712,80 @@
                 }
             }
         },
+        "Pedido": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ID único do pedido."
+                },
+                "customer_id": {
+                    "type": "string",
+                    "description": "ID único do cliente."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status do pedido."
+                },
+                "customer": {
+                    "$ref": "#/definitions/Cliente"
+                },
+                "total": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Total do pedido."
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Lista de itens do pedido.",
+                    "items": {
+                        "$ref": "#/definitions/Item"
+                    }
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora de criação do pedido."
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora da última atualização do pedido."
+                }
+            }
+        },
+        "Item": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ID único do item pedido."
+                },
+                "product_id": {
+                    "type": "string",
+                    "description": "ID único do produto."
+                },
+                "quantity": {
+                    "type": "number",
+                    "format": "int",
+                    "description": "Quantiade do item do pedido."
+                },
+                "order_id": {
+                    "type": "string",
+                    "description": "ID único do pedido."
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora de criação do pedido."
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora da última atualização do pedido."
+                }
+            }
+        },
         "CategoriaRequest": {
             "type": "object",
             "properties": {
@@ -721,6 +847,33 @@
                 "cpf",
                 "email"
             ]
+        },
+        "PedidoRequest": {
+            "type": "object",
+            "properties": {
+                "customer_id": {
+                    "type": "string",
+                    "description": "ID único do cliente."
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Lista de itens do pedido.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "product_id": {
+                                "type": "string",
+                                "description": "ID único do produto."
+                            },
+                            "quantity": {
+                                "type": "number",
+                                "format": "int",
+                                "description": "Quantiade do item do pedido."
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "security": [
