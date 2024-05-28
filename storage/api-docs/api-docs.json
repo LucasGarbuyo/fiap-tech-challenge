@@ -296,8 +296,11 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "Produto deletado com sucesso."
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
                     }
                 }
             }
