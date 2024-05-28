@@ -41,7 +41,7 @@ class Repository implements IOrderRepository
 
             if ($append === true || in_array("items", $append)) {
 
-                $items = $this->ItemRepository->index(["order_id", $orderData->id]);
+                $items = $this->ItemRepository->index(["order_id" => $orderData->id]);
 
                 $orderFactory->withItems($items);
             }
