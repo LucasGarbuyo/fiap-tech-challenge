@@ -9,18 +9,17 @@ use TechChallenge\Domain\Order\UseCase\Index as IOrderUseCaseIndex;
 use TechChallenge\Domain\Order\UseCase\Show as IOrderUseCaseShow;
 use TechChallenge\Domain\Order\UseCase\Delete as IOrderUseCaseDelete;
 use TechChallenge\Domain\Order\UseCase\Store as IOrderUseCaseStore;
+use TechChallenge\Domain\Order\UseCase\Update as IOrderUseCaseUpdate;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Order extends Controller
 {
-
     public function index(Request $request)
     {
-
         try {
             $orderIndex = DIContainer::create()->get(IOrderUseCaseIndex::class);
 
-            $orders = $orderIndex->execute();
+            $orders = $orderIndex->execute([], true);
 
             $results = array_map(function ($order) {
                 return $order->toArray();
@@ -43,7 +42,7 @@ class Order extends Controller
     {
         try {
             $data = new OrderDtoInput(
-                customer_id: $request->customerId,
+                customer_id: $request->customer_id,
                 items: $request->items
             );
 
@@ -71,9 +70,36 @@ class Order extends Controller
 
             $orderShow = DIContainer::create()->get(IOrderUseCaseShow::class);
 
-            $order = $orderShow->execute($data);
+            $order = $orderShow->execute($data, true);
 
             return $this->return($order->toArray(), 200);
+        } catch (DefaultException $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                $e->getStatus()
+            );
+        }
+    }
+
+    public function update(Request $request, string $id)
+    {
+        try {
+            $data = new OrderDtoInput(
+                id: $id,
+                customer_id: $request->customerId,
+                items: $request->items,
+                status: $request->status
+            );
+
+            $orderUpdate = DIContainer::create()->get(IOrderUseCaseUpdate::class);
+
+            $orderUpdate->execute($data);
+
+            return $this->return([], 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [

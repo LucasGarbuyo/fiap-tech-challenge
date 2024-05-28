@@ -3,11 +3,14 @@
 namespace TechChallenge\Domain\Order\Repository;
 
 use TechChallenge\Domain\Order\Entities\Item;
-use Illuminate\Support\Collection;
 
 interface IItem
 {
-    public function show(string $id): Item;
+    public function index(array $filters = []): array;
 
-    public function getByOrderId(string $orderId): Collection;
+    public function exist(array $filters = []): bool;
+
+    public function store(Item $item): void;
+
+    public function update(Item $item): void;
 }

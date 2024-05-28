@@ -42,9 +42,9 @@ Route::controller(Category::class)
 Route::controller(Order::class)
     ->prefix('/order')
     ->group(function () {
-        Route::get('', [Order::class, "index"]);
+        Route::get('/', [Order::class, "index"]);
         Route::get('/{id}', [Order::class, "show"]);
-        Route::post('', [Order::class, "store"]);
-        // Route::put('/{id}', [Order::class, "update"]);
+        Route::post('/', [Order::class, "store"]);
+        Route::put('/{id}', [Order::class, "update"]);
         Route::delete('/{id}', [Order::class, "delete"]);
     });

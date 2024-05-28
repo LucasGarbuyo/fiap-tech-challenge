@@ -6,13 +6,13 @@ use TechChallenge\Domain\Category\UseCase\DtoInput as ICategoryUseCaseDtoInput;
 
 class DtoInput implements ICategoryUseCaseDtoInput
 {
-    public readonly ?string $id;
-    public readonly ?string $name;
-    public readonly ?string $type;
-    public readonly ?string $created_at;
-    public readonly ?string $updated_at;
+    public $id;
+    public $name;
+    public $type;
+    public $created_at;
+    public $updated_at;
 
-    public function __construct(?string $id = null, ?string $name = null, ?string $type = null, ?string $created_at = null, ?string $updated_at = null)
+    public function __construct($id = null,  $name = null,  $type = null,  $created_at = null,  $updated_at = null)
     {
         $this->id = $id;
         $this->name = $name;

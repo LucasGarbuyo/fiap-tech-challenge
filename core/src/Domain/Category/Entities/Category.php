@@ -9,7 +9,7 @@ use DateTime;
 class Category
 {
     private string $name;
-    private string $type;
+    private ?string $type;
     private DateTime $created_at;
     private DateTime $updated_at;
     private ?DateTime $deleted_at;
@@ -38,8 +38,11 @@ class Category
         return $this->id;
     }
 
-    public function setName(string $name): self
+    public function setName(string|null $name): self
     {
+        if (strlen($name) < 3)
+            throw new CategoryException("Nome da categoria deve ter 3 ou mais caracteres");
+
         $this->name = $name;
 
         return $this;
@@ -50,10 +53,11 @@ class Category
         return $this->name;
     }
 
-    public function setType(string $type): self
+    public function setType(string|null $type): self
     {
         if (strlen($type) > 11)
             throw new CategoryException("A categoria não pode haver mais de 12 caracteres!");
+
         $this->type = $type;
 
         return $this;
