@@ -98,7 +98,7 @@ class Product extends Controller
 
             $productUpdate->execute($data);
 
-            return $this->return('Produto atualizado com sucesso!', 200);
+            return $this->return([], 204);
         } catch (DefaultException $e) {
 
             return $this->return(
