@@ -320,35 +320,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "id": {
-                                                "type": "string",
-                                                "description": "ID único do cliente."
-                                            },
-                                            "name": {
-                                                "type": "string",
-                                                "description": "Nome do cliente."
-                                            },
-                                            "cpf": {
-                                                "type": "string",
-                                                "description": "CPF do cliente."
-                                            },
-                                            "email": {
-                                                "type": "string",
-                                                "description": "Email do cliente."
-                                            },
-                                            "created_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "description": "Data e hora de criação do cliente."
-                                            },
-                                            "updated_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "description": "Data e hora da última atualização do cliente."
-                                            }
-                                        }
+                                        "$ref": "#/definitions/Cliente"
                                     }
                                 }
                             }
@@ -367,29 +339,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "description": "Nome do cliente.",
-                                        "example": "João"
-                                    },
-                                    "cpf": {
-                                        "type": "string",
-                                        "description": "CPF do cliente.",
-                                        "example": "12345678901"
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "description": "Email do cliente.",
-                                        "example": "joao@example.com"
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "cpf",
-                                    "email"
-                                ]
+                                "$ref": "#/definitions/ClienteRequest"
                             }
                         }
                     }
@@ -397,6 +347,9 @@
                 "responses": {
                     "201": {
                         "$ref": "#/definitions/Response201"
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     },
                     "404": {
                         "$ref": "#/definitions/Response404"
@@ -431,35 +384,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "id": {
-                                                "type": "string",
-                                                "description": "ID único do cliente."
-                                            },
-                                            "name": {
-                                                "type": "string",
-                                                "description": "Nome do cliente."
-                                            },
-                                            "cpf": {
-                                                "type": "string",
-                                                "description": "CPF do cliente."
-                                            },
-                                            "email": {
-                                                "type": "string",
-                                                "description": "Email do cliente."
-                                            },
-                                            "created_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "description": "Data e hora de criação do cliente."
-                                            },
-                                            "updated_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "description": "Data e hora da última atualização do cliente."
-                                            }
-                                        }
+                                        "$ref": "#/definitions/Cliente"
                                     }
                                 }
                             }
@@ -496,35 +421,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "ID único do cliente."
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "description": "Nome do cliente."
-                                        },
-                                        "cpf": {
-                                            "type": "string",
-                                            "description": "CPF do cliente."
-                                        },
-                                        "email": {
-                                            "type": "string",
-                                            "description": "Email do cliente."
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "description": "Data e hora de criação do cliente."
-                                        },
-                                        "updated_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "description": "Data e hora da última atualização do cliente."
-                                        }
-                                    }
+                                    "$ref": "#/definitions/Cliente"
                                 }
                             }
                         }
@@ -557,26 +454,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "description": "Novo nome do cliente."
-                                    },
-                                    "cpf": {
-                                        "type": "string",
-                                        "description": "Novo CPF do cliente."
-                                    },
-                                    "email": {
-                                        "type": "string",
-                                        "description": "Novo email do cliente."
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "cpf",
-                                    "email"
-                                ]
+                                "$ref": "#/definitions/ClienteRequest"
                             }
                         }
                     }
@@ -751,6 +629,37 @@
                 }
             }
         },
+        "Cliente": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ID único do cliente."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Nome do cliente."
+                },
+                "cpf": {
+                    "type": "string",
+                    "description": "CPF do cliente."
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email do cliente."
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora de criação do cliente."
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora da última atualização do cliente."
+                }
+            }
+        },
         "CategoriaRequest": {
             "type": "object",
             "properties": {
@@ -790,6 +699,28 @@
                     "description": "ID da categoria do produto."
                 }
             }
+        },
+        "ClienteRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Nome do cliente."
+                },
+                "cpf": {
+                    "type": "string",
+                    "description": "CPF do cliente."
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email do cliente."
+                }
+            },
+            "required": [
+                "name",
+                "cpf",
+                "email"
+            ]
         }
     },
     "security": [
