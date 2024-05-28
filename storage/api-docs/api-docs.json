@@ -3,13 +3,8 @@
     "info": {
         "title": "TechChallenge - API Documentation"
     },
-    "servers": [
-        {
-            "url": "http://localhost:8000/api"
-        }
-    ],
     "paths": {
-        "/product/index": {
+        "/api/product/index": {
             "get": {
                 "tags": [
                     "Produtos"
@@ -55,7 +50,7 @@
                 }
             }
         },
-        "/product/edit/{id}": {
+        "/api/product/show/{id}": {
             "get": {
                 "tags": [
                     "Produtos"
@@ -110,7 +105,7 @@
                 }
             }
         },
-        "/product/store": {
+        "/api/product/store": {
             "post": {
                 "tags": [
                     "Produtos"
@@ -157,7 +152,7 @@
                 }
             }
         },
-        "/product/update/{id}": {
+        "/api/product/update/{id}": {
             "put": {
                 "tags": [
                     "Produtos"
@@ -212,7 +207,7 @@
                 }
             }
         },
-        "/product/delete/{id}": {
+        "/api/product/delete/{id}": {
             "delete": {
                 "tags": [
                     "Produtos"
@@ -241,7 +236,7 @@
                 }
             }
         },
-        "/customer/index": {
+        "/api/customer/index": {
             "get": {
                 "tags": [
                     "Clientes"
@@ -286,7 +281,7 @@
                 }
             }
         },
-        "/customer/edit/{id}": {
+        "/api/customer/edit/{id}": {
             "get": {
                 "tags": [
                     "Clientes"
@@ -340,7 +335,7 @@
                 }
             }
         },
-        "/customer/store": {
+        "/api/customer/store": {
             "post": {
                 "tags": [
                     "Clientes"
@@ -386,7 +381,7 @@
                 }
             }
         },
-        "/customer/update/{id}": {
+        "/api/customer/update/{id}": {
             "put": {
                 "tags": [
                     "Clientes"
@@ -439,7 +434,7 @@
                 }
             }
         },
-        "/customer/delete/{id}": {
+        "/api/customer/delete/{id}": {
             "delete": {
                 "tags": [
                     "Clientes"
@@ -469,7 +464,6 @@
             }
         }
     },
-       
     "security": [
         []
     ]
