@@ -22,7 +22,7 @@ class Repository implements IOrderRepository
     /** @return Order[] */
     public function index(array $filters = [], array|bool $append = []): array
     {
-        $ordersData = $this->query()->get();
+        $ordersData = $this->filters($this->query($append), $filters)->get();
 
         $orders = [];
 

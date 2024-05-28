@@ -22,7 +22,7 @@ class Category
         return $this;
     }
 
-    public function withNameType(string $name, string $type): self
+    public function withNameType($name, $type): self
     {
         $this->category
             ->setName($name)

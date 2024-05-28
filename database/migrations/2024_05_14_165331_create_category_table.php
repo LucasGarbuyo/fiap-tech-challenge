@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->char("id", 28)->primary(true)->unique();
             $table->string("name");
-            $table->string("type", 11);
+            $table->string("type", 11)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
