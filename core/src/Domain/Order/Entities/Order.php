@@ -33,9 +33,9 @@ class Order
 
     public static function create(
         ?string $id = null,
-        ?Price $total = null,
-        ?DateTime $created_at = null,
-        ?DateTime $updated_at = null
+        ?Price $total,
+        ?DateTime $created_at,
+        ?DateTime $updated_at
     ): self {
         return new self(
             id: $id ?? uniqid("ORDE_", true),
@@ -160,6 +160,11 @@ class Order
         return $this;
     }
 
+    public function getTotal(): Price
+    {
+        return $this->total;
+    }
+
     public function calcTotal()
     {
         $price = 0;
@@ -168,11 +173,6 @@ class Order
             $price += $item->getTotal()->getValue();
 
         $this->setTotal(new Price($price));
-    }
-
-    public function getTotal(): Price
-    {
-        return $this->total;
     }
 
     public function toArray(): array
@@ -185,7 +185,7 @@ class Order
             "id" => $this->getId(),
             "customer_id" => $this->getCustomerId(),
             "customer" => $this->getCustomer() ? $this->getCustomer()->toArray() : null,
-            "total" => $this->getTotal(),
+            "total" => $this->getTotal()->getValue(),
             "status" => $this->getStatus(),
             "items" => $items,
             "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),

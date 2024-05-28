@@ -9,7 +9,6 @@ use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Order\Repository\IItem as IItemRepository;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 use TechChallenge\Domain\Order\Factories\Order as OrderFactory;
-use TechChallenge\Domain\Order\Factories\Item as ItemFactory;
 use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
 
 class Repository implements IOrderRepository
@@ -82,16 +81,9 @@ class Repository implements IOrderRepository
                 $orderFactory->withCustomerIdCustomer($orderData->customer_id, $customer);
         }
 
-        if ($append === true || in_array("customer", $append)) {
+        if ($append === true || in_array("items", $append)) {
 
-            $itemsData = $this->queryItems()->where('order_id', $id)->get();
-
-            $items = [];
-            foreach ($itemsData as $itemData) {
-                $items[] = (new ItemFactory())
-                    ->new($itemData->product_id, $itemData->quantity, $itemData->price, $itemData->id)
-                    ->build();
-            }
+            $items = $this->ItemRepository->index(["order_id", $orderData->id]);
 
             $orderFactory->withItems($items);
         }

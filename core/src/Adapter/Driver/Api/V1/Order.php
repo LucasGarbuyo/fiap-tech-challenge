@@ -70,7 +70,7 @@ class Order extends Controller
 
             $orderShow = DIContainer::create()->get(IOrderUseCaseShow::class);
 
-            $order = $orderShow->execute($data);
+            $order = $orderShow->execute($data, true);
 
             return $this->return($order->toArray(), 200);
         } catch (DefaultException $e) {

@@ -9,5 +9,5 @@ interface Show
 {
     public function __construct(IOrderRepository $OrderRepository);
 
-    public function execute(DtoInput $data): OrderEntity;
+    public function execute(DtoInput $data, bool|array $append = []): OrderEntity;
 }

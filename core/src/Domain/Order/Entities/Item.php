@@ -131,6 +131,7 @@ class Item
         return [
             "id" => $this->getId(),
             "product_id" => $this->getProductId(),
+            "order_id" => $this->getOrderId(),
             "quantity" => $this->getQuantity(),
             "price" => $this->getPrice()->getValue(),
         ];
