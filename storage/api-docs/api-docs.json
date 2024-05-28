@@ -370,6 +370,73 @@
                 }
             }
         },
+        "/api/customer/cpf/{cpf}": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Buscar clientes por CPF",
+                "description": "Este endpoint é usado para buscar clientes por CPF cadastrados no sistema.",
+                "parameters": [
+                    {
+                        "name": "cpf",
+                        "in": "path",
+                        "required": true,
+                        "description": "CPF do cliente a ser buscado.",
+                        "schema": {
+                            "type": "string",
+                            "description": "CPF do cliente."
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Listagem de clientes encontrada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string",
+                                                "description": "ID único do cliente."
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "description": "Nome do cliente."
+                                            },
+                                            "cpf": {
+                                                "type": "string",
+                                                "description": "CPF do cliente."
+                                            },
+                                            "email": {
+                                                "type": "string",
+                                                "description": "Email do cliente."
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "Data e hora de criação do cliente."
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "description": "Data e hora da última atualização do cliente."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado."
+                    }
+                }
+            }
+        },
         "/api/customer/{id}": {
             "get": {
                 "tags": [
