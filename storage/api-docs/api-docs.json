@@ -46,6 +46,9 @@
                 "responses": {
                     "201": {
                         "$ref": "#/definitions/Response201"
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     }
                 }
             }
@@ -117,6 +120,9 @@
                     "204": {
                         "description": "Categoria atualizado com sucesso."
                     },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
                     "404": {
                         "$ref": "#/definitions/Response404"
                     }
@@ -143,6 +149,9 @@
                 "responses": {
                     "204": {
                         "description": "Categoria deletada com sucesso."
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
                     }
                 }
             }
@@ -574,26 +583,7 @@
                         "description": "Cliente atualizado com sucesso."
                     },
                     "400": {
-                        "description": "Parametros inválidos",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": {
-                                            "type": "object",
-                                            "properties": {
-                                                "message": {
-                                                    "type": "string",
-                                                    "description": "Descrição do erro.",
-                                                    "example": "Cpf inválido."
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/definitions/Response400"
                     },
                     "404": {
                         "$ref": "#/definitions/Response404"
@@ -630,6 +620,27 @@
         }
     },
     "definitions": {
+        "Response400": {
+            "description": "Parametros inválidos.",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "error": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string",
+                                        "description": "Descrição do erro."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "Response404": {
             "description": "Registro não encontrato.",
             "content": {
