@@ -63,6 +63,13 @@ class ItemRepository implements IItemRepository
             $query->whereIn('id', $filters["id"]);
         }
 
+        if (!empty($filters["order_id"])) {
+            if (!is_array($filters["order_id"]))
+                $filters["order_id"] = [$filters["order_id"]];
+
+            $query->whereIn('order_id', $filters["order_id"]);
+        }
+
         return $query;
     }
 

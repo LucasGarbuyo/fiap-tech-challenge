@@ -135,7 +135,7 @@ class Order
             if (!$item instanceof Item)
                 throw new InvalidItemOrder();
 
-            $this->items[] = $item;
+            $this->setItem($item);
         }
 
         return $this;
@@ -143,7 +143,18 @@ class Order
 
     public function setItem(Item $item): self
     {
-        $this->items[] = $item;
+        $exist = false;
+
+        foreach ($this->getItems() as $orderItem) {
+            if ($orderItem->getProductId() == $item->getProductId()) {
+                $orderItem->setQuantity($item->getQuantity());
+                $exist = true;
+                break;
+            }
+        }
+
+        if (!$exist)
+            $this->items[] = $item;
 
         return $this;
     }

@@ -4,8 +4,11 @@ namespace TechChallenge\Domain\Order\Enum;
 
 enum OrderStatus: string
 {
-    case RECEIVED = "Recebido";
-    case IN_PREPARATION = 'Em preparação';
-    case READY = 'Pronto';
-    case FINISHED = 'Finalizado';
+    case NEW = "NEW";
+    case RECEIVED = "RECEIVED";
+    case PAID = "PAID";
+    case IN_PREPARATION = 'IN_PREPARATION';
+    case READY = 'READY';
+    case FINISHED = 'FINISHED';
+    case CANCELED = "CANCELED";
 }

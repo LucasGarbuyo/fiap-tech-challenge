@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
-            $table->char("id", 28)->primary(true)->unique()->index();
-            $table->char('customer_id', 28)->nullable()->constrained('customers', 'id')->index();
-            $table->decimal('total')->nullable();
+        Schema::create('order_status', function (Blueprint $table) {
+            $table->char("id", 28)->primary(true)->unique();
+            $table->char('order_id', 28)->nullable()->constrained('orders', 'id')->index();
             $table->enum('status', [
                 'NEW',
                 'RECEIVED',
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('order_status');
     }
 };

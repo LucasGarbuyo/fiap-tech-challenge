@@ -2,8 +2,6 @@
 
 namespace TechChallenge\Application\UseCase\Order;
 
-use Exception;
-use Illuminate\Log\Logger;
 use TechChallenge\Domain\Customer\Exceptions\CustomerNotFoundException;
 use TechChallenge\Domain\Order\UseCase\{DtoInput, Update as IOrderUseCaseUpdate};
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;

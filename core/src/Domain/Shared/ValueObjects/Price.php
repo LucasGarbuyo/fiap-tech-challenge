@@ -2,6 +2,8 @@
 
 namespace TechChallenge\Domain\Shared\ValueObjects;
 
+use TechChallenge\Domain\Shared\Exceptions\DefaultException;
+
 class Price
 {
     private float $value;
@@ -21,11 +23,11 @@ class Price
         } elseif (preg_match('/^\d{1,3}(,\d{3})*\.\d{2}$/', $value)) {
             $value = str_replace(',', '', $value);
         } elseif (!is_numeric($value)) {
-            throw new \InvalidArgumentException("Invalid price value");
+            throw new DefaultException("Preço inválido");
         }
 
         $this->value = (float) $value;
-      
+
         return $this;
     }
 
