@@ -74,8 +74,11 @@ class Product
         return $this->category;
     }
 
-    public function setName(string $name): self
+    public function setName(string|null $name): self
     {
+        if (strlen($name) < 4)
+            throw new ProductException("Nome do produto precisa ter 4 ou mais caracteres");
+
         if (strlen($name) > 255)
             throw new ProductException("Nome do produto não pode ter mais que 255 caracteres");
 
@@ -96,7 +99,7 @@ class Product
     }
 
 
-    public function setDescription(string $description): self
+    public function setDescription(string|null $description): self
     {
         $this->description = $description;
 
