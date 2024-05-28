@@ -13,8 +13,8 @@ use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
 class Store implements IOrderUseCaseStore
 {
     public function __construct(
-        protected readonly IOrderRepository $orderRepository,
-        protected readonly IProductRepository $productRepository,
+        protected readonly IOrderRepository $OrderRepository,
+        protected readonly IProductRepository $ProductRepository,
         protected readonly ICustomerRepository $CustomerRepository
     ) {
     }
@@ -37,14 +37,14 @@ class Store implements IOrderUseCaseStore
 
             foreach ($data->getItems() as $item) {
 
-                $product = $this->productRepository->show(["id" => $item['product_id']]);
-
-                if (empty($product))
+                if (is_null($item->getProductId()) || !$this->ProductRepository->exist(["id" => $item->getProductId()]))
                     throw new ProductNotFoundException();
+
+                $product = $this->ProductRepository->show(["id" => $item->getProductId()]);
 
                 $items[] = (new ItemFactory())
                     ->new(id: null, product_id: $product->getId(), order_id: $order->getId())
-                    ->withQuantityPrice($item['quantity'], $product->getPrice()->getValue())
+                    ->withQuantityPrice($item->getQuantity(), $product->getPrice()->getValue())
                     ->build();
             }
 
@@ -53,7 +53,7 @@ class Store implements IOrderUseCaseStore
 
         $order->calcTotal();
 
-        $this->orderRepository->store($order);
+        $this->OrderRepository->store($order);
 
         return $order->getId();
     }

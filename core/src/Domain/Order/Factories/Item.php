@@ -28,7 +28,7 @@ class Item
         return $this;
     }
 
-    public function withQuantityPrice($quantity, $price): self
+    public function withQuantityPrice(?int $quantity, $price): self
     {
         $this->item
             ->setQuantity($quantity)

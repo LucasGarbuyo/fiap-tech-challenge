@@ -56,9 +56,9 @@ class Item
         return $this->order_id;
     }
 
-    public function setQuantity(int $quantity): self
+    public function setQuantity(?int $quantity): self
     {
-        if ($quantity <= 0)
+        if (is_null($quantity) || $quantity <= 0)
             throw new InvalidItemQuantityException();
 
         $this->quantity = $quantity;
