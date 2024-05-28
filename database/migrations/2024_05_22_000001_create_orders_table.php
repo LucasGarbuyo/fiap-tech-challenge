@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->uuid("id")->primary();
             $table->foreignUuid('customer_id')->nullable()->constrained('customers', 'id');
-            $table->float('price')->nullable();
+            $table->decimal('total')->nullable();
             $table->enum('status', [
                 'Recebido',
                 'Em preparação',

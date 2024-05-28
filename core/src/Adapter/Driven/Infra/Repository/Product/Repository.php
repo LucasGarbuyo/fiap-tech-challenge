@@ -30,7 +30,7 @@ class Repository implements IProductRepository
         foreach ($productsData as $productData) {
             $productFactory
                 ->new($productData->id, $productData->created_at, $productData->updated_at)
-                ->withNameDescriptionPrice(
+                ->withNameDescriptionPriceImage(
                     $productData->name,
                     $productData->description,
                     $productData->price,
@@ -60,7 +60,7 @@ class Repository implements IProductRepository
 
         $productFactory = (new ProductFactory())
             ->new($productData->id, $productData->created_at, $productData->updated_at)
-            ->withNameDescriptionPrice($productData->name, $productData->description, $productData->price, $productData->image);
+            ->withNameDescriptionPriceImage($productData->name, $productData->description, $productData->price, $productData->image);
 
         if (($append === true || in_array("category", $append)) && !empty($productData->category_id)) {
 

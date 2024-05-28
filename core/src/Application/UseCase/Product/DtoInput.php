@@ -6,24 +6,24 @@ use TechChallenge\Domain\Product\UseCase\DtoInput as IProductUseCaseDtoInput;
 
 class DtoInput implements IProductUseCaseDtoInput
 {
-    public readonly ?string $id;
-    public readonly ?string $category_id;
-    public readonly ?string $name;
-    public readonly ?string $description;
-    public readonly ?float $price;
-    public readonly ?string $image;
-    public readonly ?string $created_at;
-    public readonly ?string $updated_at;
+    public $id;
+    public $category_id;
+    public $name;
+    public $description;
+    public $price;
+    public $image;
+    public $created_at;
+    public $updated_at;
 
     public function __construct(
-        ?string $id = null,
-        ?string $category_id = null,
-        ?string $name = null,
-        ?string $description = null,
-        ?float $price = null,
-        ?string $image = null,
-        ?string $created_at = null,
-        ?string $updated_at = null
+        $id = null,
+        $category_id = null,
+        $name = null,
+        $description = null,
+        $price = null,
+        $image = null,
+        $created_at = null,
+        $updated_at = null
     ) {
         $this->id = $id;
         $this->category_id = $category_id;

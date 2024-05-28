@@ -26,7 +26,7 @@ class Update implements IProductUseCaseUpdate
 
         $productFactory = (new ProductFactory())
             ->new()
-            ->withNameDescriptionPrice($data->name, $data->description, $data->price, $data->image);
+            ->withNameDescriptionPriceImage($data->name, $data->description, $data->price, $data->image);
 
         if (!empty($data->category_id)) {
             if (!$this->CategoryRepository->exist(["id" => $data->category_id]))

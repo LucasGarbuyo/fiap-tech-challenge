@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignUuid('product_id')->constrained('products', 'id');
             $table->integer('quantity');
             $table->float('price');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

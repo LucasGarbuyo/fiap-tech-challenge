@@ -50,7 +50,7 @@ class Product
         return $this;
     }
 
-    public function setImage(string $image): self
+    public function setImage(string|null $image): self
     {
         $this->image = $image;
 

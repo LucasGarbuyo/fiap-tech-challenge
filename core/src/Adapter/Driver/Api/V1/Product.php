@@ -46,7 +46,8 @@ class Product extends Controller
                 $request->category_id,
                 $request->name,
                 $request->description,
-                $request->price
+                $request->price,
+                $request->image
             );
 
             $productStore = DIContainer::create()->get(IProductUseCaseStore::class);
