@@ -791,11 +791,13 @@
             "properties": {
                 "name": {
                     "type": "string",
-                    "description": "Nome da categoria."
+                    "description": "Nome da categoria.",
+                    "example": "Bebida"
                 },
                 "type": {
                     "type": "string",
-                    "description": "Tipo da categoria."
+                    "description": "Tipo da categoria.",
+                    "example": "Refrigerante"
                 }
             }
         },
@@ -805,24 +807,29 @@
                 "name": {
                     "type": "string",
                     "description": "Nome do produto.",
-                    "maxLength": 255
+                    "maxLength": 255,
+                    "example": "Coca Cola 2L"
                 },
                 "description": {
                     "type": "string",
-                    "description": "Descrição do produto."
+                    "description": "Descrição do produto.",
+                    "example": "Refrigerante Garrafa 2L 1 UN Coca Cola"
                 },
                 "price": {
                     "type": "number",
                     "format": "float",
-                    "description": "Preço do produto."
+                    "description": "Preço do produto.",
+                    "example": 12.50
                 },
                 "image": {
                     "type": "string",
-                    "description": "Imagem do produto."
+                    "description": "Imagem do produto.",
+                    "example": "https://ibb.co/cDBT7zH"
                 },
                 "category_id": {
                     "type": "string",
-                    "description": "ID da categoria do produto."
+                    "description": "ID da categoria do produto.",
+                    "example": "CATE_1"
                 }
             }
         },
@@ -831,15 +838,18 @@
             "properties": {
                 "name": {
                     "type": "string",
-                    "description": "Nome do cliente."
+                    "description": "Nome do cliente.",
+                    "example": "João"
                 },
                 "cpf": {
                     "type": "string",
-                    "description": "CPF do cliente."
+                    "description": "CPF do cliente.",
+                    "example": "12345678901"
                 },
                 "email": {
                     "type": "string",
-                    "description": "Email do cliente."
+                    "description": "Email do cliente.",
+                    "example": "joao@email.com"
                 }
             },
             "required": [
@@ -853,7 +863,8 @@
             "properties": {
                 "customer_id": {
                     "type": "string",
-                    "description": "ID único do cliente."
+                    "description": "ID único do cliente.",
+                    "example": "CUST_1"
                 },
                 "items": {
                     "type": "array",
@@ -863,12 +874,14 @@
                         "properties": {
                             "product_id": {
                                 "type": "string",
-                                "description": "ID único do produto."
+                                "description": "ID único do produto.",
+                                "example": "PROD_1"
                             },
                             "quantity": {
                                 "type": "number",
                                 "format": "int",
-                                "description": "Quantiade do item do pedido."
+                                "description": "Quantiade do item do pedido.",
+                                "example": 1
                             }
                         }
                     }
