@@ -269,7 +269,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "204": {
                         "description": "Produto atualizado com sucesso."
                     },
                     "404": {
