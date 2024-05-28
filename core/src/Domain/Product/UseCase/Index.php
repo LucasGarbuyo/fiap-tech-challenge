@@ -2,7 +2,11 @@
 
 namespace TechChallenge\Domain\Product\UseCase;
 
-abstract class Index extends Standard
+use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
+
+interface Index
 {
-    abstract public function execute(array $filters = [], array|bool $append = []): array;
+    public function __construct(IProductRepository $ProductRepository);
+
+    public function execute(array $filters = [], array|bool $append = []): array;
 }

@@ -3,8 +3,11 @@
 namespace TechChallenge\Domain\Product\UseCase;
 
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
+use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 
-abstract class Show extends Standard
+interface Show
 {
-    abstract public function execute(DtoInput $data): ProductEntity;
+    public function __construct(IProductRepository $ProductRepository);
+
+    public function execute(DtoInput $data, array|bool $append = []): ProductEntity;
 }

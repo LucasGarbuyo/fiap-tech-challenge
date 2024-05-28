@@ -19,7 +19,7 @@ class Product extends Controller
         try {
             $productIndex = DIContainer::create()->get(IProductUseCaseIndex::class);
 
-            $products = $productIndex->execute();
+            $products = $productIndex->execute([], true);
 
             $results = array_map(function ($product) {
                 return $product->toArray();
@@ -73,7 +73,7 @@ class Product extends Controller
 
             $productEdit = DIContainer::create()->get(IProductUseCaseShow::class);
 
-            $product = $productEdit->execute($data);
+            $product = $productEdit->execute($data, true);
 
             return $this->return($product->toArray(), 200);
         } catch (DefaultException $e) {

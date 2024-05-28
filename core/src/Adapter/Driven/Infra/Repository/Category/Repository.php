@@ -29,9 +29,12 @@ class Repository implements ICategoryRepository
         return $categories;
     }
 
-    public function show(array $filters = [], array|bool $append = []): CategoryEntity
+    public function show(array $filters = [], array|bool $append = []): CategoryEntity|null
     {
         $categoryData = $this->filters($this->query($append), $filters)->first();
+
+        if (empty($categoryData))
+            return null;
 
         return (new CategoryFactory())
             ->new($categoryData->id, $categoryData->created_at, $categoryData->updated_at)

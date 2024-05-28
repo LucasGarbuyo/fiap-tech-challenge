@@ -3,13 +3,22 @@
 namespace TechChallenge\Application\UseCase\Product;
 
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
+use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
 use TechChallenge\Domain\Product\UseCase\DtoInput;
 use TechChallenge\Domain\Product\UseCase\Show as IProductUseCaseShow;
+use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 
-class Show extends IProductUseCaseShow
+class Show implements IProductUseCaseShow
 {
-    public function execute(DtoInput $data): ProductEntity
+    public function __construct(protected readonly IProductRepository $ProductRepository)
     {
-        return $this->ProductRepository->show($data->id);
+    }
+
+    public function execute(DtoInput $data, array|bool $append = []): ProductEntity
+    {
+        if (!$this->ProductRepository->exist(["id" => $data->id]))
+            throw new ProductNotFoundException();
+
+        return $this->ProductRepository->show(["id" => $data->id], $append);
     }
 }

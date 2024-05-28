@@ -7,67 +7,64 @@ use Illuminate\Support\Facades\DB;
 use TechChallenge\Domain\Category\Factories\Category as CategoryFactory;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
-use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
+use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
 
 class Repository implements IProductRepository
 {
+    public function __construct(protected readonly ICategoryRepository $CategoryRepository)
+    {
+    }
+
     /** @return ProductEntity[] */
     public function index(array $filters = [], array|bool $append = []): array
     {
-        $productsData = $this->query()->get();
+        $productsData = $this->filters($this->query($append), $filters)->get();
 
         $products = [];
 
-        $ProductFactory = new ProductFactory();
+        $productFactory = new ProductFactory();
 
         foreach ($productsData as $productData) {
-            $ProductFactory
-                ->new($productData->id)
-                ->withCategoryIdNameDescriptionPrice(
-                    $productData->category_id,
+            $productFactory
+                ->new($productData->id, $productData->created_at, $productData->updated_at)
+                ->withNameDescriptionPrice(
                     $productData->name,
                     $productData->description,
                     $productData->price
                 );
 
-            if (!empty($productData->category_id)) {
-                $categoryData = $this->queryCategory()->where('id', $productData->category_id)->first();
+            if ($append === true || in_array("category", $append) && !empty($productData->category_id)) {
 
-                if (!empty($categoryData)) {
-                    $category = (new CategoryFactory())
-                        ->new($productData->category_id)
-                        ->withNameType($categoryData->name, $categoryData->type)
-                        ->build();
+                $category = $this->CategoryRepository->show(["id" => $productData->category_id]);
 
-                    $ProductFactory->withCategory($category);
-                }
+                if (!empty($category))
+                    $productFactory->withCategoryIdCategory($productData->category_id, $category);
             }
 
-            $products[] = $ProductFactory->build();
+            $products[] = $productFactory->build();
         }
 
         return $products;
     }
 
-    public function show(string $id): ProductEntity
+    public function show(array $filters = [], array|bool $append = []): ProductEntity
     {
-        $productData = $this->query()->where('id', $id)->first();
+        $productData = $this->filters($this->query($append), $filters)->first();
 
-        if (empty($productData))
-            throw new ProductNotFoundException('Not found', 404);
-
-        $categoryData = $this->queryCategory()->where('id', $productData->category_id)->first();
-
-        $category = (new CategoryFactory())
-            ->new()
-            ->withNameType($categoryData->name, $categoryData->type)
-            ->build();
-
-        return (new ProductFactory())
+        $productFactory = (new ProductFactory())
             ->new($productData->id, $productData->created_at, $productData->updated_at)
-            ->withCategoryNameDescriptionPrice($category, $productData->name, $productData->description, $productData->price)
-            ->build();
+            ->withNameDescriptionPrice($productData->name, $productData->description, $productData->price);
+
+        if ($append === true || in_array("category", $append) && !empty($productData->category_id)) {
+
+            $category = $this->CategoryRepository->show(["id" => $productData->category_id]);
+
+            if (!empty($category))
+                $productFactory->withCategoryIdCategory($productData->category_id, $category);
+        }
+
+        return $productFactory->build();
     }
 
     public function store(ProductEntity $product): void
@@ -88,11 +85,7 @@ class Repository implements IProductRepository
 
     public function update(ProductEntity $product): void
     {
-        if (!$this->query()->where('id', $product->getId())->exists())
-            throw new ProductNotFoundException('Not found', 404);
-
-        $this->query()
-            ->where('id', $product->getId())
+        $this->filters($this->query(), ["id" => $product->getId()])
             ->update(
                 [
                     'category_id' => $product->getCategoryId(),
@@ -106,8 +99,7 @@ class Repository implements IProductRepository
 
     public function delete(ProductEntity $product): void
     {
-        $this->query()
-            ->where('id', $product->getId())
+        $this->filters($this->query(), ["id" => $product->getId()])
             ->update(
                 [
                     "deleted_at" => $product->getDeletedAt()->format("Y-m-d H:i:s")
@@ -115,13 +107,25 @@ class Repository implements IProductRepository
             );
     }
 
-    protected function query(): Builder
+    public function exist(array $filters = []): bool
     {
-        return DB::table("products")->whereNull('deleted_at');
+        return $this->filters($this->query(), $filters)->exists();
     }
 
-    protected function queryCategory(): Builder
+    public function filters(Builder $query, array $filters = []): Builder
     {
-        return DB::table("categories")->whereNull('deleted_at');
+        if (!empty($filters["id"])) {
+            if (!is_array($filters["id"]))
+                $filters["id"] = [$filters["id"]];
+
+            $query->whereIn('id', $filters["id"]);
+        }
+
+        return $query;
+    }
+
+    public function query(array|bool $append = []): Builder
+    {
+        return DB::table("products")->whereNull('deleted_at');
     }
 }

@@ -141,7 +141,7 @@ class Product
         return $this->deleted_at;
     }
 
-    public function toArray($complete = true): array
+    public function toArray(): array
     {
         $return = [
             "id" => $this->getId(),
@@ -149,13 +149,10 @@ class Product
             "description" => $this->getDescription(),
             "price" => $this->getPrice()->getValue(),
             "category_id" => $this->getCategoryId(),
+            "category" => $this->getCategory() ? $this->getCategory()->toArray() : [],
+            "created_at" => $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null,
+            "updated_at" => $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null
         ];
-
-        if ($complete) {
-            $return["category"] = $this->getCategory() ? $this->getCategory()->toArray() : [];
-            $return["created_at"] = $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null;
-            $return["updated_at"] = $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null;
-        }
 
         return $return;
     }

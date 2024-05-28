@@ -100,18 +100,16 @@ class Category
         return $this->deleted_at;
     }
 
-    public function toArray($complete = true): array
+    public function toArray(): array
     {
         $return = [
             "id" => $this->getId(),
             "name" => $this->getName(),
             "type" => $this->getType(),
+            "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),
+            "updated_at" => $this->getUpdatedAt()->format("Y-m-d H:i:s")
         ];
 
-        if ($complete) {
-            $return["created_at"] = $this->getCreatedAt()->format("Y-m-d H:i:s");
-            $return["updated_at"] = $this->getUpdatedAt()->format("Y-m-d H:i:s");
-        }
         return $return;
     }
 }

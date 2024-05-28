@@ -9,7 +9,7 @@ interface ICategory
     /** @return Category[] */
     public function index(array $filters = [], array|bool $append = []): array;
 
-    public function show(array $filters = [], array|bool $append = []): Category;
+    public function show(array $filters = [], array|bool $append = []): Category|null;
 
     public function store(Category $Category): void;
 

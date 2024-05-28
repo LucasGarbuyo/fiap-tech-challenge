@@ -9,17 +9,17 @@ use TechChallenge\Adapter\Driver\Api\V1\Order;
 Route::controller(Product::class)
     ->prefix('/product')
     ->group(function () {
-        Route::get('/index', [Product::class, "index"]);
-        Route::get('/show/{id}', [Product::class, "show"]);
-        Route::post('/store', [Product::class, "store"]);
-        Route::put('/update/{id}', [Product::class, "update"]);
-        Route::delete('/delete/{id}', [Product::class, "delete"]);
+        Route::get('/', [Product::class, "index"]);
+        Route::get('/{id}', [Product::class, "show"]);
+        Route::post('/', [Product::class, "store"]);
+        Route::put('/{id}', [Product::class, "update"]);
+        Route::delete('/{id}', [Product::class, "delete"]);
     });
 
 Route::controller(Customer::class)
     ->prefix('/customer')
     ->group(function () {
-        Route::get('', [Customer::class, "index"]);
+        Route::get('/', [Customer::class, "index"]);
         Route::get('/{id}', [Customer::class, "show"]);
         Route::post('', [Customer::class, "store"]);
         Route::put('/{id}', [Customer::class, "update"]);
