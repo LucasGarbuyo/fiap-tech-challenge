@@ -7,7 +7,6 @@ services:
                 WWWGROUP: '${WWWGROUP:-1000}'
         extra_hosts:
             - 'host.docker.internal:host-gateway'
-        env_file: .env
         volumes:
             - .:/var/www/html
         ports:

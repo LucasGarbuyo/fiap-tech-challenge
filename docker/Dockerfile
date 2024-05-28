@@ -3,9 +3,7 @@ FROM ubuntu:22.04
 LABEL maintainer="Grupo 47 < 6SOAT"
 LABEL description=" Grupo 47's Docker image for the Tech Challenge"
 
-
 ARG WWWGROUP
-ARG NODE_VERSION=20
 
 WORKDIR /var/www/html
 
