@@ -6,12 +6,13 @@ use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
 use TechChallenge\Domain\Order\Enum\OrderStatus;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
+use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Order
 {
     private ?OrderEntity $order = null;
 
-    public function new(?string $id = null, String|DateTime $created_at = null, String|DateTime $updated_at = null): self
+    public function new(?string $id = null, $total, String|DateTime $created_at = null, String|DateTime $updated_at = null): self
     {
         if (!is_null($created_at))
             $created_at = is_string($created_at) ? new DateTime($created_at) : $created_at;
@@ -19,7 +20,7 @@ class Order
         if (!is_null($updated_at))
             $updated_at = is_string($updated_at) ? new DateTime($updated_at) : $updated_at;
 
-        $this->order = OrderEntity::create($id, $created_at, $updated_at);
+        $this->order = OrderEntity::create($id, new Price($total), $created_at, $updated_at);
 
         return $this;
     }
@@ -38,6 +39,13 @@ class Order
         return $this;
     }
 
+    public function withCustomerIdCustomer(string $customer_id, Customer $customer): self
+    {
+        $this->order->setCustomerId($customer_id)
+            ->setCustomer($customer);
+
+        return $this;
+    }
 
     public function withItems(array $items): self
     {
@@ -47,7 +55,7 @@ class Order
     }
 
     public function withOrder(?string $customerId = null, ?float $price, ?string $status): self
-    {        
+    {
         $orderStatus = $status !== null ? OrderStatus::from($status) : null;
         $orderPrice = $price !== null ? $price : null;
 

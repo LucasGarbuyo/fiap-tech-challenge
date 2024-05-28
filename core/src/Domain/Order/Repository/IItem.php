@@ -2,12 +2,13 @@
 
 namespace TechChallenge\Domain\Order\Repository;
 
-use TechChallenge\Domain\Order\Entities\Item;
-use Illuminate\Support\Collection;
+use TechChallenge\Domain\Order\Entities\{Item, Order};
 
 interface IItem
 {
-    public function show(string $id): Item;
+    public function exist(array $filters = []): bool;
 
-    public function getByOrderId(string $orderId): Collection;
+    public function store(Item $item, Order $order): void;
+
+    public function update(Item $item): void;
 }

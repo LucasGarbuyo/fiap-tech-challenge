@@ -86,15 +86,11 @@ use TechChallenge\Application\UseCase\Order\Store as OrderUseCaseStore;
 use TechChallenge\Domain\Order\UseCase\Show as IOrderUseCaseShow;
 use TechChallenge\Application\UseCase\Order\Show as OrderUseCaseShow;
 
+use TechChallenge\Domain\Order\UseCase\Update as IOrderUseCaseUpdate;
+use TechChallenge\Application\UseCase\Order\Update as OrderUseCaseUpdate;
+
 use TechChallenge\Domain\Order\UseCase\Delete as IOrderUseCaseDelete;
 use TechChallenge\Application\UseCase\Order\Delete as OrderUseCaseDelete;
-
-//Order Items UseCase
-use TechChallenge\Domain\OrderItem\UseCase\Show as IOrderItemUseCaseShow;
-use TechChallenge\Application\UseCase\OrderItem\Show as OrderItemUseCaseShow;
-
-use TechChallenge\Domain\OrderItem\UseCase\GetByOrderId as IGetByOrderId;
-use TechChallenge\Application\UseCase\OrderItem\GetByOrderId as GetByOrderId;
 
 class DIContainer
 {
@@ -150,12 +146,8 @@ class DIContainer
             IOrderUseCaseIndex::class => \DI\get(OrderUseCaseIndex::class),
             IOrderUseCaseStore::class => \DI\get(OrderUseCaseStore::class),
             IOrderUseCaseShow::class => \DI\get(OrderUseCaseShow::class),
+            IOrderUseCaseUpdate::class => \DI\get(OrderUseCaseUpdate::class),
             IOrderUseCaseDelete::class => \DI\get(OrderUseCaseDelete::class),
-            IOrderUseCaseShow::class => \DI\get(OrderUseCaseShow::class),
-
-            //OrderItem UseCase
-            IOrderItemUseCaseShow::class => \DI\get(OrderItemUseCaseShow::class),
-            IGetByOrderId::class => \DI\get(GetByOrderId::class),
         ]);
     }
 }

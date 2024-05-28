@@ -13,13 +13,15 @@ class DtoInput implements IOrderUseCaseDtoInput
     public $total;
 
     public function __construct(
-        ?string $id = null,
-        ?string $customer_id = null,
-        ?array $items = null,
+        $id = null,
+        $customer_id = null,
+        $items = null,
+        $status = null
     ) {
         $this->id = $id;
         $this->customer_id = $customer_id;
         $this->items = $items;
+        $this->status = $status;
     }
 
     public function getId(): string|null

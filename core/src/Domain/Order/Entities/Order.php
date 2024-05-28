@@ -12,8 +12,7 @@ class Order
 {
     private ?string $customer_id = null;
     private ?Customer $customer = null;
-    private float $price;
-    private float $total;
+    private ?Price $total;
     private array $items = [];
     private OrderStatus $status = OrderStatus::RECEIVED;
     private readonly DateTime $created_at;
@@ -22,21 +21,25 @@ class Order
 
     public function __construct(
         private readonly string $id,
+        Price $total,
         DateTime $created_at,
         DateTime $updated_at,
     ) {
         $this
+            ->setTotal($total)
             ->setCreatedAt($created_at)
             ->setUpdatedAt($updated_at);
     }
 
     public static function create(
         ?string $id = null,
+        ?Price $total = null,
         ?DateTime $created_at = null,
         ?DateTime $updated_at = null
     ): self {
         return new self(
             id: $id ?? uniqid("ORDE_", true),
+            total: $total ?? new Price(0.0),
             created_at: $created_at ?? new DateTime(),
             updated_at: $updated_at ?? new DateTime(),
         );
@@ -151,12 +154,27 @@ class Order
         return array_map(fn ($item) => $item->toArray(), $this->items);
     }
 
-    public function setPrice(?float $price = null): self
+    public function setTotal(Price $total): self
     {
-        $this->price = $price ?? 0.0;
+        $this->total = $total;
+
         return $this;
     }
 
+    public function calcTotal()
+    {
+        $price = 0;
+
+        foreach ($this->items as $item)
+            $price += $item->getTotal()->getValue();
+
+        $this->setTotal(new Price($price));
+    }
+
+    public function getTotal(): Price
+    {
+        return $this->total;
+    }
 
     public function toArray(): array
     {
@@ -168,23 +186,11 @@ class Order
             "id" => $this->getId(),
             "customer_id" => $this->getCustomerId(),
             "customer" => $this->getCustomer() ? $this->getCustomer()->toArray() : null,
-            "price" => $this->getPrice(),
+            "total" => $this->getTotal(),
             "status" => $this->getStatus(),
             "items" => $items,
             "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),
             "updated_at" => $this->getUpdatedAt()->format("Y-m-d H:i:s")
         ];
-    }
-
-    public function getPrice(): float
-    {
-        $price = 0;
-
-        foreach ($this->items as $item)
-            $price += $item->getTotal()->getValue();
-
-        $this->total = $price;
-
-        return $this->total;
     }
 }
