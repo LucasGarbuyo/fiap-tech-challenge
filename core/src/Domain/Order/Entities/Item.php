@@ -33,7 +33,7 @@ class Item
         ?DateTime $updated_at = null
     ): self {
         return new self(
-            id: $id ?? uniqid("ORDE_ITEM", true),
+            id: $id ?? uniqid("ITEM_", true),
             product_id: $product_id,
             order_id: $order_id,
             created_at: $created_at ?? new DateTime(),

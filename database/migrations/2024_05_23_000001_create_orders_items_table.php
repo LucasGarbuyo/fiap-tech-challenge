@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders_items', function (Blueprint $table) {
-            $table->uuid("id")->primary();
-            $table->foreignUuid('order_id')->constrained('orders', 'id');
-            $table->foreignUuid('product_id')->constrained('products', 'id');
-            $table->integer('quantity');
-            $table->float('price');
+            $table->char("id", 28)->primary(true)->unique();
+            $table->char('order_id', 28)->nullable()->constrained('orders', 'id')->index();
+            $table->char('product_id', 28)->nullable()->constrained('products', 'id')->index();
+            $table->integer('quantity')->nullable();
+            $table->float('price')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

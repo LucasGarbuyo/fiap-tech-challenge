@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('categories', function (Blueprint $table) {
-            $table->char("id", 28)->primary(true)->unique();
-            $table->string("name");
+            $table->char("id", 28)->primary(true)->unique()->index();
+            $table->string("name")->nullable();
             $table->string("type", 11)->nullable();
             $table->timestamps();
             $table->softDeletes();
