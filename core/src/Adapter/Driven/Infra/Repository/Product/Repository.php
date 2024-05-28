@@ -3,8 +3,8 @@
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Product;
 
 use Illuminate\Database\Query\Builder;
+use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\DB;
-use TechChallenge\Domain\Category\Factories\Category as CategoryFactory;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
@@ -34,7 +34,7 @@ class Repository implements IProductRepository
                     $productData->price
                 );
 
-            if ($append === true || in_array("category", $append) && !empty($productData->category_id)) {
+            if (($append === true || in_array("category", $append)) && !empty($productData->category_id)) {
 
                 $category = $this->CategoryRepository->show(["id" => $productData->category_id]);
 
@@ -56,7 +56,7 @@ class Repository implements IProductRepository
             ->new($productData->id, $productData->created_at, $productData->updated_at)
             ->withNameDescriptionPrice($productData->name, $productData->description, $productData->price);
 
-        if ($append === true || in_array("category", $append) && !empty($productData->category_id)) {
+        if (($append === true || in_array("category", $append)) && !empty($productData->category_id)) {
 
             $category = $this->CategoryRepository->show(["id" => $productData->category_id]);
 
