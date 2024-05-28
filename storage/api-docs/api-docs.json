@@ -19,71 +19,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "id": {
-                                                "type": "string",
-                                                "description": "ID único do produto."
-                                            },
-                                            "name": {
-                                                "type": "string",
-                                                "description": "Nome do produto."
-                                            },
-                                            "description": {
-                                                "type": "string",
-                                                "description": "Descrição do produto."
-                                            },
-                                            "image": {
-                                                "type": "string",
-                                                "description": "Imagem do produto."
-                                            },
-                                            "price": {
-                                                "type": "number",
-                                                "format": "float",
-                                                "description": "Preço do produto."
-                                            },
-                                            "category_id": {
-                                                "type": "string",
-                                                "description": "ID da categoria do produto."
-                                            },
-                                            "category": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "id": {
-                                                        "type": "string",
-                                                        "description": "ID único da categoria."
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "description": "Nome da categoria."
-                                                    },
-                                                    "type": {
-                                                        "type": "string",
-                                                        "description": "Tipo da categoria."
-                                                    },
-                                                    "created_at": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "description": "Data e hora de criação da categoria."
-                                                    },
-                                                    "updated_at": {
-                                                        "type": "string",
-                                                        "format": "date-time",
-                                                        "description": "Data e hora da última atualização da categoria."
-                                                    }
-                                                }
-                                            },
-                                            "created_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "description": "Data e hora de criação do produto."
-                                            },
-                                            "updated_at": {
-                                                "type": "string",
-                                                "format": "date-time",
-                                                "description": "Data e hora da última atualização do produto."
-                                            }
-                                        }
+                                        "$ref": "#/definitions/Product"
                                     }
                                 }
                             }
@@ -102,62 +38,14 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "description": "Nome do produto.",
-                                        "maxLength": 255,
-                                        "example": "produto1"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "description": "Descrição do produto.",
-                                        "example": "produto1 description"
-                                    },
-                                    "price": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "description": "Preço do produto.",
-                                        "example": 10
-                                    },
-                                    "image": {
-                                        "type": "string",
-                                        "description": "Imagem do produto.",
-                                        "example": "produto1.png"
-                                    },
-                                    "category_id": {
-                                        "type": "string",
-                                        "description": "ID da categoria do produto.",
-                                        "example": "CATE_1"
-                                    }
-                                },
-                                "required": [
-                                    "name",
-                                    "description",
-                                    "price",
-                                    "image"
-                                ]
+                                "$ref": "#/definitions/NewProduct"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Produto criado com sucesso.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "ID do produto criado."
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "description": "Produto criado com sucesso"
                     },
                     "404": {
                         "description": "Nome do produto não pode ter mais que 255 caracteres."
@@ -190,71 +78,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "ID único do produto."
-                                        },
-                                        "name": {
-                                            "type": "string",
-                                            "description": "Nome do produto."
-                                        },
-                                        "description": {
-                                            "type": "string",
-                                            "description": "Descrição do produto."
-                                        },
-                                        "price": {
-                                            "type": "number",
-                                            "format": "float",
-                                            "description": "Preço do produto."
-                                        },
-                                        "image": {
-                                            "type": "string",
-                                            "description": "Imagem do produto."
-                                        },
-                                        "category_id": {
-                                            "type": "string",
-                                            "description": "ID da categoria do produto."
-                                        },
-                                        "category": {
-                                            "type": "object",
-                                            "properties": {
-                                                "id": {
-                                                    "type": "string",
-                                                    "description": "ID único da categoria."
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "description": "Nome da categoria."
-                                                },
-                                                "type": {
-                                                    "type": "string",
-                                                    "description": "Tipo da categoria."
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "description": "Data e hora de criação da categoria."
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "description": "Data e hora da última atualização da categoria."
-                                                }
-                                            }
-                                        },
-                                        "created_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "description": "Data e hora de criação do produto."
-                                        },
-                                        "updated_at": {
-                                            "type": "string",
-                                            "format": "date-time",
-                                            "description": "Data e hora da última atualização do produto."
-                                        }
-                                    }
+                                    "$ref": "#/definitions/Product"
                                 }
                             }
                         }
@@ -287,27 +111,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "description": "Nome do produto.",
-                                        "maxLength": 255
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "description": "Descrição do produto."
-                                    },
-                                    "price": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "description": "Preço do produto."
-                                    },
-                                    "image": {
-                                        "type": "string",
-                                        "description": "Imagem do produto."
-                                    }
-                                }
+                                "$ref": "#/definitions/UpdateProduct"
                             }
                         }
                     }
@@ -732,6 +536,128 @@
                             }
                         }
                     }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Product": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ID único do produto."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Nome do produto."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Descrição do produto."
+                },
+                "price": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Preço do produto."
+                },
+                "image": {
+                    "type": "string",
+                    "description": "Imagem do produto."
+                },
+                "category_id": {
+                    "type": "string",
+                    "description": "ID da categoria do produto."
+                },
+                "category": {
+                    "$ref": "#/definitions/Category"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora de criação do produto."
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora da última atualização do produto."
+                }
+            }
+        },
+        "Category": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ID único da categoria."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Nome da categoria."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Tipo da categoria."
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora de criação da categoria."
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora da última atualização da categoria."
+                }
+            }
+        },
+        "NewProduct": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Nome do produto.",
+                    "maxLength": 255
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Descrição do produto."
+                },
+                "price": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Preço do produto."
+                },
+                "image": {
+                    "type": "string",
+                    "description": "Imagem do produto."
+                },
+                "category_id": {
+                    "type": "string",
+                    "description": "ID da categoria do produto."
+                }
+            }
+        },
+        "UpdateProduct": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Nome do produto.",
+                    "maxLength": 255
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Descrição do produto."
+                },
+                "price": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Preço do produto."
+                },
+                "image": {
+                    "type": "string",
+                    "description": "Imagem do produto."
                 }
             }
         }
