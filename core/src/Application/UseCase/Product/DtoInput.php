@@ -11,6 +11,7 @@ class DtoInput implements IProductUseCaseDtoInput
     public readonly ?string $name;
     public readonly ?string $description;
     public readonly ?float $price;
+    public readonly ?string $image;
     public readonly ?string $created_at;
     public readonly ?string $updated_at;
 
@@ -20,6 +21,7 @@ class DtoInput implements IProductUseCaseDtoInput
         ?string $name = null,
         ?string $description = null,
         ?float $price = null,
+        ?string $image = null,
         ?string $created_at = null,
         ?string $updated_at = null
     ) {
@@ -28,6 +30,7 @@ class DtoInput implements IProductUseCaseDtoInput
         $this->name = $name;
         $this->description = $description;
         $this->price = $price;
+        $this->image = $image;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
     }
