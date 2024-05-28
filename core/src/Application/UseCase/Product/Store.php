@@ -21,7 +21,7 @@ class Store implements IProductUseCaseStore
     {
         $productFactory = (new ProductFactory())
             ->new()
-            ->withNameDescriptionPrice($data->name, $data->description, $data->price);
+            ->withNameDescriptionPrice($data->name, $data->description, $data->price, $data->image);
 
         if (!empty($data->category_id)) {
             if (!$this->CategoryRepository->exist(["id" => $data->category_id]))

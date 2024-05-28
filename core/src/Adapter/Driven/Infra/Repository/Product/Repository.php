@@ -33,7 +33,8 @@ class Repository implements IProductRepository
                 ->withNameDescriptionPrice(
                     $productData->name,
                     $productData->description,
-                    $productData->price
+                    $productData->price,
+                    $productData->image
                 );
 
             if (($append === true || in_array("category", $append)) && !empty($productData->category_id)) {
@@ -59,7 +60,7 @@ class Repository implements IProductRepository
 
         $productFactory = (new ProductFactory())
             ->new($productData->id, $productData->created_at, $productData->updated_at)
-            ->withNameDescriptionPrice($productData->name, $productData->description, $productData->price);
+            ->withNameDescriptionPrice($productData->name, $productData->description, $productData->price, $productData->image);
 
         if (($append === true || in_array("category", $append)) && !empty($productData->category_id)) {
 
@@ -82,6 +83,7 @@ class Repository implements IProductRepository
                     'name' => $product->getName(),
                     'description' => $product->getDescription(),
                     'price' =>  $product->getPrice()->getValue(),
+                    'image' => $product->getImage(),
                     'created_at' => $product->getCreatedAt(),
                     'updated_at' => $product->getUpdatedAt()
                 ]
@@ -97,6 +99,7 @@ class Repository implements IProductRepository
                     'name' => $product->getName(),
                     'description' => $product->getDescription(),
                     'price' => $product->getPrice()->getValue(),
+                    'image' => $product->getImage(),
                     'updated_at' => $product->getUpdatedAt()
                 ]
             );

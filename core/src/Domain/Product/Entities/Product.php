@@ -13,6 +13,7 @@ class Product
     private ?string $categoryId = null;
     private ?string $name;
     private ?string $description;
+    private ?string $image = null;
     private ?Price $price;
     private readonly DateTime $created_at;
     private DateTime $updated_at;
@@ -49,6 +50,13 @@ class Product
         return $this;
     }
 
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
     public function getCategoryId(): string|null
     {
         return $this->categoryId;
@@ -76,10 +84,17 @@ class Product
         return $this;
     }
 
+    public function getImage(): string|null
+    {
+        return $this->image;
+    }
+
+
     public function getName(): string|null
     {
         return $this->name;
     }
+
 
     public function setDescription(string $description): self
     {
@@ -148,6 +163,7 @@ class Product
             "name" => $this->getName(),
             "description" => $this->getDescription(),
             "price" => $this->getPrice()->getValue(),
+            "image" => $this->getImage(),
             "category_id" => $this->getCategoryId(),
             "category" => $this->getCategory() ? $this->getCategory()->toArray() : [],
             "created_at" => $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null,

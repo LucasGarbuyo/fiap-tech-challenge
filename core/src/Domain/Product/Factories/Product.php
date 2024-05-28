@@ -32,12 +32,13 @@ class Product
         return $this;
     }
 
-    public function withNameDescriptionPrice(string $name, string $description, float $price): self
+    public function withNameDescriptionPrice(string $name, string $description, float $price, string $image): self
     {
         $this->product
             ->setName($name)
             ->setDescription($description)
-            ->setPrice(new Price($price));
+            ->setPrice(new Price($price))
+            ->setImage($image);
 
         return $this;
     }
