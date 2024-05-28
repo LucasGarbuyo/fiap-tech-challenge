@@ -382,10 +382,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/definitions/Cliente"
-                                    }
+                                    "$ref": "#/definitions/Cliente"
                                 }
                             }
                         }
@@ -533,7 +530,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/definitions/PedidoRequest"
+                                "$ref": "#/definitions/PedidoStoreRequest"
                             }
                         }
                     }
@@ -544,6 +541,109 @@
                     },
                     "400": {
                         "$ref": "#/definitions/Response400"
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
+                    }
+                }
+            }
+        },
+        "/api/order/{id}": {
+            "get": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Buscar pedido por ID",
+                "description": "Este endpoint é usado para buscar um pedido específico pelo seu ID.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "ID do pedido a ser buscado.",
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do pedido."
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do pedido encontrados com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Pedido"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Atualizar pedido por ID",
+                "description": "Este endpoint é usado para atualizar um pedido existente pelo seu ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do pedido."
+                        },
+                        "description": "ID do pedido a ser atualizado."
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/PedidoUpdateRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Pedido atualizado com sucesso."
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Deletar pedido por ID",
+                "description": "Este endpoint é usado para deletar um pedido existente pelo seu ID. O pedido deletado preencherá o campo com datetime o campo `deleted_at`.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do pedido."
+                        },
+                        "description": "ID do pedido a ser deletado."
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Pedido deletado com sucesso."
                     },
                     "404": {
                         "$ref": "#/definitions/Response404"
@@ -723,10 +823,6 @@
                     "type": "string",
                     "description": "ID único do cliente."
                 },
-                "status": {
-                    "type": "string",
-                    "description": "Status do pedido."
-                },
                 "customer": {
                     "$ref": "#/definitions/Cliente"
                 },
@@ -734,6 +830,10 @@
                     "type": "number",
                     "format": "float",
                     "description": "Total do pedido."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status do pedido."
                 },
                 "items": {
                     "type": "array",
@@ -858,7 +958,7 @@
                 "email"
             ]
         },
-        "PedidoRequest": {
+        "PedidoStoreRequest": {
             "type": "object",
             "properties": {
                 "customer_id": {
@@ -885,6 +985,41 @@
                             }
                         }
                     }
+                }
+            }
+        },
+        "PedidoUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "customer_id": {
+                    "type": "string",
+                    "description": "ID único do cliente.",
+                    "example": "CUST_1"
+                },
+                "items": {
+                    "type": "array",
+                    "description": "Lista de itens do pedido.",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "product_id": {
+                                "type": "string",
+                                "description": "ID único do produto.",
+                                "example": "PROD_1"
+                            },
+                            "quantity": {
+                                "type": "number",
+                                "format": "int",
+                                "description": "Quantiade do item do pedido.",
+                                "example": 1
+                            }
+                        }
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status do pedido.",
+                    "example": "NEW"
                 }
             }
         }
