@@ -640,7 +640,7 @@
                     "description": "ID da categoria do produto."
                 },
                 "category": {
-                    "$ref": "#/definitions/Category"
+                    "$ref": "#/definitions/Categoria"
                 },
                 "created_at": {
                     "type": "string",
@@ -797,7 +797,7 @@
                 "type": {
                     "type": "string",
                     "description": "Tipo da categoria.",
-                    "example": "Refrigerante"
+                    "example": "Refri"
                 }
             }
         },
