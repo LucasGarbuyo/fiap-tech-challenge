@@ -6,14 +6,14 @@ use TechChallenge\Domain\Customer\UseCase\DtoInput as ICustomerUseCaseDtoInput;
 
 class DtoInput implements ICustomerUseCaseDtoInput
 {
-    public readonly ?string $id;
-    public readonly ?string $name;
-    public readonly ?string $cpf;
-    public readonly ?string $email;
-    public readonly ?string $created_at;
-    public readonly ?string $updated_at;
+    public $id;
+    public $name;
+    public $cpf;
+    public $email;
+    public $created_at;
+    public $updated_at;
 
-    public function __construct(?string $id = null, ?string $name = null, ?string $cpf = null, ?string $email = null, ?string $created_at = null, ?string $updated_at = null)
+    public function __construct($id = null, $name = null, $cpf = null, $email = null, $created_at = null, $updated_at = null)
     {
         $this->id = $id;
         $this->name = $name;

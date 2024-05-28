@@ -3,7 +3,9 @@
 namespace TechChallenge\Domain\Customer\Entities;
 
 use DateTime;
+use TechChallenge\Domain\Customer\Exceptions\CustomerException;
 use TechChallenge\Domain\Customer\ValueObjects\{Cpf, Email};
+
 class Customer
 {
     private ?string $name;
@@ -37,8 +39,11 @@ class Customer
         return $this->id;
     }
 
-    public function setName(string $name): self
+    public function setName(string|null $name): self
     {
+        if (strlen($name) < 3)
+            throw new CustomerException("Nome do cliente deve ter 3 ou mais caracteres");
+
         $this->name = $name;
 
         return $this;

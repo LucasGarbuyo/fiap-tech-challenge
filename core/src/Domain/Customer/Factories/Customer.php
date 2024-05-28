@@ -24,7 +24,7 @@ class Customer
         return $this;
     }
 
-    public function withNameCpfEmail(string $name, string $cpf, string $email): self
+    public function withNameCpfEmail(string|null $name, string|null $cpf, string|null $email): self
     {
         $this->customer
             ->setName($name)

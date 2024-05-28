@@ -8,12 +8,12 @@ class Email
 {
     private readonly string $address;
 
-    public function __construct(string $address)
+    public function __construct(string|null $address)
     {
         $this->setAddress($address);
     }
 
-    public function setAddress(string $address): self
+    public function setAddress(string|null $address): self
     {
         if (filter_var($address, FILTER_VALIDATE_EMAIL) === false)
             throw new CustomerException("E-mail inválido");

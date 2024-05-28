@@ -8,12 +8,12 @@ class Cpf
 {
     private readonly string $document;
 
-    public function __construct(string $document)
+    public function __construct(string|null $document)
     {
         $this->setDocument($document);
     }
 
-    public function setDocument(string $document): self
+    public function setDocument(string|null $document): self
     {
         $document = preg_replace('/[^\d]+/', '', $document);
 
