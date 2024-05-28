@@ -4,6 +4,149 @@
         "title": "TechChallenge - API Documentation"
     },
     "paths": {
+        "/api/category": {
+            "get": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Buscar categorias",
+                "description": "Este endpoint é usado para buscar todos as categorias cadastrados no sistema.",
+                "responses": {
+                    "200": {
+                        "description": "Listagem de categorias encontrada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/Categoria"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Criar novo categoria",
+                "description": "Este endpoint é usado para criar um novo categoria.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/CategoriaRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "$ref": "#/definitions/Response201"
+                    }
+                }
+            }
+        },
+        "/api/category/{id}": {
+            "get": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Buscar categoria por ID",
+                "description": "Este endpoint é usado para buscar uma categoria específico pelo seu ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único da categoria."
+                        },
+                        "description": "ID da categoria a ser buscado."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoria encontrado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/definitions/Categoria"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Atualizar categoria por ID",
+                "description": "Este endpoint é usado para atualizar uma categoria existente pelo seu ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único da categoria."
+                        },
+                        "description": "ID da categoria a ser atualizado."
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/definitions/CategoriaRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Categoria atualizado com sucesso."
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Deletar categoria por ID",
+                "description": "Este endpoint é usado para deletar uma categoria existente pelo seu ID. A categoria deletado preencherá o campo com datetime o campo `deleted_at`.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único da categoria."
+                        },
+                        "description": "ID da categoria a ser deletada."
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Categoria deletada com sucesso."
+                    }
+                }
+            }
+        },
         "/api/product": {
             "get": {
                 "tags": [
@@ -19,7 +162,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/definitions/Product"
+                                        "$ref": "#/definitions/Produto"
                                     }
                                 }
                             }
@@ -38,17 +181,17 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/definitions/NewProduct"
+                                "$ref": "#/definitions/ProdutoRequest"
                             }
                         }
                     }
                 },
                 "responses": {
                     "201": {
-                        "description": "Produto criado com sucesso"
+                        "$ref": "#/definitions/Response201"
                     },
                     "404": {
-                        "description": "Nome do produto não pode ter mais que 255 caracteres."
+                        "$ref": "#/definitions/Response404"
                     }
                 }
             }
@@ -78,13 +221,13 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/definitions/Product"
+                                    "$ref": "#/definitions/Produto"
                                 }
                             }
                         }
                     },
                     "404": {
-                        "description": "Produto não encontrado."
+                        "$ref": "#/definitions/Response404"
                     }
                 }
             },
@@ -111,7 +254,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/definitions/UpdateProduct"
+                                "$ref": "#/definitions/ProdutoRequest"
                             }
                         }
                     }
@@ -121,7 +264,7 @@
                         "description": "Produto atualizado com sucesso."
                     },
                     "404": {
-                        "description": "Produto não encontrado."
+                        "$ref": "#/definitions/Response404"
                     }
                 }
             },
@@ -241,45 +384,10 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Cliente criado com sucesso.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string",
-                                            "description": "ID do cliente criado."
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Parametros inválidos",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": {
-                                            "type": "object",
-                                            "properties": {
-                                                "message": {
-                                                    "type": "string",
-                                                    "description": "Descrição do erro",
-                                                    "example": "Já existe um cliente cadastrado com esse CPF"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        "$ref": "#/definitions/Response201"
                     },
                     "404": {
-                        "description": "Erro ao criar cliente"
+                        "$ref": "#/definitions/Response404"
                     }
                 }
             }
@@ -346,7 +454,7 @@
                         }
                     },
                     "404": {
-                        "description": "Cliente não encontrado."
+                        "$ref": "#/definitions/Response404"
                     }
                 }
             }
@@ -410,7 +518,7 @@
                         }
                     },
                     "404": {
-                        "description": "Cliente não encontrado."
+                        "$ref": "#/definitions/Response404"
                     }
                 }
             },
@@ -488,7 +596,7 @@
                         }
                     },
                     "404": {
-                        "description": "Cliente não encontrado."
+                        "$ref": "#/definitions/Response404"
                     }
                 }
             },
@@ -515,22 +623,26 @@
                         "description": "Cliente deletado com sucesso."
                     },
                     "404": {
-                        "description": "Cliente não encontrado.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "error": {
-                                            "type": "object",
-                                            "properties": {
-                                                "message": {
-                                                    "type": "string",
-                                                    "description": "Descrição do erro.",
-                                                    "example": "Cliente não encontrado."
-                                                }
-                                            }
-                                        }
+                        "$ref": "#/definitions/Response404"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Response404": {
+            "description": "Registro não encontrato.",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "error": {
+                                "type": "object",
+                                "properties": {
+                                    "message": {
+                                        "type": "string",
+                                        "description": "Descrição do erro."
                                     }
                                 }
                             }
@@ -538,10 +650,24 @@
                     }
                 }
             }
-        }
-    },
-    "definitions": {
-        "Product": {
+        },
+        "Response201": {
+            "description": "Registro criado com sucesso.",
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string",
+                                "description": "ID do registro criado."
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "Produto": {
             "type": "object",
             "properties": {
                 "id": {
@@ -584,7 +710,7 @@
                 }
             }
         },
-        "Category": {
+        "Categoria": {
             "type": "object",
             "properties": {
                 "id": {
@@ -611,7 +737,20 @@
                 }
             }
         },
-        "NewProduct": {
+        "CategoriaRequest": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Nome da categoria."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "Tipo da categoria."
+                }
+            }
+        },
+        "ProdutoRequest": {
             "type": "object",
             "properties": {
                 "name": {
@@ -635,29 +774,6 @@
                 "category_id": {
                     "type": "string",
                     "description": "ID da categoria do produto."
-                }
-            }
-        },
-        "UpdateProduct": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string",
-                    "description": "Nome do produto.",
-                    "maxLength": 255
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Descrição do produto."
-                },
-                "price": {
-                    "type": "number",
-                    "format": "float",
-                    "description": "Preço do produto."
-                },
-                "image": {
-                    "type": "string",
-                    "description": "Imagem do produto."
                 }
             }
         }
