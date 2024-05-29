@@ -14,7 +14,8 @@ class Order
     private ?Customer $customer = null;
     private ?Price $total;
     private array $items = [];
-    private OrderStatus $status = OrderStatus::RECEIVED;
+    private array $status_history = [];
+    private OrderStatus $status;
     private readonly DateTime $created_at;
     private readonly DateTime $updated_at;
     private ?DateTime $deleted_at = null;
@@ -117,9 +118,21 @@ class Order
         return $this->status;
     }
 
-    public function setStatus(OrderStatus $status): self
+    public function getStatusHistory(): array
     {
-        $this->status = $status;
+        return $this->status_history;
+    }
+
+    public function setAsNew()
+    {
+        $this->setStatus(Status::create(null, $this->getId(), OrderStatus::NEW));
+    }
+
+    protected function setStatus(Status $status_history): self
+    {
+        $this->status = $status_history->getStatus();
+
+        $this->status_history[] = $status_history;
 
         return $this;
     }
