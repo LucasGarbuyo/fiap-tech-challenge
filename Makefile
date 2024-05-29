@@ -51,13 +51,34 @@ generate-key: ## Cria uma chave para a aplicação
 
 clean: ## Remove todos os containers, volumes, imagens, networks e arquivos de cache do projeto	 e os arquivos de volume do mysql dentro da pasta docker/database/volumes/mysql
 	@printf "\033[5;1m\033[33m\033[41mLimpando!\033[0m\n"
-	@docker compose -f $(COMPOSE_DEV) down --volumes --rmi all
+	@printf "\033[93mDesligando Docker... Removendo volumes, imagens, networks e arquivos de cache...\033[0m\n"
+	@docker compose -f $(COMPOSE_DEV) down --volumes --rmi all --remove-orphans
+	@printf "\033[93mRemovendo imagens sem uso...\033[0m\n"
+	@docker image prune -a -f
+	@printf "\033[93mRemovendo volumes sem uso...\033[0m\n"
+	@docker volume prune -f
+	@printf "\033[93mRemovendo networks sem uso...\033[0m\n"
+	@docker network prune -f
 	@printf "\033[93mDocker desligado com sucesso! Volumes, imagens, networks e arquivos de cache removidos!\033[0m\n"
+	@printf "\033[93mRemovendo arquivos composer lock, vendor e .env do projeto...\033[0m\n"
 	@rm -rf .env vendor composer.lock
 	@printf "\033[93mArquivos do composer lock, vendor e .env removidos!\033[0m\n"
 	@rm -rf docker/database/volumes/mysql
 	@printf "\033[93mArquivos de volume do MySQL removidos!\033[0m\n"
 	@printf "\033[32mProjeto limpo com sucesso!\033[0m\n"
+
+# Name of the Docker Compose file
+COMPOSE_FILE=docker-compose.yml
+
+# Optional: Define a target to remove all Docker resources (containers, images, volumes, and networks)
+clean-all:
+	@echo "Removing all Docker images..."
+	@docker image prune -a -f
+	@echo "Removing unused Docker volumes..."
+	@docker volume prune -f
+	@echo "Removing unused Docker networks..."
+	@docker network prune -f
+
 
 ## —— Mysql 🐬  ————————————————————————————————————————————————————————————————
 migrate: ## Cria as tabelas no banco de dados
