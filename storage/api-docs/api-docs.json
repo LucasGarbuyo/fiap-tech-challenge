@@ -887,6 +887,9 @@
                         "$ref": "#/definitions/Item"
                     }
                 },
+                "status_histories": {
+                    "$ref": "#/definitions/HistorioStatus"
+                },
                 "created_at": {
                     "type": "string",
                     "format": "date-time",
@@ -910,14 +913,19 @@
                     "type": "string",
                     "description": "ID único do produto."
                 },
+                "order_id": {
+                    "type": "string",
+                    "description": "ID único do pedido."
+                },
                 "quantity": {
                     "type": "number",
                     "format": "int",
                     "description": "Quantiade do item do pedido."
                 },
-                "order_id": {
-                    "type": "string",
-                    "description": "ID único do pedido."
+                "price": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Valor produto item do pedido."
                 },
                 "created_at": {
                     "type": "string",
@@ -928,6 +936,33 @@
                     "type": "string",
                     "format": "date-time",
                     "description": "Data e hora da última atualização do pedido."
+                }
+            }
+        },
+        "HistorioStatus": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ID único do historio."
+                },
+                "order_id": {
+                    "type": "string",
+                    "description": "ID único do pedido."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Status do pedido."
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora de criação do historico."
+                },
+                "updated_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora da última atualização do historico."
                 }
             }
         },
