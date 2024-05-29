@@ -9,7 +9,7 @@ phpcs := vendor/bin/phpcs
 phpcbf := vendor/bin/phpcbf
 phpunit := vendor/bin/phpunit
 
-CONTAINER := php
+CONTAINER := fiap-tech-challenge-php-1
 PATH_CONTAINER := /var/www/html
 COMPOSE_DEV := docker-compose.yml
 
