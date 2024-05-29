@@ -35,6 +35,15 @@ class Category extends Controller
                 ],
                 $e->getStatus()
             );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
         }
     }
 
@@ -56,6 +65,15 @@ class Category extends Controller
                     ]
                 ],
                 $e->getStatus()
+            );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
             );
         }
     }
@@ -79,6 +97,15 @@ class Category extends Controller
                 ],
                 $e->getStatus()
             );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
         }
     }
 
@@ -101,6 +128,15 @@ class Category extends Controller
                 ],
                 $e->getStatus()
             );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
         }
     }
 
@@ -122,6 +158,15 @@ class Category extends Controller
                     ]
                 ],
                 $e->getStatus()
+            );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
             );
         }
     }
