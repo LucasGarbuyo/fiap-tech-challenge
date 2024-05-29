@@ -8,13 +8,10 @@ use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Order\Enum\OrderStatus;
-use TechChallenge\Domain\Order\Exceptions\InvalidStatusOrder;
 use TechChallenge\Domain\Order\Exceptions\OrderException;
 use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
 use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
 use TechChallenge\Domain\Order\Factories\Item as ItemFactory;
-
-use ValueError;
 
 class Update implements IOrderUseCaseUpdate
 {
@@ -33,7 +30,7 @@ class Update implements IOrderUseCaseUpdate
         $order = $this->OrderRepository->show(["id" => $data->getId()], true);
 
         if ($order->getStatus() != OrderStatus::NEW)
-            throw new OrderException("Pedido não está aberto, não pode ser alterado", 400);
+            throw new OrderException("Só é possível alterar pedidos novos", 400);
 
         if ($order->getCustomerId() != $data->getCustomerId() && !is_null($data->getCustomerId())) {
             if (!$this->CustomerRepository->exist(["id" => $data->getCustomerId()]))
