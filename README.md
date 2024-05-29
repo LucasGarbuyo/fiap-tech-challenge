@@ -2,7 +2,7 @@
 
 ## INTEGRANTES - GRUPO 47
 
-- RM354121 - Lucas 
+- RM354121 - Lucas
 - RM354259 - Thiago
 - RM353824 - Raphael
 - RM355935 - Lucas

@@ -13,13 +13,11 @@ CONTAINER := php
 PATH_CONTAINER := /var/www/html
 COMPOSE_DEV := docker-compose.yml
 
-
-
 ## —— Inicia o Projeto 🚀  ————————————————————————————————————————————————————
 start: ## Inicia o projeto com o Docker e executa as migrações, seed
 	make start1
 
-start1 : copy-env up set-container-php-name install-deps generate-key migrate seed msg_success
+start1 : copy-env up set-container-php-name install-deps generate-key migrate seed restart msg_success
 
 ## —— Comandos ⚙️  ————————————————————————————————————————————————————————————
 set-container-php-name: ## Define a variável CONTAINER com o nome do container da aplicação PHP
@@ -43,7 +41,7 @@ access-container: ## Acessa o container da aplicação
 
 install-deps: ## Instala as dependências do projeto
 	docker exec -it $(CONTAINER) composer install
-	@printf "\033[32mDependências instaladas com sucesso!\033[0m\n"
+	@printf "\033[32mComplementos instaladas com sucesso!\033[0m\n"
 
 generate-key: ## Cria uma chave para a aplicação
 	docker exec -it $(CONTAINER) php artisan key:generate
@@ -66,6 +64,11 @@ clean: ## Remove todos os containers, volumes, imagens, networks e arquivos de c
 	@rm -rf docker/database/volumes/mysql
 	@printf "\033[93mArquivos de volume do MySQL removidos!\033[0m\n"
 	@printf "\033[32mProjeto limpo com sucesso!\033[0m\n"
+
+restart: ## Reinicia o container da aplicação
+	@printf "\033[32mReiniciando os containers...para previnir erros ao conectar!\033[0m\n"
+	@docker compose -f $(COMPOSE_DEV) restart
+	@printf "\033[32mAcesse o proejeto em http://localhost:8080\033[0m\n"
 
 ## —— Mysql 🐬  ————————————————————————————————————————————————————————————————
 migrate: ## Cria as tabelas no banco de dados
