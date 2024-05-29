@@ -9,7 +9,7 @@ phpcs := vendor/bin/phpcs
 phpcbf := vendor/bin/phpcbf
 phpunit := vendor/bin/phpunit
 
-CONTAINER := fiap-tech-challenge-php-1
+CONTAINER := php
 PATH_CONTAINER := /var/www/html
 COMPOSE_DEV := docker-compose.yml
 
@@ -19,9 +19,16 @@ COMPOSE_DEV := docker-compose.yml
 start: ## Inicia o projeto com o Docker e executa as migrações, seed
 	make start1
 
-start1 : copy-env up install-deps generate-key migrate seed msg_success
+start1 : copy-env up set-container-php-name install-deps generate-key migrate seed msg_success
 
 ## —— Comandos ⚙️  ————————————————————————————————————————————————————————————
+set-container-php-name: ## Define a variável CONTAINER com o nome do container da aplicação PHP
+	@$(eval CONTAINER=$(shell \
+		container_id=$$(docker-compose ps -q php); \
+		container_name=$$(docker inspect --format '{{.Name}}' $${container_id} | sed 's/^.\(.*\)/\1/'); \
+		echo $${container_name} \
+	)) \
+	echo "Nome do container PHP: $(CONTAINER)"
 
 copy-env: ## Copia o arquivo .env.example para .env se ele não existir
 	@if [ ! -f .env ]; then cp .env.example .env; fi
@@ -41,6 +48,24 @@ install-deps: ## Instala as dependências do projeto
 generate-key: ## Cria uma chave para a aplicação
 	docker exec -it $(CONTAINER) php artisan key:generate
 	@printf "\033[32mChave gerada com sucesso!\033[0m\n"
+
+clean: ## Remove todos os containers, volumes, imagens, networks e arquivos de cache do projeto	 e os arquivos de volume do mysql dentro da pasta docker/database/volumes/mysql
+	@printf "\033[5;1m\033[33m\033[41mLimpando!\033[0m\n"
+	@printf "\033[93mDesligando Docker... Removendo volumes, imagens, networks e arquivos de cache...\033[0m\n"
+	@docker compose -f $(COMPOSE_DEV) down --volumes --rmi all --remove-orphans
+	@printf "\033[93mRemovendo imagens sem uso...\033[0m\n"
+	@docker image prune -a -f
+	@printf "\033[93mRemovendo volumes sem uso...\033[0m\n"
+	@docker volume prune -f
+	@printf "\033[93mRemovendo networks sem uso...\033[0m\n"
+	@docker network prune -f
+	@printf "\033[93mDocker desligado com sucesso! Volumes, imagens, networks e arquivos de cache removidos!\033[0m\n"
+	@printf "\033[93mRemovendo arquivos composer lock, vendor e .env do projeto...\033[0m\n"
+	@rm -rf .env vendor composer.lock
+	@printf "\033[93mArquivos do composer lock, vendor e .env removidos!\033[0m\n"
+	@rm -rf docker/database/volumes/mysql
+	@printf "\033[93mArquivos de volume do MySQL removidos!\033[0m\n"
+	@printf "\033[32mProjeto limpo com sucesso!\033[0m\n"
 
 ## —— Mysql 🐬  ————————————————————————————————————————————————————————————————
 migrate: ## Cria as tabelas no banco de dados
