@@ -25,7 +25,7 @@ class Order
         return $this;
     }
 
-    public function withCustomerId(string $customerId): self
+    public function withCustomerId(?string $customerId): self
     {
         $this->order->setCustomerId($customerId);
 
