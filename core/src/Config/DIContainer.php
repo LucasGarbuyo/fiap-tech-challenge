@@ -98,6 +98,9 @@ use TechChallenge\Application\UseCase\Order\Delete as OrderUseCaseDelete;
 use TechChallenge\Domain\Order\UseCase\Checkout as IOrderUseCaseCheckout;
 use TechChallenge\Application\UseCase\Order\Checkout as OrderUseCaseCheckout;
 
+use TechChallenge\Domain\Order\UseCase\ChangeStatus as IOrderUseCaseChangeStatus;
+use TechChallenge\Application\UseCase\Order\ChangeStatus as OrderUseCaseChangeStatus;
+
 class DIContainer
 {
     private static ?ContainerBuilder $containerBuild = null;
@@ -156,6 +159,7 @@ class DIContainer
             IOrderUseCaseUpdate::class => \DI\get(OrderUseCaseUpdate::class),
             IOrderUseCaseDelete::class => \DI\get(OrderUseCaseDelete::class),
             IOrderUseCaseCheckout::class => \DI\get(OrderUseCaseCheckout::class),
+            IOrderUseCaseChangeStatus::class => \DI\get(OrderUseCaseChangeStatus::class),
         ]);
     }
 }

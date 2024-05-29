@@ -27,7 +27,6 @@ Route::controller(Customer::class)
         Route::get('/cpf/{cpf}', [Customer::class, "showByCfp"]);
     });
 
-
 Route::controller(Category::class)
     ->prefix('/category')
     ->group(function () {
@@ -38,7 +37,6 @@ Route::controller(Category::class)
         Route::delete('/{id}', [Category::class, "delete"]);
     });
 
-
 Route::controller(Order::class)
     ->prefix('/order')
     ->group(function () {
@@ -48,4 +46,5 @@ Route::controller(Order::class)
         Route::put('/{id}', [Order::class, "update"]);
         Route::delete('/{id}', [Order::class, "delete"]);
         Route::post('/checkout/{id}', [Order::class, "checkout"]);
+        Route::post('/status/{id}', [Order::class, "changeStatus"]);
     });

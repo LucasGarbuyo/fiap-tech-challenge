@@ -174,9 +174,68 @@ class Order
         return $this;
     }
 
+    public function setAsInPreparation(): self
+    {
+        $status = Status::create(null, $this->getId(), OrderStatus::IN_PREPARATION);
+
+        $this->setStatusHistory($status);
+
+        $this->setStatus($status->getStatus());
+
+        return $this;
+    }
+
+    public function setAsReady(): self
+    {
+        $status = Status::create(null, $this->getId(), OrderStatus::READY);
+
+        $this->setStatusHistory($status);
+
+        $this->setStatus($status->getStatus());
+
+        return $this;
+    }
+
+    public function setAsFinished(): self
+    {
+        $status = Status::create(null, $this->getId(), OrderStatus::FINISHED);
+
+        $this->setStatusHistory($status);
+
+        $this->setStatus($status->getStatus());
+
+        return $this;
+    }
+
+    public function setAsCanceled(): self
+    {
+        $status = Status::create(null, $this->getId(), OrderStatus::CANCELED);
+
+        $this->setStatusHistory($status);
+
+        $this->setStatus($status->getStatus());
+
+        return $this;
+    }
+
     public function isNew(): bool
     {
         return $this->getStatus() === OrderStatus::NEW;
+    }
+
+    public function isReceived(): bool
+    {
+        return $this->getStatus() === OrderStatus::RECEIVED;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->getStatus() === OrderStatus::PAID;
+    }
+
+    public function isCanceled(): bool
+    {
+        return $this->getStatus() === OrderStatus::CANCELED;
     }
 
     public function setStatus(OrderStatus $status): self
