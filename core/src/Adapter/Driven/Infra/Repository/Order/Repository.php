@@ -30,7 +30,8 @@ class Repository implements IOrderRepository
 
         foreach ($ordersData as $orderData) {
             $orderFactory
-                ->new($orderData->id, $orderData->total, $orderData->created_at, $orderData->updated_at);
+                ->new($orderData->id, $orderData->total, $orderData->created_at, $orderData->updated_at)
+                ->withStatus($orderData->status);
 
             if (($append === true || in_array("customer", $append)) && !empty($orderData->customer_id)) {
 
@@ -47,6 +48,13 @@ class Repository implements IOrderRepository
                 $orderFactory->withItems($items);
             }
 
+            if ($append === true || in_array("status", $append)) {
+
+                $statusHistories = $this->StatusRepository->index(["order_id" => $orderData->id]);
+
+                $orderFactory->withStatusHistories($statusHistories);
+            }
+
             $orders[] = $orderFactory->build();
         }
 
@@ -61,7 +69,8 @@ class Repository implements IOrderRepository
             return null;
 
         $orderFactory = (new OrderFactory())
-            ->new($orderData->id, $orderData->total, $orderData->created_at, $orderData->updated_at);
+            ->new($orderData->id, $orderData->total, $orderData->created_at, $orderData->updated_at)
+            ->withStatus($orderData->status);
 
         if (($append === true || in_array("customer", $append)) && !empty($orderData->customer_id)) {
 
@@ -76,6 +85,13 @@ class Repository implements IOrderRepository
             $items = $this->ItemRepository->index(["order_id" => $orderData->id]);
 
             $orderFactory->withItems($items);
+        }
+
+        if ($append === true || in_array("status", $append)) {
+
+            $statusHistories = $this->StatusRepository->index(["order_id" => $orderData->id]);
+
+            $orderFactory->withStatusHistories($statusHistories);
         }
 
         return $orderFactory->build();
@@ -97,7 +113,7 @@ class Repository implements IOrderRepository
             foreach ($order->getItems() as $item)
                 $this->ItemRepository->store($item);
 
-            foreach ($order->getStatusHistory() as $status)
+            foreach ($order->getStatusHistories() as $status)
                 $this->StatusRepository->store($status);
         });
     }

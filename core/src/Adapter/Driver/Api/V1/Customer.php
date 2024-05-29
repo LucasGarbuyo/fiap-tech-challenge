@@ -36,6 +36,15 @@ class Customer extends Controller
                 ],
                 $e->getStatus()
             );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
         }
     }
 
@@ -57,6 +66,15 @@ class Customer extends Controller
                     ]
                 ],
                 $e->getStatus()
+            );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
             );
         }
     }
@@ -80,6 +98,15 @@ class Customer extends Controller
                 ],
                 $e->getStatus()
             );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
         }
     }
 
@@ -101,6 +128,15 @@ class Customer extends Controller
                     ]
                 ],
                 $e->getStatus()
+            );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
             );
         }
     }
@@ -124,6 +160,15 @@ class Customer extends Controller
                 ],
                 $e->getStatus()
             );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
         }
     }
 
@@ -145,6 +190,15 @@ class Customer extends Controller
                     ]
                 ],
                 $e->getStatus()
+            );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
             );
         }
     }

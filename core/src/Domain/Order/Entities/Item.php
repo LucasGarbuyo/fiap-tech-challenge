@@ -134,6 +134,8 @@ class Item
             "order_id" => $this->getOrderId(),
             "quantity" => $this->getQuantity(),
             "price" => $this->getPrice()->getValue(),
+            "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),
+            "updated_at" => $this->getUpdatedAt()->format("Y-m-d H:i:s")
         ];
     }
 }
