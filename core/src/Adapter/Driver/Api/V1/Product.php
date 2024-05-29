@@ -10,7 +10,6 @@ use TechChallenge\Domain\Product\UseCase\Store as IProductUseCaseStore;
 use TechChallenge\Domain\Product\UseCase\Update as IProductUseCaseUpdate;
 use TechChallenge\Domain\Product\UseCase\Delete as IProductUseCaseDelete;
 use TechChallenge\Config\DIContainer;
-use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Product extends Controller
 {
@@ -26,14 +25,14 @@ class Product extends Controller
             }, $products);
 
             return $this->return($results, 200);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
@@ -55,14 +54,14 @@ class Product extends Controller
             $id = $productStore->execute($data);
 
             return $this->return(["id" => $id], 201);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
@@ -77,14 +76,14 @@ class Product extends Controller
             $product = $productEdit->execute($data, true);
 
             return $this->return($product->toArray(), 200);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
@@ -99,7 +98,7 @@ class Product extends Controller
             $productUpdate->execute($data);
 
             return $this->return([], 204);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
 
             return $this->return(
                 [
@@ -107,7 +106,7 @@ class Product extends Controller
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
@@ -122,14 +121,14 @@ class Product extends Controller
             $productDelete->execute($data);
 
             return $this->return('Produto deletado com sucesso!', 204);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }

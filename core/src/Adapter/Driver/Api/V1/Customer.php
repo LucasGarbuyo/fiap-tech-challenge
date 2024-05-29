@@ -11,7 +11,6 @@ use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
 use TechChallenge\Domain\Customer\UseCase\Update as ICustomerUseCaseUpdate;
 use TechChallenge\Domain\Customer\UseCase\Delete as ICustomerUseCaseDelete;
 use TechChallenge\Domain\Customer\UseCase\ShowByCpf as ICustomerUseCaseShowByCpf;
-use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Customer extends Controller
 {
@@ -27,14 +26,14 @@ class Customer extends Controller
             }, $customers);
 
             return $this->return($results, 200);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
@@ -49,14 +48,14 @@ class Customer extends Controller
             $id = $customerStore->execute($data);
 
             return $this->return(["id" => $id], 201);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
@@ -71,14 +70,14 @@ class Customer extends Controller
             $customer = $customerShow->execute($data);
 
             return $this->return($customer->toArray(), 200);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
@@ -93,14 +92,14 @@ class Customer extends Controller
             $customerUpdate->execute($data);
 
             return $this->return([], 204);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
@@ -115,14 +114,14 @@ class Customer extends Controller
             $productDelete->execute($data);
 
             return $this->return([], 204);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
@@ -137,14 +136,14 @@ class Customer extends Controller
             $customer = $CustomerEditByCpf->execute($data);
 
             return $this->return($customer->toArray(), 200);
-        } catch (DefaultException $e) {
+        } catch (\Throwable $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                $e->getStatus()
+                400
             );
         }
     }
