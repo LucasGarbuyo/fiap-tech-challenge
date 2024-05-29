@@ -24,6 +24,9 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     }
                 }
             },
@@ -82,6 +85,9 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     },
                     "404": {
                         "$ref": "#/definitions/Response404"
@@ -150,6 +156,9 @@
                     "204": {
                         "description": "Categoria deletada com sucesso."
                     },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
                     "404": {
                         "$ref": "#/definitions/Response404"
                     }
@@ -176,6 +185,9 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     }
                 }
             },
@@ -198,6 +210,9 @@
                 "responses": {
                     "201": {
                         "$ref": "#/definitions/Response201"
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     },
                     "404": {
                         "$ref": "#/definitions/Response404"
@@ -234,6 +249,9 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     },
                     "404": {
                         "$ref": "#/definitions/Response404"
@@ -272,6 +290,9 @@
                     "204": {
                         "description": "Produto atualizado com sucesso."
                     },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
                     "404": {
                         "$ref": "#/definitions/Response404"
                     }
@@ -299,6 +320,9 @@
                     "204": {
                         "description": "Produto deletado com sucesso."
                     },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
                     "404": {
                         "$ref": "#/definitions/Response404"
                     }
@@ -325,6 +349,9 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     }
                 }
             },
@@ -387,6 +414,9 @@
                             }
                         }
                     },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
                     "404": {
                         "$ref": "#/definitions/Response404"
                     }
@@ -422,6 +452,9 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     },
                     "404": {
                         "$ref": "#/definitions/Response404"
@@ -490,6 +523,9 @@
                     "204": {
                         "description": "Cliente deletado com sucesso."
                     },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
                     "404": {
                         "$ref": "#/definitions/Response404"
                     }
@@ -516,6 +552,9 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     }
                 }
             },
@@ -577,6 +616,9 @@
                                 }
                             }
                         }
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     },
                     "404": {
                         "$ref": "#/definitions/Response404"
@@ -644,6 +686,9 @@
                 "responses": {
                     "204": {
                         "description": "Pedido deletado com sucesso."
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
                     },
                     "404": {
                         "$ref": "#/definitions/Response404"
