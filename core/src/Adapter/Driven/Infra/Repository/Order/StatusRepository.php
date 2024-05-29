@@ -2,13 +2,37 @@
 
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Order;
 
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
 use TechChallenge\Domain\Order\Entities\Status as StatusEntity;
 use TechChallenge\Domain\Order\Repository\IStatus as IStatusRepository;
+use TechChallenge\Domain\Order\Enum\OrderStatus;
 
 class StatusRepository implements IStatusRepository
 {
+    public function index(array $filters = []): array
+    {
+        $statusData = $this->filters($this->query(), $filters)->get();
+
+        if (count($statusData) == 0)
+            return [];
+
+        $statusHistories = [];
+
+        foreach ($statusData as $status) {
+            $statusHistories[] = StatusEntity::create(
+                $status->id,
+                $status->order_id,
+                OrderStatus::from($status->status),
+                new DateTime($status->created_at),
+                new DateTime($status->updated_at)
+            );
+        }
+
+        return $statusHistories;
+    }
+
     public function store(StatusEntity $status): void
     {
         $this->query()

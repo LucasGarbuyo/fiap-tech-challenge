@@ -6,6 +6,7 @@ use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
 use TechChallenge\Domain\Order\Enum\OrderStatus;
 use TechChallenge\Domain\Order\Exceptions\InvalidItemOrder;
+use TechChallenge\Domain\Order\Exceptions\InvalidStatusOrder;
 use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Order
@@ -118,21 +119,42 @@ class Order
         return $this->status;
     }
 
-    public function getStatusHistory(): array
+    public function getStatusHistories(): array
     {
         return $this->status_history;
     }
 
-    public function setAsNew()
+    public function setStatusHistories(array $statusHistories): self
     {
-        $this->setStatus(Status::create(null, $this->getId(), OrderStatus::NEW));
+        foreach ($statusHistories as $statusHistory) {
+            if (!$statusHistory instanceof Status)
+                throw new InvalidStatusOrder();
+
+            $this->setStatusHistory($statusHistory);
+        }
+
+        return $this;
     }
 
-    protected function setStatus(Status $status_history): self
+    public function setStatusHistory(Status $statusHistory)
     {
-        $this->status = $status_history->getStatus();
+        $this->status_history[] = $statusHistory;
+    }
 
-        $this->status_history[] = $status_history;
+    public function setAsNew(): self
+    {
+        $status = Status::create(null, $this->getId(), OrderStatus::NEW);
+
+        $this->setStatusHistory($status);
+
+        $this->setStatus($status->getStatus());
+
+        return $this;
+    }
+
+    public function setStatus(OrderStatus $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
@@ -205,6 +227,10 @@ class Order
             return $item->toArray();
         }, $this->getItems());
 
+        $statusHistories = array_map(function ($status) {
+            return $status->toArray();
+        }, $this->getStatusHistories());
+
         return [
             "id" => $this->getId(),
             "customer_id" => $this->getCustomerId(),
@@ -212,6 +238,7 @@ class Order
             "total" => $this->getTotal()->getValue(),
             "status" => $this->getStatus(),
             "items" => $items,
+            "status_histories" => $statusHistories,
             "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),
             "updated_at" => $this->getUpdatedAt()->format("Y-m-d H:i:s")
         ];

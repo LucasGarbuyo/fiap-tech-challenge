@@ -54,6 +54,23 @@ class Order
         return $this;
     }
 
+    public function withStatusHistories(array $statusHistories): self
+    {
+        $this->order->setStatusHistories($statusHistories);
+
+        return $this;
+    }
+
+    public function withStatus(string|OrderStatus $status): self
+    {
+        if (is_string($status))
+            $status = OrderStatus::from($status);
+
+        $this->order->setStatus($status);
+
+        return $this;
+    }
+
     public function build(): OrderEntity
     {
         return $this->order;
