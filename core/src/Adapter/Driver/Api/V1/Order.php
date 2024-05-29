@@ -119,7 +119,7 @@ class Order extends Controller
         try {
             $data = new OrderDtoInput(
                 id: $id,
-                customer_id: $request->customerId,
+                customer_id: $request->customer_id,
                 items: $request->items,
                 status: $request->status
             );

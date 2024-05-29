@@ -31,14 +31,15 @@ class Repository implements IOrderRepository
         foreach ($ordersData as $orderData) {
             $orderFactory
                 ->new($orderData->id, $orderData->total, $orderData->created_at, $orderData->updated_at)
-                ->withStatus($orderData->status);
+                ->withStatus($orderData->status)
+                ->withCustomerId($orderData->customer_id);
 
             if (($append === true || in_array("customer", $append)) && !empty($orderData->customer_id)) {
 
                 $customer = $this->CustomerRepository->show(["id" => $orderData->customer_id]);
 
                 if (!empty($customer))
-                    $orderFactory->withCustomerIdCustomer($orderData->customer_id, $customer);
+                    $orderFactory->withCustomer($customer);
             }
 
             if ($append === true || in_array("items", $append)) {
@@ -70,14 +71,15 @@ class Repository implements IOrderRepository
 
         $orderFactory = (new OrderFactory())
             ->new($orderData->id, $orderData->total, $orderData->created_at, $orderData->updated_at)
-            ->withStatus($orderData->status);
+            ->withStatus($orderData->status)
+            ->withCustomerId($orderData->customer_id);
 
         if (($append === true || in_array("customer", $append)) && !empty($orderData->customer_id)) {
 
             $customer = $this->CustomerRepository->show(["id" => $orderData->customer_id]);
 
             if (!empty($customer))
-                $orderFactory->withCustomerIdCustomer($orderData->customer_id, $customer);
+                $orderFactory->withCustomer($customer);
         }
 
         if ($append === true || in_array("items", $append)) {
