@@ -23,31 +23,60 @@ módulo de DDD, e utilizando a linguagem ubíqua, dos seguintes fluxos:
 
 ## Passo a passo para inicialização da aplicação
 
+### Se tiver o Make instalado
+
+Use os commandos: 
+
+    `make start`
+
+Para fazer a limpeza da aplicação, use o comando:
+
+    `make clean`
+
+
+### Se não tiver o Make instalado
+
 1. Clone o repositório  
    `git clone https://github.com/LucasGarbuyo/fiap-tech-challenge.git`
+
 2. Acesse a pasta do projeto com o terminal 
+
 3. Copie o arquivo `.env.example` para `.env`    
    `cp .env.example .env`
+
 4. Iniciando os containers do Docker.  
    Esse processo pode demorar um pouco na primeira vez que for executado, pois o docker irá baixar as imagens necessárias para a execução dos containers.  
    Execute o comando:    
    `docker-compose up -d`
+
 5. Acesse o container da aplicação com o comando:  
    `docker exec -it fiap-tech-challenge-php-1 bash`
+
 6. Para instalar as dependências do projeto, execute o comando dentro do container:  
    `composer install`
+
 7. Crie uma chave para a aplicação com o comando:  
    `php artisan key:generate`
+
 8. Para criar as tabelas no banco de dados, execute o comando:  
    `php artisan migrate:fresh`
+
 9. Para popular o banco de dados, execute o comando:  
    `php artisan db:seed`
+
 10. Acesse a aplicação com o endereço  
     [http://localhost:8000](http://localhost:8000)
+
 11. Acesse o Swagger com o endereço  
     [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
 
 ## Para remover a aplicação
+
+### Se tiver o Make instalado, use o comando:
+
+    `make clean`
+
+### Se não tiver o Make instalado, siga os passos abaixo:
 
 1. Execute o comando  
    `docker-compose down`
