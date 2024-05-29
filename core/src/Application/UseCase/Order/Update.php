@@ -32,21 +32,15 @@ class Update implements IOrderUseCaseUpdate
 
         $order = $this->OrderRepository->show(["id" => $data->getId()], true);
 
+        if ($order->getStatus() != OrderStatus::NEW)
+            throw new OrderException("Pedido não está aberto, não pode ser alterado", 400);
+
         if ($order->getCustomerId() != $data->getCustomerId() && !is_null($data->getCustomerId())) {
             if (!$this->CustomerRepository->exist(["id" => $data->getCustomerId()]))
                 throw new CustomerNotFoundException();
 
             $order->setCustomerId($data->getCustomerId());
         }
-
-        try {
-            $status = OrderStatus::from($data->status);
-        } catch (ValueError $error) {
-            throw new InvalidStatusOrder();
-        }
-
-        if ($status != OrderStatus::NEW)
-            throw new OrderException("Para mudar o status do pedido, precisa passar pelo checkout", 400);
 
         $idsProducts = [];
 
