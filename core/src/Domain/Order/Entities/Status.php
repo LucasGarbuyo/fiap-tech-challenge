@@ -89,7 +89,7 @@ class Status
     {
         return [
             "id" => $this->getId(),
-            "id_order" => $this->getOrderId(),
+            "order_id" => $this->getOrderId(),
             "status" => $this->getStatus(),
             "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),
             "updated_at" => $this->getUpdatedAt()->format("Y-m-d H:i:s")
