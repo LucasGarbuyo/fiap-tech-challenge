@@ -92,6 +92,12 @@ class Order
     {
         $this->deleted_at = new DateTime();
 
+        foreach ($this->getItems() as $item)
+            $item->delete();
+
+        foreach ($this->getStatusHistories() as $status)
+            $status->delete();
+
         return $this;
     }
 

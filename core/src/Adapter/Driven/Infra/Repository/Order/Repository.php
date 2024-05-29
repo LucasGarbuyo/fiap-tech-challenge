@@ -150,12 +150,20 @@ class Repository implements IOrderRepository
 
     public function delete(OrderEntity $order): void
     {
-        $this->filters($this->query(), ["id" => $order->getId()])
-            ->update(
-                [
-                    "deleted_at" => $order->getDeletedAt()->format("Y-m-d H:i:s")
-                ]
-            );
+        DB::transaction(function () use ($order) {
+            $this->filters($this->query(), ["id" => $order->getId()])
+                ->update(
+                    [
+                        "deleted_at" => $order->getDeletedAt()->format("Y-m-d H:i:s")
+                    ]
+                );
+
+            foreach ($order->getItems() as $item)
+                $this->ItemRepository->update($item);
+
+            foreach ($order->getStatusHistories() as $status)
+                $this->StatusRepository->update($status);
+        });
     }
 
     public function exist(array $filters = []): bool

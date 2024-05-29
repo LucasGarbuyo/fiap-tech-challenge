@@ -85,6 +85,13 @@ class Status
         return null;
     }
 
+    public function delete(): self
+    {
+        $this->deleted_at = new DateTime();
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         return [
