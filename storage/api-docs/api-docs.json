@@ -695,6 +695,38 @@
                     }
                 }
             }
+        },
+        "/api/order/checkout/{id}": {
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Checkout pedido por ID",
+                "description": "Este endpoint é usado para fazer checkout de um pedido existente pelo seu ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do pedido."
+                        },
+                        "description": "ID do pedido a fazer checkout."
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Checkout realizado com sucesso."
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
+                    }
+                }
+            }
         }
     },
     "definitions": {
