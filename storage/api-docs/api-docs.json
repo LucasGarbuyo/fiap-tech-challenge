@@ -727,6 +727,55 @@
                     }
                 }
             }
+        },
+        "/api/order/status/{id}": {
+            "post": {
+                "tags": [
+                    "Pedidos"
+                ],
+                "summary": "Alterar status do pedido por ID",
+                "description": "Este endpoint é usado para alterar o status de um pedido existente pelo seu ID.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "description": "ID único do pedido."
+                        },
+                        "description": "ID do pedido a alterar status."
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "description": "Status do pedido.",
+                                        "example": "READY"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "Status alterado com sucesso."
+                    },
+                    "400": {
+                        "$ref": "#/definitions/Response400"
+                    },
+                    "404": {
+                        "$ref": "#/definitions/Response404"
+                    }
+                }
+            }
         }
     },
     "definitions": {
