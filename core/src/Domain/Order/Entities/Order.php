@@ -302,8 +302,12 @@ class Order
     {
         $price = 0;
 
-        foreach ($this->items as $item)
+        foreach ($this->items as $item) {
+            if ($item->isDeleted())
+                continue;
+
             $price += $item->getTotal()->getValue();
+        }
 
         $this->setTotal(new Price($price));
     }

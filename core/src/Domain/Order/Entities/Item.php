@@ -110,6 +110,11 @@ class Item
         return null;
     }
 
+    public function isDeleted(): bool
+    {
+        return $this->getDeletedAt() !== null;
+    }
+
     public function setPrice(Price $price): self
     {
         $this->price = $price;
