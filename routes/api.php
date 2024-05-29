@@ -47,4 +47,5 @@ Route::controller(Order::class)
         Route::post('/', [Order::class, "store"]);
         Route::put('/{id}', [Order::class, "update"]);
         Route::delete('/{id}', [Order::class, "delete"]);
+        Route::post('/checkout/{id}', [Order::class, "checkout"]);
     });

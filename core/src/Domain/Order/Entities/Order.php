@@ -152,6 +152,28 @@ class Order
         return $this;
     }
 
+    public function setAsReceived(): self
+    {
+        $status = Status::create(null, $this->getId(), OrderStatus::RECEIVED);
+
+        $this->setStatusHistory($status);
+
+        $this->setStatus($status->getStatus());
+
+        return $this;
+    }
+
+    public function setAsPaid(): self
+    {
+        $status = Status::create(null, $this->getId(), OrderStatus::PAID);
+
+        $this->setStatusHistory($status);
+
+        $this->setStatus($status->getStatus());
+
+        return $this;
+    }
+
     public function isNew(): bool
     {
         return $this->getStatus() === OrderStatus::NEW;

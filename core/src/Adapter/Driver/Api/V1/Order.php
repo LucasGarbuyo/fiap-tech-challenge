@@ -10,6 +10,7 @@ use TechChallenge\Domain\Order\UseCase\Show as IOrderUseCaseShow;
 use TechChallenge\Domain\Order\UseCase\Delete as IOrderUseCaseDelete;
 use TechChallenge\Domain\Order\UseCase\Store as IOrderUseCaseStore;
 use TechChallenge\Domain\Order\UseCase\Update as IOrderUseCaseUpdate;
+use TechChallenge\Domain\Order\UseCase\Checkout as IOrderUseCaseCheckout;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Order extends Controller
@@ -156,6 +157,37 @@ class Order extends Controller
             $productDelete = DIContainer::create()->get(IOrderUseCaseDelete::class);
 
             $productDelete->execute($data);
+
+            return $this->return([], 204);
+        } catch (DefaultException $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                $e->getStatus()
+            );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
+        }
+    }
+
+    public function checkout(Request $request, string $id)
+    {
+        try {
+            $data = new OrderDtoInput($id);
+
+            $productCheckout = DIContainer::create()->get(IOrderUseCaseCheckout::class);
+
+            $productCheckout->execute($data);
 
             return $this->return([], 204);
         } catch (DefaultException $e) {
