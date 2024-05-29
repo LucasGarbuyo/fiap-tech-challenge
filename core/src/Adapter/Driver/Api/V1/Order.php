@@ -10,6 +10,7 @@ use TechChallenge\Domain\Order\UseCase\Show as IOrderUseCaseShow;
 use TechChallenge\Domain\Order\UseCase\Delete as IOrderUseCaseDelete;
 use TechChallenge\Domain\Order\UseCase\Store as IOrderUseCaseStore;
 use TechChallenge\Domain\Order\UseCase\Update as IOrderUseCaseUpdate;
+use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Order extends Controller
 {
@@ -25,14 +26,14 @@ class Order extends Controller
             }, $orders);
 
             return $this->return($results, 200);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }
@@ -50,14 +51,14 @@ class Order extends Controller
             $id = $orderStore->execute($data);
 
             return $this->return(["id" => $id], 201);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }
@@ -72,14 +73,14 @@ class Order extends Controller
             $order = $orderShow->execute($data, true);
 
             return $this->return($order->toArray(), 200);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }
@@ -99,14 +100,14 @@ class Order extends Controller
             $orderUpdate->execute($data);
 
             return $this->return([], 204);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }
@@ -121,14 +122,14 @@ class Order extends Controller
             $productDelete->execute($data);
 
             return $this->return([], 204);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }

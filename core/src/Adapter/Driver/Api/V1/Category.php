@@ -10,6 +10,7 @@ use TechChallenge\Domain\Category\UseCase\Show as ICategoryUseCaseShow;
 use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
 use TechChallenge\Domain\Category\UseCase\Update as ICategoryUseCaseUpdate;
 use TechChallenge\Domain\Category\UseCase\Delete as ICategoryUseCaseDelete;
+use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Category extends Controller
 {
@@ -25,14 +26,14 @@ class Category extends Controller
             }, $categories);
 
             return $this->return($results, 200);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }
@@ -47,14 +48,14 @@ class Category extends Controller
             $id = $categoryStore->execute($data);
 
             return $this->return(["id" => $id], 201);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }
@@ -69,14 +70,14 @@ class Category extends Controller
             $category = $categoryShow->execute($data);
 
             return $this->return($category->toArray(), 200);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }
@@ -91,14 +92,14 @@ class Category extends Controller
             $categoryUpdate->execute($data);
 
             return $this->return([], 204);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }
@@ -113,14 +114,14 @@ class Category extends Controller
             $categoryDelete->execute($data);
 
             return $this->return([], 204);
-        } catch (\Throwable $e) {
+        } catch (DefaultException $e) {
             return $this->return(
                 [
                     "error" => [
                         "message" => $e->getMessage()
                     ]
                 ],
-                400
+                $e->getStatus()
             );
         }
     }
