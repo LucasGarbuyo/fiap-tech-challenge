@@ -67,19 +67,6 @@ clean: ## Remove todos os containers, volumes, imagens, networks e arquivos de c
 	@printf "\033[93mArquivos de volume do MySQL removidos!\033[0m\n"
 	@printf "\033[32mProjeto limpo com sucesso!\033[0m\n"
 
-# Name of the Docker Compose file
-COMPOSE_FILE=docker-compose.yml
-
-# Optional: Define a target to remove all Docker resources (containers, images, volumes, and networks)
-clean-all:
-	@echo "Removing all Docker images..."
-	@docker image prune -a -f
-	@echo "Removing unused Docker volumes..."
-	@docker volume prune -f
-	@echo "Removing unused Docker networks..."
-	@docker network prune -f
-
-
 ## —— Mysql 🐬  ————————————————————————————————————————————————————————————————
 migrate: ## Cria as tabelas no banco de dados
 	docker exec -it $(CONTAINER) php artisan migrate:fresh
