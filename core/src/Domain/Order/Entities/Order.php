@@ -152,6 +152,11 @@ class Order
         return $this;
     }
 
+    public function isNew(): bool
+    {
+        return $this->getStatus() === OrderStatus::NEW;
+    }
+
     public function setStatus(OrderStatus $status): self
     {
         $this->status = $status;
