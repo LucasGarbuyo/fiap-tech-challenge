@@ -23,6 +23,9 @@ class Checkout implements IOrderUseCaseCheckout
         if (!$order->isNew())
             throw new OrderException("Não pode ser processado pois o pedido já foi pago", 400);
 
+        if (count($order->getItems()) == 0)
+            throw new OrderException("Não pode ser processado pois não há itens no carrinho", 400);
+
         $order
             ->setAsReceived()
             ->setAsPaid();
