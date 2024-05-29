@@ -52,6 +52,16 @@ class ItemRepository implements IItemRepository
 
     public function update(ItemEntity $item): void
     {
+        $this->filters($this->query(), ["id" => $item->getId()])
+            ->update([
+                "order_id" => $item->getOrderId(),
+                "product_id" => $item->getProductId(),
+                "quantity" => $item->getQuantity(),
+                "price" => $item->getPrice()->getValue(),
+                "created_at" => $item->getCreatedAt(),
+                "updated_at" => $item->getUpdatedAt(),
+                "deleted_at" => $item->getDeletedAt()
+            ]);
     }
 
     public function filters(Builder $query, array $filters = []): Builder

@@ -7,9 +7,13 @@ use TechChallenge\Domain\Order\UseCase\{DtoInput, Update as IOrderUseCaseUpdate}
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
-use TechChallenge\Domain\Order\Factories\Order as OrderFactory;
 use TechChallenge\Domain\Order\Enum\OrderStatus;
+use TechChallenge\Domain\Order\Exceptions\InvalidStatusOrder;
 use TechChallenge\Domain\Order\Exceptions\OrderException;
+use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
+use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
+use TechChallenge\Domain\Order\Factories\Item as ItemFactory;
+
 use ValueError;
 
 class Update implements IOrderUseCaseUpdate
@@ -23,20 +27,53 @@ class Update implements IOrderUseCaseUpdate
 
     public function execute(DtoInput $data): void
     {
-        $order = (new OrderFactory())
-            ->new();
+        if (is_null($data->getId()) || !$this->OrderRepository->exist(["id" => $data->getId()]))
+            throw new OrderNotFoundException();
 
-        if (!is_null($data->getCustomerId())) {
+        $order = $this->OrderRepository->show(["id" => $data->getId()], true);
+
+        if ($order->getCustomerId() != $data->getCustomerId() && !is_null($data->getCustomerId())) {
             if (!$this->CustomerRepository->exist(["id" => $data->getCustomerId()]))
                 throw new CustomerNotFoundException();
 
-            $order->withCustomerId($data->getCustomerId());
+            $order->setCustomerId($data->getCustomerId());
         }
 
         try {
-            OrderStatus::from($data->status);
+            $status = OrderStatus::from($data->status);
         } catch (ValueError $error) {
-            throw new OrderException("Status inválido");
+            throw new InvalidStatusOrder();
         }
+
+        if ($status != OrderStatus::NEW)
+            throw new OrderException("Para mudar o status do pedido, precisa passar pelo checkout", 400);
+
+        $idsProducts = [];
+
+        foreach ($data->getItems() as $item) {
+
+            if (is_null($item->getProductId()))
+                continue;
+
+            if (!$this->ProductRepository->exist(["id" => $item->getProductId()]))
+                throw new ProductNotFoundException();
+
+            $product = $this->ProductRepository->show(["id" => $item->getProductId()]);
+
+            $item = (new ItemFactory())
+                ->new(id: null, product_id: $product->getId(), order_id: $order->getId())
+                ->withQuantityPrice($item->getQuantity(), $product->getPrice()->getValue())
+                ->build();
+
+            $idsProducts[] = $item->getProductId();
+
+            $order->setItem($item);
+        }
+
+        $order->removeItemsByProductIdsNotIn($idsProducts);
+
+        $order->calcTotal();
+
+        $this->OrderRepository->update($order);
     }
 }

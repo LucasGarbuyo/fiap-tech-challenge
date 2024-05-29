@@ -104,7 +104,10 @@ class Item
 
     public function getDeletedAt(): DateTime|null
     {
-        return $this->deleted_at;
+        if (isset($this->deleted_at))
+            return $this->deleted_at;
+
+        return null;
     }
 
     public function setPrice(Price $price): self

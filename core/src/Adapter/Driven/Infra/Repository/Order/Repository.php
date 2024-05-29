@@ -121,9 +121,8 @@ class Repository implements IOrderRepository
     public function update(OrderEntity $order): void
     {
         DB::transaction(function () use ($order) {
-            $this->query()
-                ->insert([
-                    "id" => $order->getId(),
+            $this->filters($this->query(), ["id" => $order->getId()])
+                ->update([
                     "customer_id" => $order->getCustomerId(),
                     "total" => $order->getTotal()->getValue(),
                     "status" => $order->getStatus(),
@@ -132,17 +131,17 @@ class Repository implements IOrderRepository
                 ]);
 
             foreach ($order->getItems() as $item) {
-                $this->queryItems()
-                    ->insert([
-                        "id" => $item->getId(),
-                        "order_id" => $order->getId(),
-                        "product_id" => $item->getProductId(),
-                        "quantity" => $item->getQuantity(),
-                        "price" => $item->getPrice()->getValue(),
-                        "created_at" => $item->getCreatedAt(),
-                        "updated_at" => $item->getUpdatedAt(),
-                        "deleted_at" => $item->getDeletedAt()
-                    ]);
+                if ($this->ItemRepository->exist(["id" => $item->getId()]))
+                    $this->ItemRepository->update($item);
+                else
+                    $this->ItemRepository->store($item);
+            }
+
+            foreach ($order->getStatusHistories() as $status) {
+                if ($this->StatusRepository->exist(["id" => $status->getId()]))
+                    $this->StatusRepository->update($status);
+                else
+                    $this->StatusRepository->store($status);
             }
         });
     }

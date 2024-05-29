@@ -183,6 +183,7 @@ class Order
         foreach ($this->getItems() as $orderItem) {
             if ($orderItem->getProductId() == $item->getProductId()) {
                 $orderItem->setQuantity($item->getQuantity());
+                $orderItem->setPrice($item->getPrice());
                 $exist = true;
                 break;
             }
@@ -219,6 +220,13 @@ class Order
             $price += $item->getTotal()->getValue();
 
         $this->setTotal(new Price($price));
+    }
+
+    public function removeItemsByProductIdsNotIn(array $idsProducts)
+    {
+        foreach ($this->getItems() as $item)
+            if (!in_array($item->getProductId(), $idsProducts))
+                $item->delete();
     }
 
     public function toArray(): array

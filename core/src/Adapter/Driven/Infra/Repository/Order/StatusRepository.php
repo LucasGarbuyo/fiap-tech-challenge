@@ -45,6 +45,23 @@ class StatusRepository implements IStatusRepository
             ]);
     }
 
+    public function update(StatusEntity $status): void
+    {
+        $this->filters($this->query(), ["id" => $status->getId()])
+            ->update([
+                "order_id" => $status->getOrderId(),
+                "status" => $status->getStatus(),
+                "created_at" => $status->getCreatedAt(),
+                "updated_at" => $status->getUpdatedAt(),
+                "deleted_at" => $status->getDeletedAt()
+            ]);
+    }
+
+    public function exist(array $filters = []): bool
+    {
+        return $this->filters($this->query(), $filters)->exists();
+    }
+
     public function filters(Builder $query, array $filters = []): Builder
     {
         if (!empty($filters["id"])) {

@@ -77,6 +77,14 @@ class Status
         return $this->status;
     }
 
+    public function getDeletedAt(): DateTime|null
+    {
+        if (isset($this->deleted_at))
+            return $this->deleted_at;
+
+        return null;
+    }
+
     public function toArray(): array
     {
         return [
