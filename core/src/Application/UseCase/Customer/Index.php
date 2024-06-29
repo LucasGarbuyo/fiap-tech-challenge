@@ -2,12 +2,11 @@
 
 namespace TechChallenge\Application\UseCase\Customer;
 
-use TechChallenge\Domain\Customer\UseCase\Index as ICustomerUseCaseEdit;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 
-class Index implements ICustomerUseCaseEdit
+final class Index
 {
-    public function __construct(protected readonly ICustomerRepository $CustomerRepository)
+    public function __construct(private readonly ICustomerRepository $CustomerRepository)
     {
     }
 

@@ -2,20 +2,20 @@
 
 namespace TechChallenge\Domain\Customer\Repository;
 
-use TechChallenge\Domain\Customer\Entities\Customer;
+use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
+use TechChallenge\Domain\Customer\DAO\ICategory as ICategoryDAO;
 
 interface ICustomer
 {
-    /** @return Customer[] */
+    public function __construct(ICategoryDAO $CategoryDAO);
+
     public function index(array $filters = [], array|bool $append = []): array;
 
-    public function show(array $filters = [], array|bool $append = []): Customer|null;
+    public function show(array $filters = [], array|bool $append = []): CustomerEntity|null;
 
-    public function store(Customer $customer): void;
+    public function store(CustomerEntity $customer): void;
 
-    public function update(Customer $customer): void;
+    public function update(CustomerEntity $customer): void;
 
-    public function delete(Customer $customer): void;
-
-    public function exist(array $filters = []): bool;
+    public function delete(CustomerEntity $customer): void;
 }

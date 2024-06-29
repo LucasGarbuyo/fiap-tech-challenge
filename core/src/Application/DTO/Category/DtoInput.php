@@ -1,23 +1,15 @@
 <?php
 
-namespace TechChallenge\Application\UseCase\Category;
+namespace TechChallenge\Application\DTO\Category;
 
-use TechChallenge\Domain\Category\UseCase\DtoInput as ICategoryUseCaseDtoInput;
-
-class DtoInput implements ICategoryUseCaseDtoInput
+class DtoInput
 {
-    public $id;
-    public $name;
-    public $type;
-    public $created_at;
-    public $updated_at;
-
-    public function __construct($id = null,  $name = null,  $type = null,  $created_at = null,  $updated_at = null)
-    {
-        $this->id = $id;
-        $this->name = $name;
-        $this->type = $type;
-        $this->created_at = $created_at;
-        $this->updated_at = $updated_at;
+    public function __construct(
+        public readonly ?string $id = null,
+        public readonly ?string $name = null,
+        public readonly ?string $type = null,
+        public readonly ?string $createdAt = null,
+        public readonly ?string $updatedAt = null
+    ) {
     }
 }

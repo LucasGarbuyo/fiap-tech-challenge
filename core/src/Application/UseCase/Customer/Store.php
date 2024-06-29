@@ -2,29 +2,31 @@
 
 namespace TechChallenge\Application\UseCase\Customer;
 
-use TechChallenge\Domain\Customer\Exceptions\CustomerAlreadyRegistered;
-use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
-use TechChallenge\Domain\Customer\UseCase\DtoInput;
-use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
+use TechChallenge\Domain\Customer\DAO\ICategory as ICustomerDAO;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
+use TechChallenge\Domain\Customer\Exceptions\CustomerAlreadyRegistered;
+use TechChallenge\Domain\Customer\Factories\Simple as FactorySimpleCustomer;
+use TechChallenge\Application\DTO\Customer\DtoInput;
 use TechChallenge\Domain\Customer\ValueObjects\Cpf;
 
-class Store implements ICustomerUseCaseStore
+final class Store
 {
-    public function __construct(protected readonly ICustomerRepository $CustomerRepository)
-    {
+    public function __construct(
+        private readonly ICustomerDAO $CustomerDAO,
+        private readonly ICustomerRepository $CustomerRepository
+    ) {
     }
 
     public function execute(DtoInput $data): string
     {
-        if ($this->CustomerRepository->exist(
+        if ($this->CustomerDAO->exist(
             [
                 "cpf" => (string) (new Cpf($data->cpf))
             ]
         ))
             throw new CustomerAlreadyRegistered();
 
-        $customer = (new CustomerFactory())
+        $customer = (new FactorySimpleCustomer())
             ->new()
             ->withNameCpfEmail($data->name, $data->cpf, $data->email)
             ->build();
