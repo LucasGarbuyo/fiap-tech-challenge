@@ -1,32 +1,27 @@
 <?php
 
-namespace TechChallenge\Adapter\Driver\Api\V1;
+namespace TechChallenge\Api\Customer;
 
 use Illuminate\Http\Request;
-use TechChallenge\Application\UseCase\Customer\DtoInput as CustomerDtoInput;
-use TechChallenge\Config\DIContainer;
-use TechChallenge\Domain\Customer\UseCase\Index as ICustomerUseCaseIndex;
-use TechChallenge\Domain\Customer\UseCase\Show as ICustomerUseCaseShow;
-use TechChallenge\Domain\Customer\UseCase\Store as ICustomerUseCaseStore;
-use TechChallenge\Domain\Customer\UseCase\Update as ICustomerUseCaseUpdate;
-use TechChallenge\Domain\Customer\UseCase\Delete as ICustomerUseCaseDelete;
-use TechChallenge\Domain\Customer\UseCase\ShowByCpf as ICustomerUseCaseShowByCpf;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
+use TechChallenge\Adaptes\Controllers\Customer\Index as ControllerCustomerIndex;
+use TechChallenge\Adaptes\Controllers\Customer\Show as ControllerCustomerShow;
+use TechChallenge\Adaptes\Controllers\Customer\Store as ControllerCustomerStore;
+use TechChallenge\Adaptes\Controllers\Customer\Update as ControllerCustomerUpdate;
+use TechChallenge\Adaptes\Controllers\Customer\Delete as ControllerCustomerDelete;
+use TechChallenge\Infra\DB\Eloquent\Customer\DAO as EloquentCustomerDAO;
+use TechChallenge\Application\DTO\Customer\DtoInput as CustomerDtoInput;
+use Throwable;
+use TechChallenge\Api\Controller;
 
 class Customer extends Controller
 {
     public function index(Request $request)
     {
         try {
-            $customerIndex = DIContainer::create()->get(ICustomerUseCaseIndex::class);
+            $results = (new ControllerCustomerIndex(new EloquentCustomerDAO()))->execute([]);
 
-            $customers = $customerIndex->execute();
-
-            $results = array_map(function ($customer) {
-                return $customer->toArray();
-            }, $customers);
-
-            return $this->return($results, 200);
+            $this->return($results, 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -36,7 +31,7 @@ class Customer extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -51,13 +46,11 @@ class Customer extends Controller
     public function store(Request $request)
     {
         try {
-            $data = new CustomerDtoInput(null, $request->name, $request->cpf, $request->email);
+            $dto = new CustomerDtoInput(null, $request->name, $request->cpf, $request->email);
 
-            $customerStore = DIContainer::create()->get(ICustomerUseCaseStore::class);
+            $id = (new ControllerCustomerStore(new EloquentCustomerDAO()))->execute($dto);
 
-            $id = $customerStore->execute($data);
-
-            return $this->return(["id" => $id], 201);
+            return $this->return($id, 201);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -67,7 +60,7 @@ class Customer extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -82,13 +75,9 @@ class Customer extends Controller
     public function show(Request $request, string $id)
     {
         try {
-            $data = new CustomerDtoInput($id);
+            $result = (new ControllerCustomerShow(new EloquentCustomerDAO()))->execute($id);
 
-            $customerShow = DIContainer::create()->get(ICustomerUseCaseShow::class);
-
-            $customer = $customerShow->execute($data);
-
-            return $this->return($customer->toArray(), 200);
+            return $this->return($result, 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -98,7 +87,7 @@ class Customer extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -113,13 +102,11 @@ class Customer extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $data = new CustomerDtoInput($id, $request->name, $request->cpf, $request->email);
+            $dto = new CustomerDtoInput($id, $request->name, $request->cpf, $request->email);
 
-            $customerUpdate = DIContainer::create()->get(ICustomerUseCaseUpdate::class);
+            (new ControllerCustomerUpdate(new EloquentCustomerDAO()))->execute($dto);
 
-            $customerUpdate->execute($data);
-
-            return $this->return([], 204);
+            return $this->return('', 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -129,7 +116,7 @@ class Customer extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -144,13 +131,9 @@ class Customer extends Controller
     public function delete(Request $request, string $id)
     {
         try {
-            $data = new CustomerDtoInput($id);
+            (new ControllerCustomerDelete(new EloquentCustomerDAO()))->execute($id);
 
-            $productDelete = DIContainer::create()->get(ICustomerUseCaseDelete::class);
-
-            $productDelete->execute($data);
-
-            return $this->return([], 204);
+            return $this->return('', 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -160,7 +143,7 @@ class Customer extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -172,34 +155,35 @@ class Customer extends Controller
         }
     }
 
-    public function showByCfp(Request $request, string $cpf)
-    {
-        try {
-            $data = new CustomerDtoInput(cpf: $cpf);
+    //TODO fazer o Adapter controller desse método
+    // public function showByCfp(Request $request, string $cpf)
+    // {
+    //     try {
+    //         $data = new CustomerDtoInput(cpf: $cpf);
 
-            $CustomerEditByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
+    //         $CustomerEditByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
 
-            $customer = $CustomerEditByCpf->execute($data);
+    //         $customer = $CustomerEditByCpf->execute($data);
 
-            return $this->return($customer->toArray(), 200);
-        } catch (DefaultException $e) {
-            return $this->return(
-                [
-                    "error" => [
-                        "message" => $e->getMessage()
-                    ]
-                ],
-                $e->getStatus()
-            );
-        } catch (\Throwable $e) {
-            return $this->return(
-                [
-                    "error" => [
-                        "message" => $e->getMessage()
-                    ]
-                ],
-                400
-            );
-        }
-    }
+    //         return $this->return($customer->toArray(), 200);
+    //     } catch (DefaultException $e) {
+    //         return $this->return(
+    //             [
+    //                 "error" => [
+    //                     "message" => $e->getMessage()
+    //                 ]
+    //             ],
+    //             $e->getStatus()
+    //         );
+    //     } catch (\Throwable $e) {
+    //         return $this->return(
+    //             [
+    //                 "error" => [
+    //                     "message" => $e->getMessage()
+    //                 ]
+    //             ],
+    //             400
+    //         );
+    //     }
+    // }
 }

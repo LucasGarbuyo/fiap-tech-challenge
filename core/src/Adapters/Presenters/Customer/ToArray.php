@@ -11,6 +11,14 @@ class ToArray
 
     public function execute(CustomerEntity $customer): array
     {
-        return [];
+        return [
+            "id" => $customer->getId(),
+            "name" => $customer->getName(),
+            "cpf" => $customer->getCpf(),
+            "email" => $customer->getEmail(),
+            "created_at" => $customer->getCreatedAt() ? $customer->getCreatedAt()->format("Y-m-d H:i:s") : null,
+            "updated_at" => $customer->getUpdatedAt() ? $customer->getUpdatedAt()->format("Y-m-d H:i:s") : null,
+            "deleted_at" => $customer->getUpdatedAt() ? $customer->getUpdatedAt()->format("Y-m-d H:i:s") : null,
+        ];
     }
 }

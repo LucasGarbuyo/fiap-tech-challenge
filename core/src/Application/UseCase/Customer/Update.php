@@ -2,7 +2,7 @@
 
 namespace TechChallenge\Application\UseCase\Customer;
 
-use TechChallenge\Domain\Customer\DAO\ICategory as ICustomerDAO;
+use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Customer\Exceptions\CustomerAlreadyRegistered;
 use TechChallenge\Domain\Customer\Exceptions\CustomerNotFoundException;

@@ -1,10 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use TechChallenge\Adapter\Driver\Api\V1\Product;
-use TechChallenge\Adapter\Driver\Api\V1\Customer;
-use TechChallenge\Adapter\Driver\Api\V1\Category;
-use TechChallenge\Adapter\Driver\Api\V1\Order;
+use TechChallenge\Api\Customer\Customer;
 
 Route::controller(Product::class)
     ->prefix('/product')
