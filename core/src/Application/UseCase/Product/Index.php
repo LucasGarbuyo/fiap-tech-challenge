@@ -2,13 +2,11 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use TechChallenge\Domain\Product\UseCase\Index as IProductUseCaseIndex;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 
-
-class Index implements IProductUseCaseIndex
+final class Index
 {
-    public function __construct(protected readonly IProductRepository $ProductRepository)
+    public function __construct(private readonly IProductRepository $ProductRepository)
     {
     }
 

@@ -20,5 +20,4 @@ interface IProduct
 
     public function delete(Product $product): void;
 
-    public function exist(array $filters = []): bool;
 }
