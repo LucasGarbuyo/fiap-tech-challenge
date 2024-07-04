@@ -15,10 +15,9 @@ final class Index
     {
         $this->ProductDAO = $ProductDAO;
     }
-    
+
     public function execute(array $filters)
     {
-        dd('asd');
-        $products = (new UseCaseProductIndex((new ProductRepository($this->ProductDAO))))->execute($filters);
+        return (new UseCaseProductIndex((new ProductRepository($this->ProductDAO))))->execute($filters);
     }
 }

@@ -9,7 +9,6 @@ final class DAO implements IProductDAO
 {
     public function index(array $filters = [], array|bool $append = []): array
     {
-        dd('parou');
         $query = $this->query($filters, $append);
 
         if (!empty($filters["pag"]) && !empty($filters["prp"])) {

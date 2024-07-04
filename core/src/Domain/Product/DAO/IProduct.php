@@ -10,8 +10,8 @@ interface IProduct
 
     // public function create(array $category): void;
 
-    public function update(array $category): void;
+    // public function update(array $category): void;
 
-    public function delete(array $category): void;
+    // public function delete(array $category): void;
 
 }
