@@ -1,6 +1,6 @@
 <?php
 
-namespace TechChallenge\Adaptes\Controllers\Customer;
+namespace TechChallenge\Adapters\Controllers\Customer;
 
 use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
 use TechChallenge\Application\DTO\Customer\DtoInput as CustomerDTOInput;

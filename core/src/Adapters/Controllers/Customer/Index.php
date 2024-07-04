@@ -5,6 +5,7 @@ namespace TechChallenge\Adapters\Controllers\Customer;
 use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
 use TechChallenge\Adapters\Gateways\Repository\Customer\Repository as CustomerRepository;
 use TechChallenge\Application\UseCase\Customer\Index as UseCaseCustomerIndex;
+use TechChallenge\Adapters\Presenters\Customer\ToArray as PresenterCustomerToArray;
 
 final class Index
 {
@@ -14,10 +15,20 @@ final class Index
 
     public function execute(array $filters = [])
     {
-        $categories = (new UseCaseCustomerIndex((new CustomerRepository($this->CustomerDAO))))->execute($filters);
+        $results = (new UseCaseCustomerIndex((new CustomerRepository($this->CustomerDAO))))->execute($filters);
+
+        $presenter = new PresenterCustomerToArray();
+
+        if ($this->isPaginated($results))
+            $results["data"] = $presenter->executeOnArray($results["data"]);
+        else
+            $results = $presenter->executeOnArray($results);
+
+        return $results;
     }
 
-    protected function isPaginated(): bool
+    private function isPaginated(array $results): bool
     {
+        return isset($results["data"]) && isset($results["pagination"]) && count($results["pagination"]) == 6;
     }
 }

@@ -34,7 +34,7 @@ class Customer extends StandardEntity
         ?DateTime $updatedAt = null
     ): self {
         return new self(
-            id: $id ?? Uuid::generate("CUST"),
+            id: $id ? $id : Uuid::generate("CUST"),
             createdAt: $createdAt ?? new DateTime(),
             updatedAt: $updatedAt ?? new DateTime()
         );

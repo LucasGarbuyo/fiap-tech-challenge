@@ -4,11 +4,11 @@ namespace TechChallenge\Api\Customer;
 
 use Illuminate\Http\Request;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
-use TechChallenge\Adaptes\Controllers\Customer\Index as ControllerCustomerIndex;
-use TechChallenge\Adaptes\Controllers\Customer\Show as ControllerCustomerShow;
-use TechChallenge\Adaptes\Controllers\Customer\Store as ControllerCustomerStore;
-use TechChallenge\Adaptes\Controllers\Customer\Update as ControllerCustomerUpdate;
-use TechChallenge\Adaptes\Controllers\Customer\Delete as ControllerCustomerDelete;
+use TechChallenge\Adapters\Controllers\Customer\Index as ControllerCustomerIndex;
+use TechChallenge\Adapters\Controllers\Customer\Show as ControllerCustomerShow;
+use TechChallenge\Adapters\Controllers\Customer\Store as ControllerCustomerStore;
+use TechChallenge\Adapters\Controllers\Customer\Update as ControllerCustomerUpdate;
+use TechChallenge\Adapters\Controllers\Customer\Delete as ControllerCustomerDelete;
 use TechChallenge\Infra\DB\Eloquent\Customer\DAO as EloquentCustomerDAO;
 use TechChallenge\Application\DTO\Customer\DtoInput as CustomerDtoInput;
 use Throwable;
@@ -21,7 +21,7 @@ class Customer extends Controller
         try {
             $results = (new ControllerCustomerIndex(new EloquentCustomerDAO()))->execute([]);
 
-            $this->return($results, 200);
+            return $this->return($results, 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -50,7 +50,7 @@ class Customer extends Controller
 
             $id = (new ControllerCustomerStore(new EloquentCustomerDAO()))->execute($dto);
 
-            return $this->return($id, 201);
+            return $this->return(["id" => $id], 201);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -102,11 +102,18 @@ class Customer extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $dto = new CustomerDtoInput($id, $request->name, $request->cpf, $request->email);
+            $dto = new CustomerDtoInput(
+                $id,
+                $request->name,
+                $request->cpf,
+                $request->email,
+                $request->created_at,
+                $request->updated_at
+            );
 
             (new ControllerCustomerUpdate(new EloquentCustomerDAO()))->execute($dto);
 
-            return $this->return('', 204);
+            return $this->return(null, 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -133,7 +140,7 @@ class Customer extends Controller
         try {
             (new ControllerCustomerDelete(new EloquentCustomerDAO()))->execute($id);
 
-            return $this->return('', 204);
+            return $this->return(null, 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [

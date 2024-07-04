@@ -17,7 +17,7 @@ class Product extends Controller
         try {
             $results = (new ControllerProductIndex(new EloquentProductDAO()))->execute([]);
 
-           return $this->return($results, 200);
+            return $this->return($results, 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [

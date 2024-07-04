@@ -1,6 +1,6 @@
 <?php
 
-namespace TechChallenge\Adaptes\Controllers\Customer;
+namespace TechChallenge\Adapters\Controllers\Customer;
 
 use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
 use TechChallenge\Application\DTO\Customer\DtoInput as CustomerDTOInput;
@@ -15,6 +15,6 @@ final class Update
 
     public function execute(CustomerDTOInput $dto): void
     {
-        return (new UseCaseCustomerUpdate($this->CustomerDAO, (new CustomerRepository($this->CustomerDAO))))->execute($dto);
+        (new UseCaseCustomerUpdate($this->CustomerDAO, (new CustomerRepository($this->CustomerDAO))))->execute($dto);
     }
 }

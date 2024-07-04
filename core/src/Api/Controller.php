@@ -4,8 +4,8 @@ namespace TechChallenge\Api;
 
 class Controller
 {
-    protected function return($content = '', $status = 200)
+    protected function return(mixed $data = [], int $status = 200)
     {
-        return response($content, $status, ["Content-Type: application/json", "Accept: application/json"]);
+        return response()->json($data, $status, ["Content-Type: application/json", "Accept: application/json"]);
     }
 }

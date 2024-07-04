@@ -14,11 +14,11 @@ class ToArray
         return [
             "id" => $customer->getId(),
             "name" => $customer->getName(),
-            "cpf" => $customer->getCpf(),
-            "email" => $customer->getEmail(),
+            "cpf" => (string) $customer->getCpf(),
+            "email" => (string) $customer->getEmail(),
             "created_at" => $customer->getCreatedAt() ? $customer->getCreatedAt()->format("Y-m-d H:i:s") : null,
             "updated_at" => $customer->getUpdatedAt() ? $customer->getUpdatedAt()->format("Y-m-d H:i:s") : null,
-            "deleted_at" => $customer->getUpdatedAt() ? $customer->getUpdatedAt()->format("Y-m-d H:i:s") : null,
+            "deleted_at" => $customer->getDeletedAt() ? $customer->getDeletedAt()->format("Y-m-d H:i:s") : null,
         ];
     }
 }

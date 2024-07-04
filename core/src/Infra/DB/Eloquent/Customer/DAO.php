@@ -13,7 +13,7 @@ final class DAO implements ICustomerDAO
 
         if (!empty($filters["pag"]) && !empty($filters["prp"])) {
 
-            $paginator = $query->paginate(perPage: $filters["pag"], page: $filters["page"]);
+            $paginator = $query->paginate(perPage: $filters["prp"], page: $filters["pag"]);
 
             return [
                 'data' => $paginator->items(),
@@ -28,7 +28,9 @@ final class DAO implements ICustomerDAO
             ];
         }
 
-        return $query->get();
+        $results = $query->get()->toArray();
+
+        return $results;
     }
 
     public function store(array $category): void
@@ -38,29 +40,48 @@ final class DAO implements ICustomerDAO
 
     public function show(array $filters = [], array|bool $append = []): ?array
     {
-        $query = $this->query($filters, $append);
-
-        return $query->first();
+        return $this->query($filters, $append)->first()->toArray();
     }
 
     public function update(array $category): void
     {
+        Model::where("id", $category["id"])->update($category);
     }
 
     public function delete(array $category): void
     {
+        Model::where("id", $category["id"])->update($category);
     }
 
     public function exist(array $filters = []): bool
     {
-        // $query = $this->query($filters);
-
-        // return $query->has
+        return $this->query($filters)->exists();
     }
 
     protected function query(array $filters = [], array|bool $append = []): Builder
     {
         $query = Model::query();
+
+        if (!empty($filters["id"])) {
+            if (!is_array($filters["id"]))
+                $filters["id"] = [$filters["id"]];
+
+            $query->whereIn('id', $filters["id"]);
+        }
+
+        if (!empty($filters["not-id"])) {
+            if (!is_array($filters["not-id"]))
+                $filters["not-id"] = [$filters["not-id"]];
+
+            $query->whereNotIn('id', $filters["not-id"]);
+        }
+
+        if (!empty($filters["cpf"])) {
+            if (!is_array($filters["cpf"]))
+                $filters["cpf"] = [$filters["cpf"]];
+
+            $query->whereIn('cpf', $filters["cpf"]);
+        }
 
         return $query;
     }
