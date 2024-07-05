@@ -1,11 +1,11 @@
 <?php
 
-namespace TechChallenge\Adapters\Gateways\Repository\Customer;
+namespace TechChallenge\Adapters\Gateways\Repository\Eloquent\Customer;
 
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
 use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
-use TechChallenge\DOmain\CUstomer\Factories\Simple as SimpleFactoryCustomer;
+use TechChallenge\Domain\Customer\SimpleFactory\Customer as SimpleFactoryCustomer;
 use TechChallenge\Adapters\Presenters\Customer\ToArray as CustomerToArray;
 
 final class Repository implements ICustomerRepository

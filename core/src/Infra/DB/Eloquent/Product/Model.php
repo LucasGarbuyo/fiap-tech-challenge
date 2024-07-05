@@ -4,13 +4,14 @@ namespace TechChallenge\Infra\DB\Eloquent\Product;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Model extends EloquentModel
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = "products";
-    
+
     protected $keyType = 'string';
 
     public $incrementing = false;
@@ -26,6 +27,4 @@ class Model extends EloquentModel
         "updated_at",
         "deleted_at"
     ];
-
-   
 }

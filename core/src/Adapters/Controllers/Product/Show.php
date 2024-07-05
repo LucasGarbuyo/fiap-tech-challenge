@@ -3,7 +3,7 @@
 namespace TechChallenge\Adapters\Controllers\Product;
 
 use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
-use TechChallenge\Adapters\Gateways\Repository\Product\Repository as ProductRepository;
+use TechChallenge\Adapters\Gateways\Repository\Eloquent\Product\Repository as ProductRepository;
 use TechChallenge\Application\UseCase\Product\Show as UseCaseProducShow;
 use TechChallenge\Adapters\Presenters\Product\ToArray as PresenterProductToArray;
 

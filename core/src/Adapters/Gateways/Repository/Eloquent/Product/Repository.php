@@ -1,11 +1,9 @@
 <?php
 
-namespace TechChallenge\Adapters\Gateways\Repository\Product;
+namespace TechChallenge\Adapters\Gateways\Repository\Eloquent\Product;
 
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
-use TechChallenge\Infra\DB\Eloquent\Product\Model as ProductModel;
-use TechChallenge\Domain\Shared\ValueObjects\Price;
 use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 use TechChallenge\Adapters\Presenters\Product\ToArray as ProductToArray;
@@ -33,8 +31,8 @@ final class Repository implements IProductRepository
 
     public function show(array $filters = [], array|bool $append = []): ?ProductEntity
     {
-        $customer = $this->ProductDAO->show($filters, $append);       
-        
+        $customer = $this->ProductDAO->show($filters, $append);
+
         if (is_null($customer))
             return null;
 

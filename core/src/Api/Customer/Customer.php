@@ -2,24 +2,38 @@
 
 namespace TechChallenge\Api\Customer;
 
+use TechChallenge\Domain\Shared\AbstractFactory\DAO as AbstractFactoryDAO;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
+use TechChallenge\Application\AbstractFactory\EloquentDAO as AbstractFactoryEloquentDAO;
+use TechChallenge\Application\AbstractFactory\EloquentRepository as AbstractFactoryEloquentRepository;
+use TechChallenge\Api\Controller;
 use Illuminate\Http\Request;
+use Throwable;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 use TechChallenge\Adapters\Controllers\Customer\Index as ControllerCustomerIndex;
 use TechChallenge\Adapters\Controllers\Customer\Show as ControllerCustomerShow;
 use TechChallenge\Adapters\Controllers\Customer\Store as ControllerCustomerStore;
 use TechChallenge\Adapters\Controllers\Customer\Update as ControllerCustomerUpdate;
 use TechChallenge\Adapters\Controllers\Customer\Delete as ControllerCustomerDelete;
-use TechChallenge\Infra\DB\Eloquent\Customer\DAO as EloquentCustomerDAO;
 use TechChallenge\Application\DTO\Customer\DtoInput as CustomerDtoInput;
-use Throwable;
-use TechChallenge\Api\Controller;
 
 class Customer extends Controller
 {
+    private readonly AbstractFactoryDAO $AbstractFactoryDAO;
+
+    private readonly AbstractFactoryRepository $AbstractFactoryRepository;
+
+    public function __construct()
+    {
+        $this->AbstractFactoryDAO = new AbstractFactoryEloquentDAO();
+
+        $this->AbstractFactoryRepository = new AbstractFactoryEloquentRepository($this->AbstractFactoryDAO);
+    }
+
     public function index(Request $request)
     {
         try {
-            $results = (new ControllerCustomerIndex(new EloquentCustomerDAO()))->execute([]);
+            $results = (new ControllerCustomerIndex($this->AbstractFactoryRepository))->execute([]);
 
             return $this->return($results, 200);
         } catch (DefaultException $e) {
@@ -48,7 +62,7 @@ class Customer extends Controller
         try {
             $dto = new CustomerDtoInput(null, $request->name, $request->cpf, $request->email);
 
-            $id = (new ControllerCustomerStore(new EloquentCustomerDAO()))->execute($dto);
+            $id = (new ControllerCustomerStore($this->AbstractFactoryRepository))->execute($dto);
 
             return $this->return(["id" => $id], 201);
         } catch (DefaultException $e) {
@@ -75,7 +89,7 @@ class Customer extends Controller
     public function show(Request $request, string $id)
     {
         try {
-            $result = (new ControllerCustomerShow(new EloquentCustomerDAO()))->execute($id);
+            $result = (new ControllerCustomerShow($this->AbstractFactoryRepository))->execute($id);
 
             return $this->return($result, 200);
         } catch (DefaultException $e) {
@@ -111,7 +125,7 @@ class Customer extends Controller
                 $request->updated_at
             );
 
-            (new ControllerCustomerUpdate(new EloquentCustomerDAO()))->execute($dto);
+            (new ControllerCustomerUpdate($this->AbstractFactoryRepository))->execute($dto);
 
             return $this->return(null, 204);
         } catch (DefaultException $e) {
@@ -138,7 +152,7 @@ class Customer extends Controller
     public function delete(Request $request, string $id)
     {
         try {
-            (new ControllerCustomerDelete(new EloquentCustomerDAO()))->execute($id);
+            (new ControllerCustomerDelete($this->AbstractFactoryRepository))->execute($id);
 
             return $this->return(null, 204);
         } catch (DefaultException $e) {

@@ -1,13 +1,13 @@
 <?php
 
-namespace TechChallenge\Domain\Customer\Factories;
+namespace TechChallenge\Domain\Customer\SimpleFactory;
 
 use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
 use TechChallenge\Domain\Customer\ValueObjects\Cpf;
 use TechChallenge\Domain\Customer\ValueObjects\Email;
 
-class Simple
+class Customer
 {
     private CustomerEntity $customer;
 

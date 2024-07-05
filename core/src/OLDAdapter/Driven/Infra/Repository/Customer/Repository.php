@@ -3,7 +3,7 @@
 namespace TechChallenge\Adapter\Driven\Infra\Repository\Customer;
 
 use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
-use TechChallenge\Domain\Customer\Factories\Customer as CustomerFactory;
+use TechChallenge\Domain\Customer\SimpleFactory\Customer as CustomerFactory;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\Builder;
