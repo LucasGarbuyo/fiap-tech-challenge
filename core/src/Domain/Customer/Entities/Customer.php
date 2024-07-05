@@ -3,47 +3,19 @@
 namespace TechChallenge\Domain\Customer\Entities;
 
 use TechChallenge\Domain\Shared\Entities\Standard as StandardEntity;
-use DateTime;
 use TechChallenge\Domain\Customer\Exceptions\CustomerException;
 use TechChallenge\Domain\Customer\ValueObjects\Cpf;
 use TechChallenge\Domain\Customer\ValueObjects\Email;
-use TechChallenge\Domain\Shared\Facade\Uuid;
 
 class Customer extends StandardEntity
 {
-    private ?string $name = null;
-    private ?Cpf $cpf = null;
-    private ?Email $email = null;
-    private readonly DateTime $createdAt;
-    private DateTime $updatedAt;
-    private ?DateTime $deletedAt = null;
+    protected static string $idPrefix = "CUST";
 
-    public function __construct(
-        private readonly string $id,
-        DateTime $createdAt,
-        DateTime $updatedAt,
-    ) {
-        $this
-            ->setCreatedAt($createdAt)
-            ->setUpdatedAt($updatedAt);
-    }
+    protected ?string $name = null;
 
-    public static function create(
-        ?string $id = null,
-        ?DateTime $createdAt = null,
-        ?DateTime $updatedAt = null
-    ): self {
-        return new self(
-            id: $id ? $id : Uuid::generate("CUST"),
-            createdAt: $createdAt ?? new DateTime(),
-            updatedAt: $updatedAt ?? new DateTime()
-        );
-    }
+    protected ?Cpf $cpf = null;
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
+    protected ?Email $email = null;
 
     public function setName(string|null $name): self
     {
@@ -85,41 +57,5 @@ class Customer extends StandardEntity
     public function getEmail(): Email
     {
         return $this->email;
-    }
-
-    public function setCreatedAt(DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setUpdatedAt(DateTime $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function delete(): self
-    {
-        $this->deletedAt = new DateTime();
-
-        return $this;
-    }
-
-    public function getDeletedAt(): DateTime|null
-    {
-        return $this->deletedAt;
     }
 }

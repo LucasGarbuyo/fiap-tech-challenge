@@ -11,6 +11,16 @@ class ToArray
 
     public function execute(ProductEntity $product): array
     {
-        return $product->toArray();
+        return [
+            "id" => $product->getId(),
+            "name" => $product->getName(),
+            "description" => $product->getDescription(),
+            "price" => $product->getPrice()->getValue(),
+            "image" => $product->getImage(),
+            "category_id" => $product->getCategoryId(),
+            // "category" => $product->getCategory() ? $product->getCategory()->toArray() : [], TODO fazer o append da categoria
+            "created_at" => $product->getCreatedAt() ? $product->getCreatedAt()->format("Y-m-d H:i:s") : null,
+            "updated_at" => $product->getUpdatedAt() ? $product->getUpdatedAt()->format("Y-m-d H:i:s") : null
+        ];
     }
 }

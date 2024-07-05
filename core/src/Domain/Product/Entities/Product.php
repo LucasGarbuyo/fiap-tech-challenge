@@ -2,46 +2,26 @@
 
 namespace TechChallenge\Domain\Product\Entities;
 
-use DateTime;
 use TechChallenge\Domain\Category\Entities\Category;
 use TechChallenge\Domain\Product\Exceptions\ProductException;
 use TechChallenge\Domain\SHared\ValueObjects\Price;
+use TechChallenge\Domain\Shared\Entities\Standard as StandardEntity;
 
-class Product
+class Product extends StandardEntity
 {
-    private ?Category $category = null;
-    private ?string $categoryId = null;
-    private ?string $name;
-    private ?string $description;
-    private ?string $image = null;
-    private ?Price $price;
-    private readonly DateTime $created_at;
-    private DateTime $updated_at;
-    private ?DateTime $deleted_at;
+    protected static string $idPrefix = "PROD";
 
-    public function __construct(
-        private readonly string $id,
-        DateTime $created_at,
-        DateTime $updated_at,
-    ) {
-        $this
-            ->setCreatedAt($created_at)
-            ->setUpdatedAt($updated_at);
-    }
+    protected ?Category $category = null;
 
-    public static function create(?string $id = null, ?DateTime $created_at = null, ?DateTime $updated_at = null)
-    {
-        return new self(
-            id: $id ?? uniqid("PROD_", true),
-            created_at: $created_at ?? new DateTime(),
-            updated_at: $updated_at ?? new DateTime()
-        );
-    }
+    protected ?string $categoryId = null;
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
+    protected ?string $name;
+
+    protected ?string $description;
+
+    protected ?string $image = null;
+
+    protected ?Price $price;
 
     public function setCategoryId(string $categoryId): self
     {
@@ -92,12 +72,10 @@ class Product
         return $this->image;
     }
 
-
     public function getName(): string|null
     {
         return $this->name;
     }
-
 
     public function setDescription(string|null $description): self
     {
@@ -121,58 +99,5 @@ class Product
     public function getPrice(): Price
     {
         return $this->price;
-    }
-
-    public function setCreatedAt(DateTime $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): DateTime|null
-    {
-        return $this->created_at;
-    }
-
-    public function setUpdatedAt(DateTime $updated_at): self
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): DateTime|null
-    {
-        return $this->updated_at;
-    }
-
-    public function delete(): self
-    {
-        $this->deleted_at = new DateTime();
-
-        return $this;
-    }
-
-    public function getDeletedAt(): DateTime|null
-    {
-        return $this->deleted_at;
-    }
-
-    public function toArray(): array
-    {
-        $return = [
-            "id" => $this->getId(),
-            "name" => $this->getName(),
-            "description" => $this->getDescription(),
-            "price" => $this->getPrice()->getValue(),
-            "image" => $this->getImage(),
-            "category_id" => $this->getCategoryId(),
-            "category" => $this->getCategory() ? $this->getCategory()->toArray() : [],
-            "created_at" => $this->getCreatedAt() ? $this->getCreatedAt()->format("Y-m-d H:i:s") : null,
-            "updated_at" => $this->getUpdatedAt() ? $this->getUpdatedAt()->format("Y-m-d H:i:s") : null
-        ];
-
-        return $return;
     }
 }
