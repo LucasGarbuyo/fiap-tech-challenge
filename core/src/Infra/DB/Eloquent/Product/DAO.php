@@ -37,9 +37,7 @@ final class DAO implements IProductDAO
 
     public function show(array $filters = [], array|bool $append = []): ?array
     {
-        $query = $this->query($filters, $append);
-
-        return $query->first();
+        return $this->query($filters, $append)->first()->toArray();
     }
 
     public function update(array $category): void

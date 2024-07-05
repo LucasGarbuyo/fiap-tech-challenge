@@ -31,6 +31,16 @@ final class Repository implements IProductRepository
         return $results;
     }
 
+    public function show(array $filters = [], array|bool $append = []): ?ProductEntity
+    {
+        $customer = $this->ProductDAO->show($filters, $append);       
+        
+        if (is_null($customer))
+            return null;
+
+        return $this->toProductEntitie($customer);
+    }
+
     /*public function store(CustomerEntity $customer): void
     {
         $array = (new CustomerToArray())->execute($customer);
@@ -38,10 +48,7 @@ final class Repository implements IProductRepository
         $this->CustomerDAO->store($array);
     }
 
-    public function show(array $filters = [], array|bool $append = []): ?CustomerEntity
-    {
-        return null;
-    }
+    
 
     public function update(CustomerEntity $customer): void
     {

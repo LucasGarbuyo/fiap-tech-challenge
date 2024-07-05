@@ -4,7 +4,7 @@ namespace TechChallenge\Adapters\Controllers\Product;
 
 use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
 use TechChallenge\Adapters\Gateways\Repository\Product\Repository as ProductRepository;
-use TechChallenge\Application\UseCase\Product\Index as UseCaseProductIndex;
+use TechChallenge\Application\UseCase\Product\Show as UseCaseProducShow;
 use TechChallenge\Adapters\Presenters\Product\ToArray as PresenterProductToArray;
 
 final class Show
@@ -15,7 +15,7 @@ final class Show
 
     public function execute(string $id): array
     {
-        $product = (new UseCaseProductIndex($this->IProductDAO, (new ProductRepository($this->IProductDAO))))->execute($id);
+        $product = (new UseCaseProducShow($this->IProductDAO, (new ProductRepository($this->IProductDAO))))->execute($id);
 
         return (new PresenterProductToArray())->execute($product);
     }

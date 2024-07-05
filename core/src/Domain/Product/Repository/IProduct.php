@@ -11,9 +11,9 @@ interface IProduct
 
     public function index(array $filters = [], array|bool $append = []): array;
 
-    /*public function show(array $filters = [], array|bool $append = []): Product|null;
+    public function show(array $filters = [], array|bool $append = []): Product|null;
 
-    public function store(Product $product): void;
+    /*public function store(Product $product): void;
 
     public function update(Product $product): void;
 
