@@ -10,6 +10,10 @@ class Model extends EloquentModel
     use HasFactory;
 
     protected $table = "products";
+    
+    protected $keyType = 'string';
+
+    public $incrementing = false;
 
     protected $fillable = [
         "id",
@@ -22,4 +26,6 @@ class Model extends EloquentModel
         "updated_at",
         "deleted_at"
     ];
+
+   
 }
