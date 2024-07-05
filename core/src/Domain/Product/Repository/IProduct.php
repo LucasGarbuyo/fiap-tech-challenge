@@ -9,7 +9,6 @@ interface IProduct
 {
     public function __construct(IProductDAO $IProductDAO);
 
-    /** @return Product[] */
     public function index(array $filters = [], array|bool $append = []): array;
 
     /*public function show(array $filters = [], array|bool $append = []): Product|null;

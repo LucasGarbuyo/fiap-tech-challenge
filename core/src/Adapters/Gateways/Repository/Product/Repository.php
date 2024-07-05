@@ -6,41 +6,29 @@ use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
 use TechChallenge\Infra\DB\Eloquent\Product\Model as ProductModel;
 use TechChallenge\Domain\Shared\ValueObjects\Price;
+use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 use TechChallenge\Adapters\Presenters\Product\ToArray as ProductToArray;
 
 final class Repository implements IProductRepository
 {
+    private readonly ProductFactory $ProductFactory;
+
     public function __construct(private readonly IProductDAO $ProductDAO)
     {
+        $this->ProductFactory = new ProductFactory();
     }
 
     public function index(array $filters = [], array|bool $append = []): array
     {
-        $products = ProductModel::all();
+        $results = $this->ProductDAO->index($filters, $append);
 
-        $productsArray = $products->map(function ($product) {
-            $productEntity = new ProductEntity(
-                id: $product->id,
-                created_at: new \DateTime($product->created_at),
-                updated_at: new \DateTime($product->updated_at)
-            );
-            $productEntity->setName($product->name)
-                ->setDescription($product->description)
-                ->setImage($product->image)
-                ->setPrice(new Price($product->price));
+        if ($this->isPaginated($results))
+            $results["data"] = $this->toProductEntities($results["data"]);
+        else
+            $results = $this->toProductEntities($results);
 
-            $productArray = $productEntity->toArray();
-            array_walk_recursive($productArray, function (&$item) {
-                if (is_string($item)) {
-                    $item = mb_convert_encoding($item, 'UTF-8', 'auto');
-                }
-            });
-
-            return $productArray;
-        })->toArray();
-
-        return $productsArray;
+        return $results;
     }
 
     /*public function store(CustomerEntity $customer): void
@@ -62,4 +50,27 @@ final class Repository implements IProductRepository
     public function delete(CustomerEntity $customer): void
     {
     }*/
+
+    private function isPaginated(array $results): bool
+    {
+        return isset($results["data"]) && isset($results["pagination"]) && count($results["pagination"]) == 6;
+    }
+
+    private function toProductEntities(array $products): array
+    {
+        $productEntities = [];
+
+        foreach ($products as $product)
+            $productEntities[] = $this->toProductEntitie($product);
+
+        return $productEntities;
+    }
+
+    private function toProductEntitie(array $product): ProductEntity
+    {
+        return $this->ProductFactory
+            ->new($product["id"], $product["created_at"], $product["updated_at"])
+            ->withNameDescriptionPriceImage($product["name"], $product["description"], $product["price"], $product["image"])
+            ->build();
+    }
 }

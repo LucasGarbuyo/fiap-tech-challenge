@@ -5,12 +5,13 @@ namespace TechChallenge\Infra\DB\Eloquent\Product;
 use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
 use Illuminate\Database\Eloquent\Builder;
 
+
 final class DAO implements IProductDAO
 {
     public function index(array $filters = [], array|bool $append = []): array
-    {
+    {       
         $query = $this->query($filters, $append);
-
+        
         if (!empty($filters["pag"]) && !empty($filters["prp"])) {
             $paginator = $query->paginate(perPage: $filters["pag"], page: $filters["page"]);
 
@@ -26,8 +27,7 @@ final class DAO implements IProductDAO
                 ],
             ];
         }
-
-        return $query->get();
+        return $query->get()->toArray();;
     }
 
     public function store(array $category): void
@@ -52,9 +52,7 @@ final class DAO implements IProductDAO
 
     public function exist(array $filters = []): bool
     {
-        // $query = $this->query($filters);
-
-        // return $query->has
+        return $this->query($filters)->exists();
     }
 
     protected function query(array $filters = [], array|bool $append = []): Builder
