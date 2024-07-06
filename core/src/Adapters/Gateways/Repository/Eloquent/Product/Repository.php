@@ -4,21 +4,28 @@ namespace TechChallenge\Adapters\Gateways\Repository\Eloquent\Product;
 
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
-use TechChallenge\Domain\Product\SimpleFactory\Product as ProductFactory;
+use TechChallenge\Domain\Product\SimpleFactory\Product as SimpleFactoryProduct;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
+use TechChallenge\Domain\Category\Entities\Category as CategoryEntity;
 use TechChallenge\Adapters\Presenters\Product\ToArray as ProductToArray;
+use TechChallenge\Adapters\Gateways\Repository\Eloquent\Abstract\Repository as AbstractRepository;
+use TechChallenge\Domain\Category\SimpleFactory\Category as SimpleFactoryCategory;
 
-
-final class Repository implements IProductRepository
+final class Repository extends AbstractRepository implements IProductRepository
 {
-    private readonly ProductFactory $ProductFactory;
-
     private readonly ProductToArray $ProductToArray;
+
+    private readonly SimpleFactoryProduct $SimpleFactoryProduct;
+
+    private readonly SimpleFactoryCategory $SimpleFactoryCategory;
 
     public function __construct(private readonly IProductDAO $ProductDAO)
     {
-        $this->ProductFactory = new ProductFactory();
         $this->ProductToArray = new ProductToArray();
+
+        $this->SimpleFactoryProduct = new SimpleFactoryProduct();
+
+        $this->SimpleFactoryCategory = new SimpleFactoryCategory();
     }
 
     public function index(array $filters = [], array|bool $append = []): array
@@ -26,9 +33,9 @@ final class Repository implements IProductRepository
         $results = $this->ProductDAO->index($filters, $append);
 
         if ($this->isPaginated($results))
-            $results["data"] = $this->toProductEntities($results["data"]);
+            $results["data"] = $this->toEntities($results["data"]);
         else
-            $results = $this->toProductEntities($results);
+            $results = $this->toEntities($results);
 
         return $results;
     }
@@ -40,7 +47,7 @@ final class Repository implements IProductRepository
         if (is_null($customer))
             return null;
 
-        return $this->toProductEntitie($customer);
+        return $this->toEntity($customer);
     }
 
     public function store(ProductEntity $product): void
@@ -58,27 +65,27 @@ final class Repository implements IProductRepository
         $this->ProductDAO->delete($this->ProductToArray->execute($product));
     }
 
-    private function isPaginated(array $results): bool
+    protected function toEntity(array $product): ProductEntity
     {
-        return isset($results["data"]) && isset($results["pagination"]) && count($results["pagination"]) == 6;
-    }
-
-    private function toProductEntities(array $products): array
-    {
-        $productEntities = [];
-
-        foreach ($products as $product)
-            $productEntities[] = $this->toProductEntitie($product);
-
-        return $productEntities;
-    }
-
-    private function toProductEntitie(array $product): ProductEntity
-    {
-        return $this->ProductFactory
+        $this->SimpleFactoryProduct
             ->new($product["id"], $product["created_at"], $product["updated_at"])
             ->withCategoryId($product["category_id"])
-            ->withNameDescriptionPriceImage($product["name"], $product["description"], $product["price"], $product["image"])
+            ->withNameDescriptionPriceImage($product["name"], $product["description"], $product["price"], $product["image"]);
+
+        if (isset($product["category"]) && isset($product["category"]["id"])) {
+            $category = $this->createCategoryEntity($product["category"]);
+
+            $this->SimpleFactoryProduct->withCategory($category);
+        }
+
+        return $this->SimpleFactoryProduct->build();
+    }
+
+    protected function createCategoryEntity(array $category): CategoryEntity
+    {
+        return $this->SimpleFactoryCategory
+            ->restore($category["id"], $category["created_at"], $category["updated_at"])
+            ->withNameType($category["name"], $category["type"])
             ->build();
     }
 }

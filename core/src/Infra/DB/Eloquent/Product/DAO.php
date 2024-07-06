@@ -66,6 +66,9 @@ final class DAO implements IProductDAO
             $query->whereIn('id', $filters["id"]);
         }
 
+        if ($append === true || in_array("category", $append))
+            $query->with("category");
+
         return $query;
     }
 }

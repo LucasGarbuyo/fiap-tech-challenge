@@ -5,6 +5,7 @@ namespace TechChallenge\Infra\DB\Eloquent\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use TechChallenge\Infra\DB\Eloquent\Category\Model as CategoryModel;
 
 class Model extends EloquentModel
 {
@@ -27,4 +28,9 @@ class Model extends EloquentModel
         "updated_at",
         "deleted_at"
     ];
+
+    public function category()
+    {
+        return $this->hasOne(CategoryModel::class, "id", "category_id");
+    }
 }

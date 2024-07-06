@@ -2,13 +2,8 @@
 
 namespace TechChallenge\Api\Category;
 
-use TechChallenge\Domain\Shared\AbstractFactory\DAO as AbstractFactoryDAO;
-use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
-use TechChallenge\Application\AbstractFactory\EloquentDAO as AbstractFactoryEloquentDAO;
-use TechChallenge\Application\AbstractFactory\EloquentRepository as AbstractFactoryEloquentRepository;
 use TechChallenge\Api\Controller;
 use Illuminate\Http\Request;
-use Throwable;
 use TechChallenge\Application\UseCase\Category\DtoInput as CategoryDtoInput;
 use TechChallenge\Domain\Category\UseCase\Index as ICategoryUseCaseIndex;
 use TechChallenge\Domain\Category\UseCase\Show as ICategoryUseCaseShow;
@@ -16,6 +11,7 @@ use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
 use TechChallenge\Domain\Category\UseCase\Update as ICategoryUseCaseUpdate;
 use TechChallenge\Domain\Category\UseCase\Delete as ICategoryUseCaseDelete;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
+use Throwable;
 
 class Category extends Controller
 {
