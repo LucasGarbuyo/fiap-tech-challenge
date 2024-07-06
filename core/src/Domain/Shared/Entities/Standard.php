@@ -9,7 +9,7 @@ abstract class Standard
 {
     protected static string $idPrefix;
 
-    protected DateTime $updatedAt;
+    protected ?DateTime $updatedAt = null;
 
     protected ?DateTime $deletedAt = null;
 
@@ -50,7 +50,7 @@ abstract class Standard
         return $this;
     }
 
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }

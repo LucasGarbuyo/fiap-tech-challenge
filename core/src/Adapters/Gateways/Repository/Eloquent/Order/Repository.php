@@ -40,7 +40,12 @@ class Repository extends AbstractRepository implements IOrderRepository
 
     public function show(array $filters = [], array|bool $append = []): ?OrderEntity
     {
-        return null;
+        $order = $this->OrderDAO->show($filters, $append);
+
+        if (is_null($order))
+            return null;
+
+        return $this->toEntity($order);
     }
 
     public function update(OrderEntity $order): void
@@ -53,10 +58,18 @@ class Repository extends AbstractRepository implements IOrderRepository
 
     protected function toEntity(array $order): OrderEntity
     {
-        return $this->SimpleFactoryOrder
+        $this->SimpleFactoryOrder
             ->new($order["id"], $order["total"], $order["created_at"], $order["updated_at"])
             ->withCustomerId($order["customer_id"])
-            ->withStatus($order["status"])
-            ->build();
+            ->withStatus($order["status"]);
+
+            /*
+        if (isset($order["customer_id"]) && isset($order["category"]["id"])) {
+            $category = $this->createCategoryEntity($product["category"]);
+
+            $this->SimpleFactoryProduct->withCategory($category);
+        }
+        */
+        return $this->SimpleFactoryOrder->build();
     }
 }

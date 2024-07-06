@@ -30,6 +30,7 @@ class Category
         if (!is_null($updatedAt))
             $updatedAt = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
 
+
         $this->category = new CategoryEntity($id, $createdAt, $updatedAt);
 
         return $this;

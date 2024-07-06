@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use TechChallenge\Infra\DB\Eloquent\Order\Item\Model as OrderItemModel;
 use TechChallenge\Infra\DB\Eloquent\Order\Status\Model as OrderStatusModel;
+use TechChallenge\Infra\DB\Eloquent\Customer\Model as CustomerModel;
 
 class Model extends EloquentModel
 {
@@ -38,5 +39,10 @@ class Model extends EloquentModel
     public function statusHistory()
     {
         return $this->hasMany(OrderStatusModel::class, "order_id", "id");
+    }
+
+    public function category()
+    {
+        return $this->hasOne(CustomerModel::class, "id", "customer_id");
     }
 }

@@ -81,7 +81,7 @@ final class Repository extends AbstractRepository implements IProductRepository
         return $this->SimpleFactoryProduct->build();
     }
 
-    protected function createCategoryEntity(array $category): CategoryEntity
+    protected function createCategoryEntity(array $category):?CategoryEntity
     {
         return $this->SimpleFactoryCategory
             ->restore($category["id"], $category["created_at"], $category["updated_at"])

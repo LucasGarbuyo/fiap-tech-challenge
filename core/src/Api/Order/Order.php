@@ -43,6 +43,33 @@ class Order extends Controller
         }
     }
 
+    public function show(string $id)
+    {
+        try {
+            $result = (new ControllerOrderShow($this->AbstractFactoryRepository))->execute($id);
+           
+            return $this->return($result, 200);
+        } catch (DefaultException $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                $e->getStatus()
+            );
+        } catch (Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
+        }
+    }
+
     public function store(Request $request)
     {
         try {
@@ -70,34 +97,7 @@ class Order extends Controller
                 400
             );
         }
-    }
-
-    public function show(Request $request, string $id)
-    {
-        try {
-            $result = (new ControllerOrderShow($this->AbstractFactoryRepository))->execute($id);
-
-            return $this->return($result, 200);
-        } catch (DefaultException $e) {
-            return $this->return(
-                [
-                    "error" => [
-                        "message" => $e->getMessage()
-                    ]
-                ],
-                $e->getStatus()
-            );
-        } catch (Throwable $e) {
-            return $this->return(
-                [
-                    "error" => [
-                        "message" => $e->getMessage()
-                    ]
-                ],
-                400
-            );
-        }
-    }
+    }    
 
     public function update(Request $request, string $id)
     {

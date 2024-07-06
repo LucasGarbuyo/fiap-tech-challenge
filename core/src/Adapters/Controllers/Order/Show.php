@@ -3,8 +3,8 @@
 namespace TechChallenge\Adapters\Controllers\Order;
 
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
-use TechChallenge\Application\UseCase\Customer\Show as UseCaseCustomerShow;
-use TechChallenge\Adapters\Presenters\Customer\ToArray as PresenterCustomerToArray;
+use TechChallenge\Application\UseCase\Order\Show as UseCaseOrderShow;
+use TechChallenge\Adapters\Presenters\Order\ToArray as PresenterOrderToArray;
 
 final class Show
 {
@@ -14,8 +14,8 @@ final class Show
 
     public function execute(string $id)
     {
-        $customer = (new UseCaseCustomerShow($this->AbstractFactoryRepository))->execute($id);
+        $customer = (new UseCaseOrderShow($this->AbstractFactoryRepository))->execute($id);
 
-        return (new PresenterCustomerToArray())->execute($customer);
+        return (new PresenterOrderToArray())->execute($customer);
     }
 }
