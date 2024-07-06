@@ -16,12 +16,6 @@ final class Uuid
 
         $uuid = RamseyUuid::uuid4();
 
-        $maxLength = 28;
-        $result = "{$prefix}_{$uuid->toString()}";
-        if (strlen($result) > $maxLength) {
-            $result = substr($result, 0, $maxLength);
-        }
-
-        return $result;
+        return "{$prefix}_{$uuid->toString()}";
     }
 }
