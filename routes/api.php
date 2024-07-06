@@ -8,9 +8,9 @@ Route::controller(Product::class)
     ->prefix('/product')
     ->group(function () {
         Route::get('/', [Product::class, "index"]);// feito (falta criar relacionamento)
-        Route::get('/{id}', [Product::class, "show"]); // feito
+        Route::get('/{id}', [Product::class, "show"]);
         Route::post('/', [Product::class, "store"]);
-        Route::put('/{id}', [Product::class, "update"]);
+        Route::put('/{id}', [Product::class, "update"]);// feito (falta criar relacionamento)
         Route::delete('/{id}', [Product::class, "delete"]);
     });
 

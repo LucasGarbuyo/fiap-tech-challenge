@@ -2,23 +2,27 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
-use TechChallenge\Domain\Product\UseCase\Delete as IProductUseCaseDelete;
-use TechChallenge\Domain\Product\UseCase\DtoInput;
+use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
-
-class Delete implements IProductUseCaseDelete
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
+use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
+final class Delete
 {
-    public function __construct(protected readonly IProductRepository $ProductRepository)
+    private IProductRepository $ProductRepository;
+    private readonly IProductDAO $ProductDAO;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->ProductDAO = $AbstractFactoryRepository->getDAO()->createProductDAO();
+        $this->ProductRepository = $AbstractFactoryRepository->createProductRepository();
     }
 
-    public function execute(DtoInput $data): void
+    public function execute(string $id): void
     {
-        if (!$this->ProductRepository->exist(["id" => $data->id]))
+        if (!$this->ProductDAO->exist(["id" => $id]))
             throw new ProductNotFoundException();
 
-        $product = $this->ProductRepository->show(["id" => $data->id]);
+        $product = $this->ProductRepository->show(["id" => $id]);
 
         $product->delete();
 

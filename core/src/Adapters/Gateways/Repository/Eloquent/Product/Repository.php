@@ -50,10 +50,12 @@ final class Repository implements IProductRepository
 
     public function update(ProductEntity $product): void
     {
+        $this->ProductDAO->update($this->ProductToArray->execute($product));
     }
 
     public function delete(ProductEntity $product): void
     {
+        $this->ProductDAO->delete($this->ProductToArray->execute($product));
     }
 
     private function isPaginated(array $results): bool
