@@ -54,7 +54,7 @@ class Repository extends AbstractRepository implements IOrderRepository
     protected function toEntity(array $order): OrderEntity
     {
         return $this->SimpleFactoryOrder
-            ->new($order["id"], $order["price"], $order["created_at"], $order["updated_at"])
+            ->new($order["id"], $order["total"], $order["created_at"], $order["updated_at"])
             ->withCustomerId($order["customer_id"])
             ->withStatus($order["status"])
             ->build();
