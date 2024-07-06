@@ -27,12 +27,12 @@ final class DAO implements IProductDAO
                 ],
             ];
         }
-        return $query->get()->toArray();;
+        return $query->get()->toArray();
     }
 
-    public function store(array $category): void
+    public function store(array $product): void
     {
-        Model::create($category);
+        Model::create($product);
     }
 
     public function show(array $filters = [], array|bool $append = []): ?array

@@ -10,6 +10,8 @@ interface IProduct
 
     public function exist(array $filters = []): bool;
 
+    public function store(array $category): void;
+
     // public function edit(array $filters = [], array|bool $append = []): array|null;
 
     // public function create(array $category): void;

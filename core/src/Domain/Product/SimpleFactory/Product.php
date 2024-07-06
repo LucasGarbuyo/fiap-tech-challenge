@@ -1,6 +1,6 @@
 <?php
 
-namespace TechChallenge\Domain\Product\Factories;
+namespace TechChallenge\Domain\Product\SimpleFactory;
 
 use DateTime;
 use TechChallenge\Domain\Shared\ValueObjects\Price;

@@ -7,8 +7,8 @@ use TechChallenge\Api\Product\Product;
 Route::controller(Product::class)
     ->prefix('/product')
     ->group(function () {
-        Route::get('/', [Product::class, "index"]);
-        Route::get('/{id}', [Product::class, "show"]);
+        Route::get('/', [Product::class, "index"]);// feito (falta criar relacionamento)
+        Route::get('/{id}', [Product::class, "show"]); // feito
         Route::post('/', [Product::class, "store"]);
         Route::put('/{id}', [Product::class, "update"]);
         Route::delete('/{id}', [Product::class, "delete"]);

@@ -4,7 +4,7 @@ namespace TechChallenge\Adapters\Gateways\Repository\Eloquent\Product;
 
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
-use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
+use TechChallenge\Domain\Product\SimpleFactory\Product as ProductFactory;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 use TechChallenge\Adapters\Presenters\Product\ToArray as ProductToArray;
 
@@ -12,9 +12,12 @@ final class Repository implements IProductRepository
 {
     private readonly ProductFactory $ProductFactory;
 
+    private readonly ProductToArray $ProductToArray;
+
     public function __construct(private readonly IProductDAO $ProductDAO)
     {
         $this->ProductFactory = new ProductFactory();
+        $this->ProductToArray = new ProductToArray();
     }
 
     public function index(array $filters = [], array|bool $append = []): array
@@ -39,22 +42,18 @@ final class Repository implements IProductRepository
         return $this->toProductEntitie($customer);
     }
 
-    /*public function store(CustomerEntity $customer): void
+    public function store(ProductEntity $product): void
     {
-        $array = (new CustomerToArray())->execute($customer);
-
-        $this->CustomerDAO->store($array);
+        $this->ProductDAO->store($this->ProductToArray->execute($product));
     }
 
-    
-
-    public function update(CustomerEntity $customer): void
+    public function update(ProductEntity $product): void
     {
     }
 
-    public function delete(CustomerEntity $customer): void
+    public function delete(ProductEntity $product): void
     {
-    }*/
+    }
 
     private function isPaginated(array $results): bool
     {
@@ -75,6 +74,7 @@ final class Repository implements IProductRepository
     {
         return $this->ProductFactory
             ->new($product["id"], $product["created_at"], $product["updated_at"])
+            ->withCategoryId($product["category_id"])
             ->withNameDescriptionPriceImage($product["name"], $product["description"], $product["price"], $product["image"])
             ->build();
     }
