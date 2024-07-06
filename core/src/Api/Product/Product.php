@@ -15,23 +15,11 @@ use TechChallenge\Adapters\Controllers\Product\Update as ControllerProductUpdate
 use TechChallenge\Adapters\Controllers\Product\Delete as ControllerProductDelete;
 use TechChallenge\Infra\DB\Eloquent\Product\DAO as EloquentProductDAO;
 use TechChallenge\Application\DTO\Product\DtoInput as ProductDtoInput;
-
 use Throwable;
-
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 
 class Product extends Controller
 {
-    private readonly AbstractFactoryDAO $AbstractFactoryDAO;
-
-    private readonly AbstractFactoryRepository $AbstractFactoryRepository;
-
-    public function __construct()
-    {
-        $this->AbstractFactoryDAO = new AbstractFactoryEloquentDAO();
-
-        $this->AbstractFactoryRepository = new AbstractFactoryEloquentRepository($this->AbstractFactoryDAO);
-    }
     public function index()
     {
         try {
@@ -97,9 +85,9 @@ class Product extends Controller
                 $request->price,
                 $request->image
             );
-            
+
             $id = (new ControllerProductStore($this->AbstractFactoryRepository))->execute($dto);
-           
+
 
             return $this->return(["id" => $id], 201);
         } catch (DefaultException $e) {
