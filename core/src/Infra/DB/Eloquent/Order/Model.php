@@ -41,7 +41,7 @@ class Model extends EloquentModel
         return $this->hasMany(OrderStatusModel::class, "order_id", "id");
     }
 
-    public function category()
+    public function customer()
     {
         return $this->hasOne(CustomerModel::class, "id", "customer_id");
     }
