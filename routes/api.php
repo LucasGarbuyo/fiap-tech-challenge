@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use TechChallenge\Api\Customer\Customer;
 use TechChallenge\Api\Product\Product;
+use TechChallenge\Api\Category\Category;
 
 Route::controller(Product::class)
     ->prefix('/product')
@@ -24,7 +25,7 @@ Route::controller(Customer::class)
         Route::delete('/{id}', [Customer::class, "delete"]);
         Route::get('/cpf/{cpf}', [Customer::class, "showByCfp"]);
     });
-/*
+
 Route::controller(Category::class)
     ->prefix('/category')
     ->group(function () {
@@ -34,7 +35,7 @@ Route::controller(Category::class)
         Route::put('/{id}', [Category::class, "update"]);
         Route::delete('/{id}', [Category::class, "delete"]);
     });
-
+/*
 Route::controller(Order::class)
     ->prefix('/order')
     ->group(function () {

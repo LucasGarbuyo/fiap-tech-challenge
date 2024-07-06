@@ -4,27 +4,21 @@ namespace TechChallenge\Api\Category;
 
 use TechChallenge\Api\Controller;
 use Illuminate\Http\Request;
-use TechChallenge\Application\UseCase\Category\DtoInput as CategoryDtoInput;
-use TechChallenge\Domain\Category\UseCase\Index as ICategoryUseCaseIndex;
-use TechChallenge\Domain\Category\UseCase\Show as ICategoryUseCaseShow;
-use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
-use TechChallenge\Domain\Category\UseCase\Update as ICategoryUseCaseUpdate;
-use TechChallenge\Domain\Category\UseCase\Delete as ICategoryUseCaseDelete;
-use TechChallenge\Domain\Shared\Exceptions\DefaultException;
 use Throwable;
+use TechChallenge\Domain\Shared\Exceptions\DefaultException;
+use TechChallenge\Adapters\Controllers\Category\Index as ControllerCategoryIndex;
+use TechChallenge\Adapters\Controllers\Category\Show as ControllerCategoryShow;
+use TechChallenge\Adapters\Controllers\Category\Store as ControllerCategoryStore;
+use TechChallenge\Adapters\Controllers\Category\Update as ControllerCategoryUpdate;
+use TechChallenge\Adapters\Controllers\Category\Delete as ControllerCustomerDelete;
+use TechChallenge\Application\DTO\Category\DtoInput as CategoryDtoInput;
 
 class Category extends Controller
 {
     public function index(Request $request)
     {
         try {
-            $categoryIndex = DIContainer::create()->get(ICategoryUseCaseIndex::class);
-
-            $categories = $categoryIndex->execute();
-
-            $results = array_map(function ($category) {
-                return $category->toArray();
-            }, $categories);
+            $results = (new ControllerCategoryIndex($this->AbstractFactoryRepository))->execute([]);
 
             return $this->return($results, 200);
         } catch (DefaultException $e) {
@@ -36,7 +30,7 @@ class Category extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -51,11 +45,9 @@ class Category extends Controller
     public function store(Request $request)
     {
         try {
-            $data = new CategoryDtoInput(null, $request->name, $request->type);
+            $dto = new CategoryDtoInput(null, $request->name, $request->type);
 
-            $categoryStore = DIContainer::create()->get(ICategoryUseCaseStore::class);
-
-            $id = $categoryStore->execute($data);
+            $id = (new ControllerCategoryStore($this->AbstractFactoryRepository))->execute($dto);
 
             return $this->return(["id" => $id], 201);
         } catch (DefaultException $e) {
@@ -67,7 +59,7 @@ class Category extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -82,13 +74,9 @@ class Category extends Controller
     public function show(Request $request, string $id)
     {
         try {
-            $data = new CategoryDtoInput($id);
+            $result = (new ControllerCategoryShow($this->AbstractFactoryRepository))->execute($id);
 
-            $categoryShow = DIContainer::create()->get(ICategoryUseCaseShow::class);
-
-            $category = $categoryShow->execute($data);
-
-            return $this->return($category->toArray(), 200);
+            return $this->return($result, 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -98,7 +86,7 @@ class Category extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -113,13 +101,11 @@ class Category extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $data = new CategoryDtoInput($id, $request->name, $request->type);
+            $dto = new CategoryDtoInput($id, $request->name, $request->type);
 
-            $categoryUpdate = DIContainer::create()->get(ICategoryUseCaseUpdate::class);
+            (new ControllerCategoryUpdate($this->AbstractFactoryRepository))->execute($dto);
 
-            $categoryUpdate->execute($data);
-
-            return $this->return([], 204);
+            return $this->return(null, 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -129,7 +115,7 @@ class Category extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -144,13 +130,9 @@ class Category extends Controller
     public function delete(Request $request, string $id)
     {
         try {
-            $data = new CategoryDtoInput($id);
+            (new ControllerCustomerDelete($this->AbstractFactoryRepository))->execute($id);
 
-            $categoryDelete = DIContainer::create()->get(ICategoryUseCaseDelete::class);
-
-            $categoryDelete->execute($data);
-
-            return $this->return([], 204);
+            return $this->return(null, 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -160,7 +142,7 @@ class Category extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
