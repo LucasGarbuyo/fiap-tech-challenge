@@ -66,4 +66,9 @@ abstract class Standard
     {
         return $this->deletedAt;
     }
+
+    public function isDeleted(): bool
+    {
+        return $this->getDeletedAt() !== null;
+    }
 }
