@@ -2,10 +2,10 @@
 
 namespace TechChallenge\Infra\DB\Eloquent\Order;
 
-use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
+use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
 use Illuminate\Database\Eloquent\Builder;
 
-class DAO implements ICustomerDAO
+class DAO implements IOrderDAO
 {
     public function index(array $filters = [], array|bool $append = []): array
     {

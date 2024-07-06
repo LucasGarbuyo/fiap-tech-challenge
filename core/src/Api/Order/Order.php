@@ -16,7 +16,7 @@ use TechChallenge\Application\DTO\Order\DtoInput as OrderDtoInput;
 
 class Order extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         try {
             $results = (new ControllerOrderIndex($this->AbstractFactoryRepository))->execute([]);

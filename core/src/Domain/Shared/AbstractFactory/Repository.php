@@ -5,6 +5,7 @@ namespace TechChallenge\Domain\Shared\AbstractFactory;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 
 abstract class Repository
 {
@@ -22,4 +23,6 @@ abstract class Repository
     abstract public function createCategoryRepository(): ICategoryRepository;
 
     abstract public function createProductRepository(): IProductRepository;
+
+    abstract public function createOrderRepository(): IOrderRepository;
 }

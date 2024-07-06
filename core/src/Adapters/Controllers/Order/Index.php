@@ -4,7 +4,7 @@ namespace TechChallenge\Adapters\Controllers\Order;
 
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Application\UseCase\Order\Index as UseCaseOrderIndex;
-use TechChallenge\Adapters\Presenters\Order\ToArray as PresenterCustomerToArray;
+use TechChallenge\Adapters\Presenters\Order\ToArray as PresenterOrderToArray;
 
 final class Index
 {
@@ -14,9 +14,10 @@ final class Index
 
     public function execute(array $filters = [])
     {
+        dd('asd');
         $results = (new UseCaseOrderIndex($this->AbstractFactoryRepository))->execute($filters);
 
-        $presenter = new PresenterCustomerToArray();
+        $presenter = new PresenterOrderToArray();
 
         if ($this->isPaginated($results))
             $results["data"] = $presenter->executeOnArray($results["data"]);
