@@ -1,42 +1,21 @@
 <?php
 
-namespace TechChallenge\Application\UseCase\Order;
+namespace TechChallenge\Application\DTO\Order;
 
-use TechChallenge\Domain\Order\UseCase\DtoInput as IOrderUseCaseDtoInput;
-
-class DtoInput implements IOrderUseCaseDtoInput
+class DtoInput
 {
-    public array $items = [];
+    // public array $items = [];
 
     public function __construct(
         public readonly ?string $id = null,
         public readonly ?string $customer_id = null,
         public readonly ?string $status = null,
-        $items = [],
+        // $items = [],
     ) {
-        $this->setItems($items);
+        //$this->setItems($items);
     }
 
-    public function getId(): ?string
-    {
-        return $this->id;
-    }
-
-    public function getCustomerId(): ?string
-    {
-        return $this->customer_id;
-    }
-
-    public function getItems(): array
-    {
-        return $this->items;
-    }
-
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
+    /*
     public function setItems(array|null $items)
     {
         if (empty($items))
@@ -49,4 +28,5 @@ class DtoInput implements IOrderUseCaseDtoInput
                 $item["quantity"] ?? null
             );
     }
+            */
 }

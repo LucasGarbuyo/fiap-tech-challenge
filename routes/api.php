@@ -4,14 +4,15 @@ use Illuminate\Support\Facades\Route;
 use TechChallenge\Api\Customer\Customer;
 use TechChallenge\Api\Product\Product;
 use TechChallenge\Api\Category\Category;
+use TechChallenge\Api\Order\Order;
 
 Route::controller(Product::class)
     ->prefix('/product')
     ->group(function () {
-        Route::get('/', [Product::class, "index"]); // feito (falta criar relacionamento)
+        Route::get('/', [Product::class, "index"]);
         Route::get('/{id}', [Product::class, "show"]);
         Route::post('/', [Product::class, "store"]);
-        Route::put('/{id}', [Product::class, "update"]); // feito (falta criar relacionamento)
+        Route::put('/{id}', [Product::class, "update"]);
         Route::delete('/{id}', [Product::class, "delete"]);
     });
 
@@ -35,7 +36,7 @@ Route::controller(Category::class)
         Route::put('/{id}', [Category::class, "update"]);
         Route::delete('/{id}', [Category::class, "delete"]);
     });
-/*
+
 Route::controller(Order::class)
     ->prefix('/order')
     ->group(function () {
@@ -46,4 +47,4 @@ Route::controller(Order::class)
         Route::delete('/{id}', [Order::class, "delete"]);
         Route::post('/checkout/{id}', [Order::class, "checkout"]);
         Route::post('/status/{id}', [Order::class, "changeStatus"]);
-    });*/
+    });

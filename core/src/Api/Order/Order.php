@@ -1,31 +1,25 @@
 <?php
 
-namespace TechChallenge\Adapter\Driver\Api\V1;
+namespace TechChallenge\Api\Order;
 
+use TechChallenge\Api\Controller;
 use Illuminate\Http\Request;
-use TechChallenge\Application\UseCase\Order\DtoInput as OrderDtoInput;
-use TechChallenge\Config\DIContainer;
-use TechChallenge\Domain\Order\UseCase\Index as IOrderUseCaseIndex;
-use TechChallenge\Domain\Order\UseCase\Show as IOrderUseCaseShow;
-use TechChallenge\Domain\Order\UseCase\Delete as IOrderUseCaseDelete;
-use TechChallenge\Domain\Order\UseCase\Store as IOrderUseCaseStore;
-use TechChallenge\Domain\Order\UseCase\Update as IOrderUseCaseUpdate;
-use TechChallenge\Domain\Order\UseCase\Checkout as IOrderUseCaseCheckout;
-use TechChallenge\Domain\Order\UseCase\ChangeStatus as IOrderUseCaseChangeStatus;
+use Throwable;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
+
+use TechChallenge\Adapters\Controllers\Order\Index  as ControllerOrderIndex;
+use TechChallenge\Adapters\Controllers\Order\Show   as ControllerOrderShow;
+use TechChallenge\Adapters\Controllers\Order\Store  as ControllerOrderStore;
+use TechChallenge\Adapters\Controllers\Order\Update as ControllerOrderUpdate;
+use TechChallenge\Adapters\Controllers\Order\Delete as ControllerOrderDelete;
+use TechChallenge\Application\DTO\Order\DtoInput as OrderDtoInput;
 
 class Order extends Controller
 {
     public function index(Request $request)
     {
         try {
-            $orderIndex = DIContainer::create()->get(IOrderUseCaseIndex::class);
-
-            $orders = $orderIndex->execute([], true);
-
-            $results = array_map(function ($order) {
-                return $order->toArray();
-            }, $orders);
+            $results = (new ControllerOrderIndex($this->AbstractFactoryRepository))->execute([]);
 
             return $this->return($results, 200);
         } catch (DefaultException $e) {
@@ -37,7 +31,7 @@ class Order extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -52,14 +46,9 @@ class Order extends Controller
     public function store(Request $request)
     {
         try {
-            $data = new OrderDtoInput(
-                customer_id: $request->customer_id,
-                items: $request->items
-            );
+            $dto = new OrderDtoInput(null, $request->name, $request->cpf, $request->email);
 
-            $orderStore = DIContainer::create()->get(IOrderUseCaseStore::class);
-
-            $id = $orderStore->execute($data);
+            $id = (new ControllerOrderStore($this->AbstractFactoryRepository))->execute($dto);
 
             return $this->return(["id" => $id], 201);
         } catch (DefaultException $e) {
@@ -71,7 +60,7 @@ class Order extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -86,13 +75,9 @@ class Order extends Controller
     public function show(Request $request, string $id)
     {
         try {
-            $data = new OrderDtoInput($id);
+            $result = (new ControllerOrderShow($this->AbstractFactoryRepository))->execute($id);
 
-            $orderShow = DIContainer::create()->get(IOrderUseCaseShow::class);
-
-            $order = $orderShow->execute($data, true);
-
-            return $this->return($order->toArray(), 200);
+            return $this->return($result, 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -102,7 +87,7 @@ class Order extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -117,18 +102,18 @@ class Order extends Controller
     public function update(Request $request, string $id)
     {
         try {
-            $data = new OrderDtoInput(
-                id: $id,
-                customer_id: $request->customer_id,
-                items: $request->items,
-                status: $request->status
+            $dto = new OrderDtoInput(
+                $id,
+                $request->name,
+                $request->cpf,
+                $request->email,
+                $request->created_at,
+                $request->updated_at
             );
 
-            $orderUpdate = DIContainer::create()->get(IOrderUseCaseUpdate::class);
+            (new ControllerOrderUpdate($this->AbstractFactoryRepository))->execute($dto);
 
-            $orderUpdate->execute($data);
-
-            return $this->return([], 204);
+            return $this->return(null, 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -138,7 +123,7 @@ class Order extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
@@ -153,13 +138,9 @@ class Order extends Controller
     public function delete(Request $request, string $id)
     {
         try {
-            $data = new OrderDtoInput($id);
+            (new ControllerOrderDelete($this->AbstractFactoryRepository))->execute($id);
 
-            $productDelete = DIContainer::create()->get(IOrderUseCaseDelete::class);
-
-            $productDelete->execute($data);
-
-            return $this->return([], 204);
+            return $this->return(null, 204);
         } catch (DefaultException $e) {
             return $this->return(
                 [
@@ -169,69 +150,7 @@ class Order extends Controller
                 ],
                 $e->getStatus()
             );
-        } catch (\Throwable $e) {
-            return $this->return(
-                [
-                    "error" => [
-                        "message" => $e->getMessage()
-                    ]
-                ],
-                400
-            );
-        }
-    }
-
-    public function checkout(Request $request, string $id)
-    {
-        try {
-            $data = new OrderDtoInput($id);
-
-            $productCheckout = DIContainer::create()->get(IOrderUseCaseCheckout::class);
-
-            $productCheckout->execute($data);
-
-            return $this->return([], 204);
-        } catch (DefaultException $e) {
-            return $this->return(
-                [
-                    "error" => [
-                        "message" => $e->getMessage()
-                    ]
-                ],
-                $e->getStatus()
-            );
-        } catch (\Throwable $e) {
-            return $this->return(
-                [
-                    "error" => [
-                        "message" => $e->getMessage()
-                    ]
-                ],
-                400
-            );
-        }
-    }
-
-    public function changeStatus(Request $request, string $id)
-    {
-        try {
-            $data = new OrderDtoInput($id, null, $request->status);
-
-            $productChangeStatus = DIContainer::create()->get(IOrderUseCaseChangeStatus::class);
-
-            $productChangeStatus->execute($data);
-
-            return $this->return([], 204);
-        } catch (DefaultException $e) {
-            return $this->return(
-                [
-                    "error" => [
-                        "message" => $e->getMessage()
-                    ]
-                ],
-                $e->getStatus()
-            );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->return(
                 [
                     "error" => [
