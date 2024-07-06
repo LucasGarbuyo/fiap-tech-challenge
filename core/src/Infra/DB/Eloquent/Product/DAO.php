@@ -40,12 +40,14 @@ final class DAO implements IProductDAO
         return $this->query($filters, $append)->first()->toArray();
     }
 
-    public function update(array $category): void
+    public function update(array $product): void
     {
+        Model::where("id", $product["id"])->update($product);
     }
 
-    public function delete(array $category): void
+    public function delete(array $product): void
     {
+        Model::where("id", $product["id"])->update($product);
     }
 
     public function exist(array $filters = []): bool

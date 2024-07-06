@@ -23,7 +23,7 @@ class Product extends StandardEntity
 
     protected ?Price $price;
 
-    public function setCategoryId(string $categoryId): self
+    public function setCategoryId(?string $categoryId): self
     {
         $this->categoryId = $categoryId;
 

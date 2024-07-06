@@ -52,7 +52,7 @@ class Product
         return $this;
     }
 
-    public function withCategoryId(string $categoryId): self
+    public function withCategoryId(?string $categoryId): self
     {
         $this->product->setCategoryId($categoryId);
 

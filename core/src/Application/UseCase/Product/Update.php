@@ -21,6 +21,7 @@ final class Update
     public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
         $this->ProductDAO = $AbstractFactoryRepository->getDAO()->createProductDAO();
+
         $this->ProductRepository = $AbstractFactoryRepository->createProductRepository();
         //$this->CategoryRepository = $AbstractFactoryRepository->createCategoryRepository();
     }
