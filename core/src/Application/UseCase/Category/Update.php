@@ -2,27 +2,35 @@
 
 namespace TechChallenge\Application\UseCase\Category;
 
-use DateTime;
-use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
-use TechChallenge\Domain\Category\Factories\Category as CategoryFactory;
-use TechChallenge\Domain\Category\UseCase\DtoInput;
-use TechChallenge\Domain\Category\UseCase\Update as ICategoryUseCaseUpdate;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+use TechChallenge\Domain\Category\DAO\ICategory as ICategoryDAO;
+use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
+use TechChallenge\Domain\Category\SimpleFactory\Category as SimpleFactoryCategory;
+use TechChallenge\Application\DTO\Category\DtoInput;
+use DateTime;
 
-class Update implements ICategoryUseCaseUpdate
+final class Update
 {
-    public function __construct(protected readonly ICategoryRepository $CategoryRepository)
+    private readonly ICategoryRepository $CategoryRepository;
+
+    private readonly ICategoryDAO $CategoryDAO;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->CategoryRepository = $AbstractFactoryRepository->createCategoryRepository();
+
+        $this->CategoryDAO = $AbstractFactoryRepository->getDAO()->createCategoryDAO();
     }
 
-    public function execute(DtoInput $data): void
+    public function execute(DtoInput $dto): void
     {
-        if (!$this->CategoryRepository->exist(["id" => $data->id]))
+        if (!$this->CategoryDAO->exist(["id" => $dto->id]))
             throw new CategoryNotFoundException();
 
-        $category = (new CategoryFactory())
-            ->new($data->id, $data->created_at, $data->updated_at)
-            ->withNameType($data->name, $data->type)
+        $category = (new SimpleFactoryCategory())
+            ->new($dto->id, $dto->createdAt, $dto->updatedAt)
+            ->withNameType($dto->name, $dto->type)
             ->build();
 
         $category->setUpdatedAt(new DateTime());

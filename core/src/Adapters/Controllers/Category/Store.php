@@ -3,17 +3,17 @@
 namespace TechChallenge\Adapters\Controllers\Category;
 
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
-use TechChallenge\Application\UseCase\Category\Update as UseCaseCategoryUpdate;
+use TechChallenge\Application\UseCase\Category\Store as UseCaseCategoryStore;
 use TechChallenge\Application\DTO\Category\DtoInput as CategoryDtoInput;
 
-final class Update
+final class Store
 {
     public function __construct(private readonly AbstractFactoryRepository $AbstractFactoryRepository)
     {
     }
 
-    public function execute(CategoryDtoInput $dto)
+    public function execute(CategoryDtoInput $dto): string
     {
-        return (new UseCaseCategoryUpdate($this->AbstractFactoryRepository))->execute($dto);
+        return (new UseCaseCategoryStore($this->AbstractFactoryRepository))->execute($dto);
     }
 }

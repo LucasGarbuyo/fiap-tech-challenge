@@ -33,9 +33,9 @@ final class DAO implements ICustomerDAO
         return $results;
     }
 
-    public function store(array $category): void
+    public function store(array $customer): void
     {
-        Model::create($category);
+        Model::create($customer);
     }
 
     public function show(array $filters = [], array|bool $append = []): ?array
@@ -43,14 +43,14 @@ final class DAO implements ICustomerDAO
         return $this->query($filters, $append)->first()->toArray();
     }
 
-    public function update(array $category): void
+    public function update(array $customer): void
     {
-        Model::where("id", $category["id"])->update($category);
+        Model::where("id", $customer["id"])->update($customer);
     }
 
-    public function delete(array $category): void
+    public function delete(array $customer): void
     {
-        Model::where("id", $category["id"])->update($category);
+        Model::where("id", $customer["id"])->update($customer);
     }
 
     public function exist(array $filters = []): bool

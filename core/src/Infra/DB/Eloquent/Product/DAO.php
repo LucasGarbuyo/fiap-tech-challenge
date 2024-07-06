@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Builder;
 final class DAO implements IProductDAO
 {
     public function index(array $filters = [], array|bool $append = []): array
-    {       
+    {
         $query = $this->query($filters, $append);
-        
+
         if (!empty($filters["pag"]) && !empty($filters["prp"])) {
             $paginator = $query->paginate(perPage: $filters["pag"], page: $filters["page"]);
 
@@ -56,6 +56,13 @@ final class DAO implements IProductDAO
     protected function query(array $filters = [], array|bool $append = []): Builder
     {
         $query = Model::query();
+
+        if (!empty($filters["id"])) {
+            if (!is_array($filters["id"]))
+                $filters["id"] = [$filters["id"]];
+
+            $query->whereIn('id', $filters["id"]);
+        }
 
         return $query;
     }

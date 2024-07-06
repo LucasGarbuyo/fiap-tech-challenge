@@ -2,22 +2,25 @@
 
 namespace TechChallenge\Application\UseCase\Category;
 
-use TechChallenge\Domain\Category\Factories\Category as CategoryFactory;
-use TechChallenge\Domain\Category\UseCase\DtoInput;
-use TechChallenge\Domain\Category\UseCase\Store as ICategoryUseCaseStore;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+use TechChallenge\Domain\Category\SimpleFactory\Category as SimpleFactoryCategory;
+use TechChallenge\Application\DTO\Category\DtoInput;
 
-class Store implements ICategoryUseCaseStore
+final class Store
 {
-    public function __construct(protected readonly ICategoryRepository $CategoryRepository)
+    private readonly ICategoryRepository $CategoryRepository;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->CategoryRepository = $AbstractFactoryRepository->createCategoryRepository();
     }
 
-    public function execute(DtoInput $data): string
+    public function execute(DtoInput $dto): string
     {
-        $category = (new CategoryFactory())
+        $category = (new SimpleFactoryCategory())
             ->new()
-            ->withNameType($data->name, $data->type)
+            ->withNameType($dto->name, $dto->type)
             ->build();
 
         $this->CategoryRepository->store($category);

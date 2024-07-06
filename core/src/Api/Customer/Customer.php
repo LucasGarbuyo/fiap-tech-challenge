@@ -2,10 +2,6 @@
 
 namespace TechChallenge\Api\Customer;
 
-use TechChallenge\Domain\Shared\AbstractFactory\DAO as AbstractFactoryDAO;
-use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
-use TechChallenge\Application\AbstractFactory\EloquentDAO as AbstractFactoryEloquentDAO;
-use TechChallenge\Application\AbstractFactory\EloquentRepository as AbstractFactoryEloquentRepository;
 use TechChallenge\Api\Controller;
 use Illuminate\Http\Request;
 use Throwable;
@@ -19,17 +15,6 @@ use TechChallenge\Application\DTO\Customer\DtoInput as CustomerDtoInput;
 
 class Customer extends Controller
 {
-    private readonly AbstractFactoryDAO $AbstractFactoryDAO;
-
-    private readonly AbstractFactoryRepository $AbstractFactoryRepository;
-
-    public function __construct()
-    {
-        $this->AbstractFactoryDAO = new AbstractFactoryEloquentDAO();
-
-        $this->AbstractFactoryRepository = new AbstractFactoryEloquentRepository($this->AbstractFactoryDAO);
-    }
-
     public function index(Request $request)
     {
         try {

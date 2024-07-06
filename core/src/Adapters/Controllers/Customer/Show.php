@@ -12,10 +12,10 @@ final class Show
     {
     }
 
-    public function execute(string $id): array
+    public function execute(string $id)
     {
-        $category = (new UseCaseCustomerShow($this->AbstractFactoryRepository))->execute($id);
+        $customer = (new UseCaseCustomerShow($this->AbstractFactoryRepository))->execute($id);
 
-        return (new PresenterCustomerToArray())->execute($category);
+        return (new PresenterCustomerToArray())->execute($customer);
     }
 }

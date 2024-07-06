@@ -7,8 +7,9 @@ use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
 use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
 use TechChallenge\Domain\Customer\SimpleFactory\Customer as SimpleFactoryCustomer;
 use TechChallenge\Adapters\Presenters\Customer\ToArray as CustomerToArray;
+use TechChallenge\Adapters\Gateways\Repository\Eloquent\Abstract\Repository as AbstractRepository;
 
-final class Repository implements ICustomerRepository
+final class Repository extends AbstractRepository implements ICustomerRepository
 {
     private readonly SimpleFactoryCustomer $SimpleFactoryCustomer;
 
@@ -26,9 +27,9 @@ final class Repository implements ICustomerRepository
         $results = $this->CustomerDAO->index($filters, $append);
 
         if ($this->isPaginated($results))
-            $results["data"] = $this->toCustomerEntities($results["data"]);
+            $results["data"] = $this->toEntities($results["data"]);
         else
-            $results = $this->toCustomerEntities($results);
+            $results = $this->toEntities($results);
 
         return $results;
     }
@@ -45,7 +46,7 @@ final class Repository implements ICustomerRepository
         if (is_null($customer))
             return null;
 
-        return $this->toCustomerEntity($customer);
+        return $this->toEntity($customer);
     }
 
     public function update(CustomerEntity $customer): void
@@ -58,22 +59,7 @@ final class Repository implements ICustomerRepository
         $this->CustomerDAO->delete($this->CustomerToArray->execute($customer));
     }
 
-    private function isPaginated(array $results): bool
-    {
-        return isset($results["data"]) && isset($results["pagination"]) && count($results["pagination"]) == 6;
-    }
-
-    private function toCustomerEntities(array $customers): array
-    {
-        $customerEntities = [];
-
-        foreach ($customers as $customer)
-            $customerEntities[] = $this->toCustomerEntity($customer);
-
-        return $customerEntities;
-    }
-
-    private function toCustomerEntity(array $customer): CustomerEntity
+    protected function toEntity(array $customer): CustomerEntity
     {
         return $this->SimpleFactoryCustomer
             ->new($customer["id"], $customer["created_at"], $customer["updated_at"])

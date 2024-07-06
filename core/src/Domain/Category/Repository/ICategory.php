@@ -2,20 +2,17 @@
 
 namespace TechChallenge\Domain\Category\Repository;
 
-use TechChallenge\Domain\Category\Entities\Category;
+use TechChallenge\Domain\Category\Entities\Category as CategoryEntity;
 
 interface ICategory
 {
-    /** @return Category[] */
     public function index(array $filters = [], array|bool $append = []): array;
 
-    public function show(array $filters = [], array|bool $append = []): Category|null;
+    public function show(array $filters = [], array|bool $append = []): CategoryEntity|null;
 
-    public function store(Category $Category): void;
+    public function store(CategoryEntity $category): void;
 
-    public function update(Category $Category): void;
+    public function update(CategoryEntity $category): void;
 
-    public function delete(Category $Category): void;
-
-    public function exist(array $filters = []): bool;
+    public function delete(CategoryEntity $category): void;
 }
