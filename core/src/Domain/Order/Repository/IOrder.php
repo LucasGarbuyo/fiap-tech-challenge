@@ -18,6 +18,4 @@ interface IOrder
     public function update(OrderEntity $order): void;
 
     public function delete(OrderEntity $order): void;
-
-    public function exist(array $filters = []): bool;
 }

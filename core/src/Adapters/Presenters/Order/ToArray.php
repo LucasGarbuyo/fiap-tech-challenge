@@ -3,26 +3,24 @@
 namespace TechChallenge\Adapters\Presenters\Order;
 
 use TechChallenge\Adapters\Presenters\Traits\ExecuteOnArray as ExecuteOnArrayTrait;
-use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
-use TechChallenge\Adapters\Presenters\Category\ToArray as CategoryToArray;
+use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 
 class ToArray
 {
     use ExecuteOnArrayTrait;
 
-    public function execute(ProductEntity $product): array
+    public function execute(OrderEntity $order): array
     {
+        //TODO fazer a parte os appends dos items e status
+
         return [
-            "id" => $product->getId(),
-            "name" => $product->getName(),
-            "description" => $product->getDescription(),
-            "price" => $product->getPrice()->getValue(),
-            "image" => $product->getImage(),
-            "category_id" => $product->getCategoryId(),
-            "category" => $product->getCategory() ? (new CategoryToArray())->execute($product->getCategory()) : [],
-            "created_at" => $product->getCreatedAt() ? $product->getCreatedAt()->format("Y-m-d H:i:s") : null,
-            "updated_at" => $product->getUpdatedAt() ? $product->getUpdatedAt()->format("Y-m-d H:i:s") : null,
-            "deleted_at" => $product->getDeletedAt() ? $product->getDeletedAt()->format("Y-m-d H:i:s") : null,
+            "id" => $order->getId(),
+            "customer_id" => $order->getCustomerId(),
+            "total" => $order->getTotal() ? $order->getTotal()->getValue() : null,
+            "status" => $order->getStatus() ? $order->getStatus()->value : null,
+            "created_at" => $order->getCreatedAt() ? $order->getCreatedAt()->format("Y-m-d H:i:s") : null,
+            "updated_at" => $order->getUpdatedAt() ? $order->getUpdatedAt()->format("Y-m-d H:i:s") : null,
+            "deleted_at" => $order->getDeletedAt() ? $order->getDeletedAt()->format("Y-m-d H:i:s") : null,
         ];
     }
 }
