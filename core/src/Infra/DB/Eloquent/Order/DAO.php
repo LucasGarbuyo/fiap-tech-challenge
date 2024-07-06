@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 class DAO implements IOrderDAO
 {
     public function index(array $filters = [], array|bool $append = []): array
-    {
+    {        
         $query = $this->query($filters, $append);
 
         if (!empty($filters["pag"]) && !empty($filters["prp"])) {
@@ -60,7 +60,7 @@ class DAO implements IOrderDAO
 
     protected function query(array $filters = [], array|bool $append = []): Builder
     {
-        $query = Model::query();
+        $query = Model::query();      
 
         if ($append === true || in_array("items", $append))
             $query->with("items");

@@ -29,7 +29,7 @@ final class Repository extends AbstractRepository implements ICategoryRepository
         if ($this->isPaginated($results))
             $results["data"] = $this->toEntities($results["data"]);
         else
-            $results = $this->toEntities($results);
+            $results = $this->toEntities($results);       
 
         return $results;
     }

@@ -14,7 +14,6 @@ final class Index
 
     public function execute(array $filters = [])
     {
-        dd('asd');
         $results = (new UseCaseOrderIndex($this->AbstractFactoryRepository))->execute($filters);
 
         $presenter = new PresenterOrderToArray();
