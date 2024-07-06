@@ -1,6 +1,6 @@
 <?php
 
-namespace TechChallenge\Domain\Order\Factories;
+namespace TechChallenge\Domain\Order\SimpleFactory;
 
 use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
@@ -12,15 +12,21 @@ class Order
 {
     private ?OrderEntity $order = null;
 
-    public function new(?string $id = null, float $total = 0, String|DateTime $created_at = null, String|DateTime $updated_at = null): self
-    {
-        if (!is_null($created_at))
-            $created_at = is_string($created_at) ? new DateTime($created_at) : $created_at;
+    public function new(
+        ?string $id = null,
+        float $total = 0,
+        String|DateTime $createdAt = null,
+        String|DateTime $updatedAt = null
+    ): self {
+        if (!is_null($createdAt))
+            $createdAt = is_string($createdAt) ? new DateTime($createdAt) : $createdAt;
 
-        if (!is_null($updated_at))
-            $updated_at = is_string($updated_at) ? new DateTime($updated_at) : $updated_at;
+        if (!is_null($updatedAt))
+            $updatedAt = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
 
-        $this->order = OrderEntity::create($id, new Price($total), $created_at, $updated_at);
+        $this->order = OrderEntity::create($id, $createdAt, $updatedAt);
+
+        $this->order->setTotal(new Price($total));
 
         return $this;
     }
@@ -39,9 +45,10 @@ class Order
         return $this;
     }
 
-    public function withCustomerIdCustomer(string $customer_id, Customer $customer): self
+    public function withCustomerIdCustomer(string $customerId, Customer $customer): self
     {
-        $this->order->setCustomerId($customer_id)
+        $this->order
+            ->setCustomerId($customerId)
             ->setCustomer($customer);
 
         return $this;
