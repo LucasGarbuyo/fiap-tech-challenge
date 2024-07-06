@@ -88,15 +88,16 @@ class Product extends Controller
     {
         try {
             $dto = new ProductDtoInput(
-                null,                
+                null,
                 $request->category_id,
                 $request->name,
                 $request->description,
-                $request->price,                
+                $request->price,
                 $request->image
             );
-
+            
             $id = (new ControllerProductStore($this->AbstractFactoryRepository))->execute($dto);
+           
 
             return $this->return(["id" => $id], 201);
         } catch (DefaultException $e) {

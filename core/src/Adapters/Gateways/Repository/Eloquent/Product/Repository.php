@@ -8,6 +8,7 @@ use TechChallenge\Domain\Product\SimpleFactory\Product as ProductFactory;
 use TechChallenge\Domain\Product\Entities\Product as ProductEntity;
 use TechChallenge\Adapters\Presenters\Product\ToArray as ProductToArray;
 
+
 final class Repository implements IProductRepository
 {
     private readonly ProductFactory $ProductFactory;
