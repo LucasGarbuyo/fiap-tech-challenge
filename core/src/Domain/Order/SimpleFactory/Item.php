@@ -8,12 +8,12 @@ use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Item
 {
-    private ItemEntity $item;
+    private ?ItemEntity $item = null;
 
     public function new(
         ?string $id = null,
-        string $productId,
-        string $orderId,
+        ?string $productId = NULL,
+        ?string $orderId = NULL,
         String|DateTime $createdAt = null,
         String|DateTime $updatedAt = null
     ): self {
@@ -24,7 +24,6 @@ class Item
             $updatedAt = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
 
         $this->item = ItemEntity::create($id, $createdAt, $updatedAt);
-
         $this->item
             ->setOrderId($orderId)
             ->setProductId($productId);
@@ -40,6 +39,21 @@ class Item
 
         return $this;
     }
+
+    public function restore(?string $id = null, String|DateTime $createdAt = null, String|DateTime $updatedAt = null): self
+    {
+        if (!is_null($createdAt))
+            $createdAt = is_string($createdAt) ? new DateTime($createdAt) : $createdAt;
+
+        if (!is_null($updatedAt))
+            $updatedAt = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
+
+
+        $this->item = new ItemEntity($id, $createdAt, $updatedAt);
+
+        return $this;
+    }
+
 
     public function build(): ItemEntity
     {
