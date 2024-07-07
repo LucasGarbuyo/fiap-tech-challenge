@@ -3,8 +3,8 @@
 namespace TechChallenge\Adapters\Controllers\Order;
 
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
-use TechChallenge\Application\DTO\Customer\DtoInput as CustomerDTOInput;
-use TechChallenge\Application\UseCase\Customer\Store as UseCaseCustomerStore;
+use TechChallenge\Application\DTO\Order\DtoInput as OrderDTOInput;
+use TechChallenge\Application\UseCase\Order\Store as UseCaseOrderStore;
 
 final class Store
 {
@@ -12,8 +12,8 @@ final class Store
     {
     }
 
-    public function execute(CustomerDTOInput $dto)
+    public function execute(OrderDTOInput $dto)
     {
-        return (new UseCaseCustomerStore($this->AbstractFactoryRepository))->execute($dto);
+        return (new UseCaseOrderStore($this->AbstractFactoryRepository))->execute($dto);
     }
 }

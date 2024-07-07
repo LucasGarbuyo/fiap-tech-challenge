@@ -42,6 +42,7 @@ Route::controller(Order::class)
     ->group(function () {
         Route::get('/', [Order::class, "index"]);
         Route::get('/{id}', [Order::class, "show"]);
+        /* FALTA RESOLVER ESSAS ABAIXO  */
         Route::post('/', [Order::class, "store"]);
         Route::put('/{id}', [Order::class, "update"]);
         Route::delete('/{id}', [Order::class, "delete"]);

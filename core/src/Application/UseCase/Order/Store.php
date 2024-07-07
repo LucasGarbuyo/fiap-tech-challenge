@@ -2,32 +2,36 @@
 
 namespace TechChallenge\Application\UseCase\Order;
 
-use TechChallenge\Domain\Customer\Exceptions\CustomerNotFoundException;
+use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Order\Factories\{Order as OrderFactory, Item as ItemFactory};
-use TechChallenge\Domain\Order\UseCase\{DtoInput, Store as IOrderUseCaseStore};
+use TechChallenge\Domain\Order\SimpleFactory\Order as FactorySimpleOrder;
+use TechChallenge\Application\DTO\Order\{DtoInput, Store as IOrderUseCaseStore};
+use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
-use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
-use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
-use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
 
-class Store implements IOrderUseCaseStore
+final class Store
 {
-    public function __construct(
-        protected readonly IOrderRepository $OrderRepository,
-        protected readonly IProductRepository $ProductRepository,
-        protected readonly ICustomerRepository $CustomerRepository
-    ) {
+    private readonly IOrderDAO $OrderDAO;
+
+    private readonly IOrderRepository $OrderRepository;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
+    {
+        $this->OrderDAO = $AbstractFactoryRepository->getDAO()->createOrderDAO();
+
+        $this->OrderRepository = $AbstractFactoryRepository->createOrderRepository();
     }
 
     public function execute(DtoInput $data): string
     {
-        $order = (new OrderFactory())
+        $order = (new FactorySimpleOrder())
             ->new()
             ->build();
-
+          
         if (!is_null($data->getCustomerId())) {
-            if (!$this->CustomerRepository->exist(["id" => $data->getCustomerId()]))
-                throw new CustomerNotFoundException();
+            if (!$this->OrderRepository->exist(["id" => $data->getCustomerId()]))
+                throw new OrderNotFoundException();
 
             $order->setCustomerId($data->getCustomerId());
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace TechChallenge\Application\UseCase\Order;
+namespace TechChallenge\Application\DTO\Order;
 
 use TechChallenge\Domain\Order\UseCase\ItemDtoInput as IOrderUseCaseItemDtoInput;
 

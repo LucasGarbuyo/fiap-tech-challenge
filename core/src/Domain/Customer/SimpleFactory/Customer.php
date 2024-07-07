@@ -24,6 +24,21 @@ class Customer
         return $this;
     }
 
+    public function restore(?string $id = null, String|DateTime $createdAt = null, String|DateTime $updatedAt = null): self
+    {
+        if (!is_null($createdAt))
+            $createdAt = is_string($createdAt) ? new DateTime($createdAt) : $createdAt;
+
+        if (!is_null($updatedAt))
+            $updatedAt = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
+
+
+        $this->customer = new CustomerEntity($id, $createdAt, $updatedAt);
+
+        return $this;
+    }
+
+
     public function withNameCpfEmail(string|null $name, string|null $cpf, string|null $email): self
     {
         $this->customer
