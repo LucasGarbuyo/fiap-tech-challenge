@@ -4,26 +4,21 @@ namespace TechChallenge\Api\Product;
 
 use Illuminate\Http\Request;
 use TechChallenge\Api\Controller;
-use TechChallenge\Domain\Shared\AbstractFactory\DAO as AbstractFactoryDAO;
-use TechChallenge\Application\AbstractFactory\EloquentDAO as AbstractFactoryEloquentDAO;
-use TechChallenge\Application\AbstractFactory\EloquentRepository as AbstractFactoryEloquentRepository;
-use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Adapters\Controllers\Product\Index as ControllerProductIndex;
 use TechChallenge\Adapters\Controllers\Product\Show as ControllerProductShow;
 use TechChallenge\Adapters\Controllers\Product\Store as ControllerProductStore;
 use TechChallenge\Adapters\Controllers\Product\Update as ControllerProductUpdate;
 use TechChallenge\Adapters\Controllers\Product\Delete as ControllerProductDelete;
-use TechChallenge\Infra\DB\Eloquent\Product\DAO as EloquentProductDAO;
 use TechChallenge\Application\DTO\Product\DtoInput as ProductDtoInput;
-use Throwable;
 use TechChallenge\Domain\Shared\Exceptions\DefaultException;
+use Throwable;
 
 class Product extends Controller
 {
     public function index()
     {
         try {
-            $results = (new ControllerProductIndex(new EloquentProductDAO()))->execute([]);
+            $results = (new ControllerProductIndex($this->AbstractFactoryRepository))->execute([]);
 
             return $this->return($results, 200);
         } catch (DefaultException $e) {
@@ -50,7 +45,7 @@ class Product extends Controller
     public function show(string $id)
     {
         try {
-            $result = (new ControllerProductShow(new EloquentProductDAO()))->execute($id);
+            $result = (new ControllerProductShow($this->AbstractFactoryRepository))->execute($id);
 
             return $this->return($result, 200);
         } catch (DefaultException $e) {
