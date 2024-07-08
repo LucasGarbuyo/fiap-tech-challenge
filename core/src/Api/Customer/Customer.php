@@ -11,6 +11,7 @@ use TechChallenge\Adapters\Controllers\Customer\Show as ControllerCustomerShow;
 use TechChallenge\Adapters\Controllers\Customer\Store as ControllerCustomerStore;
 use TechChallenge\Adapters\Controllers\Customer\Update as ControllerCustomerUpdate;
 use TechChallenge\Adapters\Controllers\Customer\Delete as ControllerCustomerDelete;
+use TechChallenge\Adapters\Controllers\Customer\ShowByCpf as ControllerCustomerShowByCpf;
 use TechChallenge\Application\DTO\Customer\DtoInput as CustomerDtoInput;
 
 class Customer extends Controller
@@ -161,35 +162,30 @@ class Customer extends Controller
         }
     }
 
-    //TODO fazer o Adapter controller desse método
-    // public function showByCfp(Request $request, string $cpf)
-    // {
-    //     try {
-    //         $data = new CustomerDtoInput(cpf: $cpf);
+    public function showByCfp(Request $request, string $cpf)
+    {
+        try {
+            $result = (new ControllerCustomerShowByCpf($this->AbstractFactoryRepository))->execute($cpf);
 
-    //         $CustomerEditByCpf = DIContainer::create()->get(ICustomerUseCaseShowByCpf::class);
-
-    //         $customer = $CustomerEditByCpf->execute($data);
-
-    //         return $this->return($customer->toArray(), 200);
-    //     } catch (DefaultException $e) {
-    //         return $this->return(
-    //             [
-    //                 "error" => [
-    //                     "message" => $e->getMessage()
-    //                 ]
-    //             ],
-    //             $e->getStatus()
-    //         );
-    //     } catch (\Throwable $e) {
-    //         return $this->return(
-    //             [
-    //                 "error" => [
-    //                     "message" => $e->getMessage()
-    //                 ]
-    //             ],
-    //             400
-    //         );
-    //     }
-    // }
+            return $this->return($result, 200);
+        } catch (DefaultException $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                $e->getStatus()
+            );
+        } catch (\Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
+        }
+    }
 }
