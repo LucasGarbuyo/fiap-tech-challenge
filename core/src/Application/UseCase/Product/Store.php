@@ -2,37 +2,37 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-// use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
+use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Product\SimpleFactory\Product as FactorySimpleProduct;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
-use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+use TechChallenge\Domain\Category\DAO\ICategory as ICategoryDAO;
 use TechChallenge\Application\DTO\Product\DtoInput;
 
 final class Store
 {
     private IProductRepository $ProductRepository;
-    private ICategoryRepository $CategoryRepository;
+
+    private ICategoryDAO $CategoryDAO;
 
     public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
         $this->ProductRepository = $AbstractFactoryRepository->createProductRepository();
-        //$this->CategoryRepository = $AbstractFactoryRepository->createCategoryRepository();
+
+        $this->CategoryDAO = $AbstractFactoryRepository->getDAO()->createCategoryDAO();
     }
 
     public function execute(DtoInput $data): string
     {
         $productFactory = (new FactorySimpleProduct())
             ->new()
-            ->withCategoryId($data->category_id)
             ->withNameDescriptionPriceImage($data->name, $data->description, $data->price, $data->image);
 
-        // TODO - ADICIONAR A CATEGORIA QUANDO AbstractFactoryRepository ESTIVER IMPLEMENTADO
-        /*if (!empty($data->category_id)) {
-            if (!$this->CategoryRepository->exist(["id" => $data->category_id]))
+        if (!empty($data->categoryId)) {
+            if (!$this->CategoryDAO->exist(["id" => $data->categoryId]))
                 throw new CategoryNotFoundException();
-            $productFactory->withCategoryId($data->category_id);
-        }*/
+            $productFactory->withCategoryId($data->categoryId);
+        }
 
         $product = $productFactory->build();
 

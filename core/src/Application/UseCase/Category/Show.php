@@ -24,7 +24,7 @@ final class Show
     public function execute(string $id): Category
     {
         if (!$this->CategoryDAO->exist(["id" => $id]))
-            throw new CategoryNotFoundException('Not found', 404);
+            throw new CategoryNotFoundException();
 
         return $this->CategoryRepository->show(["id" => $id], true);
     }

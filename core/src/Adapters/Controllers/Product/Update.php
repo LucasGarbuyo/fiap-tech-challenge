@@ -12,8 +12,8 @@ final class Update
     {
     }
 
-    public function execute(ProductDTOInput $dto): void
+    public function execute(ProductDTOInput $dto)
     {
-        (new UseCaseProductUpdate($this->AbstractFactoryRepository))->execute($dto);
+        return (new UseCaseProductUpdate($this->AbstractFactoryRepository))->execute($dto);
     }
 }

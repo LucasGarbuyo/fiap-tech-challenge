@@ -12,7 +12,7 @@ final class Store
     {
     }
 
-    public function execute(ProductDTOInput $dto): string
+    public function execute(ProductDTOInput $dto)
     {
         return (new UseCaseProductStore($this->AbstractFactoryRepository))->execute($dto);
     }

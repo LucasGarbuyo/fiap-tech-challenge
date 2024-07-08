@@ -42,12 +42,12 @@ final class Repository extends AbstractRepository implements IProductRepository
 
     public function show(array $filters = [], array|bool $append = []): ?ProductEntity
     {
-        $customer = $this->ProductDAO->show($filters, $append);
+        $product = $this->ProductDAO->show($filters, $append);
 
-        if (is_null($customer))
+        if (is_null($product))
             return null;
 
-        return $this->toEntity($customer);
+        return $this->toEntity($product);
     }
 
     public function store(ProductEntity $product): void
@@ -81,7 +81,7 @@ final class Repository extends AbstractRepository implements IProductRepository
         return $this->SimpleFactoryProduct->build();
     }
 
-    protected function createCategoryEntity(array $category):?CategoryEntity
+    protected function createCategoryEntity(array $category): ?CategoryEntity
     {
         return $this->SimpleFactoryCategory
             ->restore($category["id"], $category["created_at"], $category["updated_at"])

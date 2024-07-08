@@ -2,8 +2,8 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-// use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
-// use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
+use TechChallenge\Domain\Category\DAO\ICategory as ICategoryDAO;
 use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Product\SimpleFactory\Product as FactorySimpleProduct;
@@ -14,16 +14,19 @@ use DateTime;
 
 final class Update
 {
-    private IProductRepository $ProductRepository;
+    private readonly IProductRepository $ProductRepository;
+
     private readonly IProductDAO $ProductDAO;
-    // private ICategoryRepository $CategoryRepository;
+
+    private readonly ICategoryDAO $CategoryDAO;
 
     public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
         $this->ProductDAO = $AbstractFactoryRepository->getDAO()->createProductDAO();
 
         $this->ProductRepository = $AbstractFactoryRepository->createProductRepository();
-        //$this->CategoryRepository = $AbstractFactoryRepository->createCategoryRepository();
+
+        $this->CategoryDAO = $AbstractFactoryRepository->getDAO()->createCategoryDAO();
     }
 
     public function execute(DtoInput $data): void
@@ -32,20 +35,19 @@ final class Update
             throw new ProductNotFoundException();
 
         $productFactory = (new FactorySimpleProduct())
-            ->new($data->id, $data->created_at, $data->updated_at)
-            ->withCategoryId($data->category_id)
-            ->withNameDescriptionPriceImage($data->name, $data->description, $data->price, $data->image)
-            ->build();
+            ->new($data->id, $data->createdAt, $data->updatedAt)
+            ->withNameDescriptionPriceImage($data->name, $data->description, $data->price, $data->image);
 
-        // TODO - ADICIONAR A CATEGORIA QUANDO AbstractFactoryRepository ESTIVER IMPLEMENTADO
-        /*if (!empty($data->category_id)) {
-            if (!$this->CategoryRepository->exist(["id" => $data->category_id]))
+        if (!empty($data->categoryId)) {
+            if (!$this->CategoryDAO->exist(["id" => $data->categoryId]))
                 throw new CategoryNotFoundException();
-            $productFactory->withCategoryId($data->category_id);
-        }*/
+            $productFactory->withCategoryId($data->categoryId);
+        }
 
-        $productFactory->setUpdatedAt(new DateTime());
+        $product = $productFactory->build();
 
-        $this->ProductRepository->update($productFactory);
+        $product->setUpdatedAt(new DateTime());
+
+        $this->ProductRepository->update($product);
     }
 }
