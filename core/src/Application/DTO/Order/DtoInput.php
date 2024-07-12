@@ -4,23 +4,20 @@ namespace TechChallenge\Application\DTO\Order;
 
 class DtoInput
 {
-    // public array $items = [];
+    /** @var ItemDtoInput[] */
+    public array $items = [];
 
     public function __construct(
         public readonly ?string $id = null,
-        public readonly ?string $customer_id = null,
+        public readonly ?string $customerId = null,
         public readonly ?string $status = null,
-        // $items = [],
+        $items = [],
     ) {
-        //$this->setItems($items);
+        $this->setItems($items);
     }
 
-    /*
-    public function setItems(array|null $items)
+    public function setItems(array $items)
     {
-        if (empty($items))
-            return;
-
         foreach ($items as $item)
             $this->items[] = new ItemDtoInput(
                 $item["id"] ?? null,
@@ -28,5 +25,4 @@ class DtoInput
                 $item["quantity"] ?? null
             );
     }
-            */
 }

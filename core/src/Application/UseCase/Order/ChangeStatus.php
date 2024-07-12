@@ -2,26 +2,35 @@
 
 namespace TechChallenge\Application\UseCase\Order;
 
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Order\Enum\OrderStatus;
 use TechChallenge\Domain\Order\Exceptions\InvalidStatusOrder;
 use TechChallenge\Domain\Order\Exceptions\OrderException;
 use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
-use TechChallenge\Domain\Order\UseCase\{DtoInput, ChangeStatus as IOrderUseCaseChangeStatus};
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
+use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
+use TechChallenge\Application\DTO\Order\DtoInput;
 use ValueError;
 
-class ChangeStatus implements IOrderUseCaseChangeStatus
+final class ChangeStatus
 {
-    public function __construct(protected readonly IOrderRepository $OrderRepository)
+    private readonly IOrderDAO $OrderDAO;
+
+    private readonly IOrderRepository $OrderRepository;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->OrderDAO =  $AbstractFactoryRepository->getDAO()->createOrderDAO();
+
+        $this->OrderRepository = $AbstractFactoryRepository->createOrderRepository();
     }
 
-    public function execute(DtoInput $data): void
+    public function execute(DtoInput $dto): void
     {
-        if (is_null($data->getId()) || !$this->OrderRepository->exist(["id" => $data->getId()]))
+        if (!$dto->id || !$this->OrderDAO->exist(["id" => $dto->id]))
             throw new OrderNotFoundException();
 
-        $order = $this->OrderRepository->show(["id" => $data->getId()], true);
+        $order = $this->OrderRepository->show(["id" => $dto->id], true);
 
         if ($order->isCanceled())
             throw new OrderException("Não pode alterar o status pois o pedido foi cancelado e esse é um status final.", 400);
@@ -30,7 +39,7 @@ class ChangeStatus implements IOrderUseCaseChangeStatus
             throw new OrderException("Não pode alterar o status pois o pedido não está pago", 400);
 
         try {
-            $status = OrderStatus::from($data->status);
+            $status = OrderStatus::from($dto->status);
         } catch (ValueError $error) {
             throw new InvalidStatusOrder();
         }

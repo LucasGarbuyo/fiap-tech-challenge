@@ -8,6 +8,8 @@ interface IOrder
 
     public function show(array $filters = [], array|bool $append = []): array|null;
 
+    public function store(array $order): void;
+
     public function update(array $order): void;
 
     public function delete(array $order): void;

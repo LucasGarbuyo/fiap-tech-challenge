@@ -21,9 +21,9 @@ final class Show
         $this->OrderRepository = $AbstractFactoryRepository->createOrderRepository();
     }
 
-    public function execute(string $id): OrderEntity
+    public function execute(?string $id): OrderEntity
     {
-        if (!$this->OrderDAO->exist(["id" => $id]))
+        if (!$id || !$this->OrderDAO->exist(["id" => $id]))
             throw new OrderNotFoundException();
 
         return $this->OrderRepository->show(["id" => $id], true);

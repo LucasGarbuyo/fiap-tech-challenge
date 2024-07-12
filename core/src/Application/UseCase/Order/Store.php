@@ -2,57 +2,66 @@
 
 namespace TechChallenge\Application\UseCase\Order;
 
-use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
-use TechChallenge\Domain\Order\Factories\{Order as OrderFactory, Item as ItemFactory};
 use TechChallenge\Domain\Order\SimpleFactory\Order as FactorySimpleOrder;
-use TechChallenge\Application\DTO\Order\{DtoInput, Store as IOrderUseCaseStore};
-use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
+use TechChallenge\Domain\Order\SimpleFactory\Item as FactorySimpleOrderItem;
+use TechChallenge\Application\DTO\Order\DtoInput;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
+use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
+use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
+use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
+use TechChallenge\Domain\Customer\Exceptions\CustomerNotFoundException;
+use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
 
 final class Store
 {
-    private readonly IOrderDAO $OrderDAO;
+    private readonly ICustomerDAO $CustomerDAO;
+
+    private readonly IProductDAO $ProductDAO;
 
     private readonly IOrderRepository $OrderRepository;
 
+    private readonly IProductRepository $ProductRepository;
+
     public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
-        $this->OrderDAO = $AbstractFactoryRepository->getDAO()->createOrderDAO();
+        $this->CustomerDAO = $AbstractFactoryRepository->getDAO()->createCustomerDAO();
+
+        $this->ProductDAO = $AbstractFactoryRepository->getDAO()->createProductDAO();
 
         $this->OrderRepository = $AbstractFactoryRepository->createOrderRepository();
+
+        $this->ProductRepository = $AbstractFactoryRepository->createProductRepository();
     }
 
-    public function execute(DtoInput $data): string
+    public function execute(DtoInput $dto): string
     {
         $order = (new FactorySimpleOrder())
             ->new()
             ->build();
-          
-        if (!is_null($data->getCustomerId())) {
-            if (!$this->OrderRepository->exist(["id" => $data->getCustomerId()]))
-                throw new OrderNotFoundException();
 
-            $order->setCustomerId($data->getCustomerId());
+        if ($dto->customerId) {
+            if (!$this->CustomerDAO->exist(["id" => $dto->customerId]))
+                throw new CustomerNotFoundException();
+
+            $order->setCustomerId($dto->customerId);
         }
 
-        if (!empty($data->getItems())) {
-            $items = [];
+        $FactorySimpleOrderItem = new FactorySimpleOrderItem();
 
-            foreach ($data->getItems() as $item) {
+        foreach ($dto->items as $item) {
 
-                if (is_null($item->getProductId()) || !$this->ProductRepository->exist(["id" => $item->getProductId()]))
-                    throw new ProductNotFoundException();
+            if (!$item->productId || !$this->ProductDAO->exist(["id" => $item->productId]))
+                throw new ProductNotFoundException();
 
-                $product = $this->ProductRepository->show(["id" => $item->getProductId()]);
+            $product = $this->ProductRepository->show(["id" => $item->productId]);
 
-                $items[] = (new ItemFactory())
-                    ->new(id: null, product_id: $product->getId(), order_id: $order->getId())
-                    ->withQuantityPrice($item->getQuantity(), $product->getPrice()->getValue())
-                    ->build();
-            }
+            $item = $FactorySimpleOrderItem
+                ->new(null, $product->getId(), $order->getId())
+                ->withQuantityPrice($item->quantity, $product->getPrice()->getValue())
+                ->build();
 
-            $order->setItems($items);
+            $order->setItem($item);
         }
 
         $order->calcTotal();

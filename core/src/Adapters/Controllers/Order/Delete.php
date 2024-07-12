@@ -3,7 +3,7 @@
 namespace TechChallenge\Adapters\Controllers\Order;
 
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
-use TechChallenge\Application\UseCase\Customer\Delete as UseCaseCustomerDelete;
+use TechChallenge\Application\UseCase\Order\Delete as UseCaseOrderDelete;
 
 final class Delete
 {
@@ -13,6 +13,6 @@ final class Delete
 
     public function execute(string $id)
     {
-        return (new UseCaseCustomerDelete($this->AbstractFactoryRepository))->execute($id);
+        return (new UseCaseOrderDelete($this->AbstractFactoryRepository))->execute($id);
     }
 }
