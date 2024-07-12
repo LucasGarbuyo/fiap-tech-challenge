@@ -11,6 +11,8 @@ use TechChallenge\Adapters\Controllers\Order\Show as ControllerOrderShow;
 use TechChallenge\Adapters\Controllers\Order\Store as ControllerOrderStore;
 use TechChallenge\Adapters\Controllers\Order\Update as ControllerOrderUpdate;
 use TechChallenge\Adapters\Controllers\Order\Delete as ControllerOrderDelete;
+use TechChallenge\Adapters\Controllers\Order\ChangeStatus as ControllerOrderChangeStatus;
+use TechChallenge\Adapters\Controllers\Order\Checkout as ControllerOrderCheckout;
 use TechChallenge\Application\DTO\Order\DtoInput as OrderDtoInput;
 
 class Order extends Controller
@@ -136,6 +138,62 @@ class Order extends Controller
     {
         try {
             (new ControllerOrderDelete($this->AbstractFactoryRepository))->execute($id);
+
+            return $this->return(null, 204);
+        } catch (DefaultException $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                $e->getStatus()
+            );
+        } catch (Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
+        }
+    }
+
+    public function checkout(Request $request, string $id)
+    {
+        try {
+            (new ControllerOrderCheckout($this->AbstractFactoryRepository))->execute($id);
+
+            return $this->return(null, 204);
+        } catch (DefaultException $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                $e->getStatus()
+            );
+        } catch (Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
+        }
+    }
+
+    public function changeStatus(Request $request, string $id)
+    {
+        try {
+            $dto = new OrderDtoInput($id, null, $request->status);
+
+            (new ControllerOrderChangeStatus($this->AbstractFactoryRepository))->execute($dto);
 
             return $this->return(null, 204);
         } catch (DefaultException $e) {

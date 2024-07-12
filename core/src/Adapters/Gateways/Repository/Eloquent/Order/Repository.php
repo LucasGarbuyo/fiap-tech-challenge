@@ -5,9 +5,11 @@ namespace TechChallenge\Adapters\Gateways\Repository\Eloquent\Order;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
 use TechChallenge\Adapters\Gateways\Repository\Eloquent\Abstract\Repository as AbstractRepository;
-use TechChallenge\Domain\Order\Entities\{Order as OrderEntity, Item as ItemEntity};
+use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
+use TechChallenge\Domain\Order\Entities\Item as ItemEntity;
 use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
-use TechChallenge\Domain\Order\SimpleFactory\{Order as SimpleFactoryOrder, Item as SimpleFactoryItem};
+use TechChallenge\Domain\Order\SimpleFactory\Order as SimpleFactoryOrder;
+use TechChallenge\Domain\Order\SimpleFactory\Item as SimpleFactoryItem;
 use TechChallenge\Domain\Customer\SimpleFactory\Customer as SimpleFactoryCustomer;
 use TechChallenge\Adapters\Presenters\Order\ToArray as OrderToArray;
 
@@ -46,6 +48,7 @@ class Repository extends AbstractRepository implements IOrderRepository
 
     public function store(OrderEntity $order): void
     {
+        $this->OrderDAO->store($this->OrderToArray->execute($order));
     }
 
     public function show(array $filters = [], array|bool $append = []): ?OrderEntity
@@ -60,10 +63,12 @@ class Repository extends AbstractRepository implements IOrderRepository
 
     public function update(OrderEntity $order): void
     {
+        $this->OrderDAO->update($this->OrderToArray->execute($order));
     }
 
     public function delete(OrderEntity $order): void
     {
+        $this->OrderDAO->delete($this->OrderToArray->execute($order));
     }
 
     protected function toEntity(array $order): OrderEntity
@@ -75,6 +80,7 @@ class Repository extends AbstractRepository implements IOrderRepository
 
         if (isset($order["customer_id"]) && isset($order["customer"]["id"])) {
             $customer = $this->createCustomerEntity($order["customer"]);
+
             $this->SimpleFactoryOrder->withCustomer($customer);
         }
 
