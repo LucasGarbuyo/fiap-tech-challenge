@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders_items', function (Blueprint $table) {
+        Schema::create('order_items', function (Blueprint $table) {
             $table->char("id", 41)->primary(true)->unique();
             $table->char('order_id', 41)->nullable()->constrained('orders', 'id')->index();
             $table->char('product_id', 41)->nullable()->constrained('products', 'id')->index();

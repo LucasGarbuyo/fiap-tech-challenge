@@ -10,12 +10,14 @@ class Model extends EloquentModel
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = "order_status";
+    protected $table = "order_items";
 
     protected $fillable = [
         "id",
         "order_id",
-        "status",
+        "product_id",
+        "quantity",
+        "price",
         "created_at",
         "updated_at",
         "deleted_at"

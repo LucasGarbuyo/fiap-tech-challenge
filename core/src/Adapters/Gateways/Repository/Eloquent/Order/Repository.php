@@ -84,6 +84,12 @@ class Repository extends AbstractRepository implements IOrderRepository
             $this->SimpleFactoryOrder->withCustomer($customer);
         }
 
+        if (isset($order["items"]) && count($order["items"]) > 0) {
+            $items = $this->createItemsEntity($order["items"]);
+
+            $this->SimpleFactoryOrder->withItems($items);
+        }
+
         /*
         if (isset($order["status_history"])) {
             $items = $order["status_history"];
@@ -105,7 +111,7 @@ class Repository extends AbstractRepository implements IOrderRepository
         return $this->SimpleFactoryOrder->build();
     }
 
-    protected function createCustomerEntity(array $customer): ?CustomerEntity
+    protected function createCustomerEntity(array $customer): CustomerEntity
     {
         return $this->SimpleFactoryCustomer
             ->restore($customer["id"], $customer["created_at"], $customer["updated_at"])
@@ -113,10 +119,20 @@ class Repository extends AbstractRepository implements IOrderRepository
             ->build();
     }
 
-    protected function createItemEntity(array $item): ?ItemEntity
+    protected function createItemsEntity(array $items): array
+    {
+        $entities = [];
+
+        foreach ($items as $item)
+            $entities[] = $this->createItemEntity($item);
+
+        return $entities;
+    }
+
+    protected function createItemEntity(array $item): ItemEntity
     {
         return $this->SimpleFactoryItem
-            ->restore($item["id"], $item["created_at"], $item["updated_at"])
+            ->restore($item["id"], $item["product_id"], $item["order_id"], $item["created_at"], $item["updated_at"])
             ->withQuantityPrice($item["quantity"], $item["price"])
             ->build();
     }

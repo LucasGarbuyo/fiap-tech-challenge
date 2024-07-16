@@ -14,8 +14,8 @@ class Item
         ?string $id = null,
         ?string $productId = NULL,
         ?string $orderId = NULL,
-        String|DateTime $createdAt = null,
-        String|DateTime $updatedAt = null
+        null|string|DateTime $createdAt = null,
+        null|string|DateTime $updatedAt = null
     ): self {
         if (!is_null($createdAt))
             $createdAt = is_string($createdAt) ? new DateTime($createdAt) : $createdAt;
@@ -31,6 +31,28 @@ class Item
         return $this;
     }
 
+    public function restore(
+        ?string $id = null,
+        ?string $productId = NULL,
+        ?string $orderId = NULL,
+        null|string|DateTime $createdAt = null,
+        null|string|DateTime $updatedAt = null
+    ): self {
+        if (!is_null($createdAt))
+            $createdAt = is_string($createdAt) ? new DateTime($createdAt) : $createdAt;
+
+        if (!is_null($updatedAt))
+            $updatedAt = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
+
+        $this->item = new ItemEntity($id, $createdAt, $updatedAt);
+
+        $this->item
+            ->setOrderId($orderId)
+            ->setProductId($productId);
+
+        return $this;
+    }
+
     public function withQuantityPrice(?int $quantity, ?float $price): self
     {
         $this->item
@@ -39,21 +61,6 @@ class Item
 
         return $this;
     }
-
-    public function restore(?string $id = null, String|DateTime $createdAt = null, String|DateTime $updatedAt = null): self
-    {
-        if (!is_null($createdAt))
-            $createdAt = is_string($createdAt) ? new DateTime($createdAt) : $createdAt;
-
-        if (!is_null($updatedAt))
-            $updatedAt = is_string($updatedAt) ? new DateTime($updatedAt) : $updatedAt;
-
-
-        $this->item = new ItemEntity($id, $createdAt, $updatedAt);
-
-        return $this;
-    }
-
 
     public function build(): ItemEntity
     {

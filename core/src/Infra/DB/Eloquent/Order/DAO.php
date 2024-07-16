@@ -4,6 +4,8 @@ namespace TechChallenge\Infra\DB\Eloquent\Order;
 
 use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
 use Illuminate\Database\Eloquent\Builder;
+use TechChallenge\Infra\DB\Eloquent\Order\Item\Model as ItemModel;
+use TechChallenge\Infra\DB\Eloquent\Order\Status\Model as StatusModel;
 
 class DAO implements IOrderDAO
 {
@@ -36,6 +38,10 @@ class DAO implements IOrderDAO
     public function store(array $order): void
     {
         Model::create($order);
+
+        $this->saveItems($order["items"], $order["id"]);
+
+        $this->saveStatus($order["status_history"], $order["id"]);
     }
 
     public function show(array $filters = [], array|bool $append = []): ?array
@@ -46,11 +52,19 @@ class DAO implements IOrderDAO
     public function update(array $order): void
     {
         Model::where("id", $order["id"])->update($order);
+
+        $this->saveItems($order["items"], $order["id"]);
+
+        $this->saveStatus($order["status_history"], $order["id"]);
     }
 
     public function delete(array $order): void
     {
         Model::where("id", $order["id"])->update($order);
+
+        $this->saveItems($order["items"], $order["id"]);
+
+        $this->saveStatus($order["status_history"], $order["id"]);
     }
 
     public function exist(array $filters = []): bool
@@ -79,5 +93,45 @@ class DAO implements IOrderDAO
         }
 
         return $query;
+    }
+
+    protected function saveItems(array $items, string $orderId): void
+    {
+        $order = Model::find($orderId);
+
+        foreach ($items as $item) {
+            $order->items()
+                ->updateOrCreate(
+                    [
+                        "id" => $item["id"]
+                    ],
+                    $item
+                );
+        }
+
+        ItemModel::query()
+            ->where("order_id", $orderId)
+            ->whereNotIn("id", array_column($items, "id"))
+            ->delete();
+    }
+
+    protected function saveStatus(array $statusHistories, string $orderId): void
+    {
+        $order = Model::find($orderId);
+
+        foreach ($statusHistories as $status) {
+            $order->statusHistory()
+                ->updateOrCreate(
+                    [
+                        "id" => $status["id"]
+                    ],
+                    $status
+                );
+        }
+
+        StatusModel::query()
+            ->where("order_id", $orderId)
+            ->whereNotIn("id", array_column($statusHistories, "id"))
+            ->delete();
     }
 }
