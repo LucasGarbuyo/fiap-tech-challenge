@@ -2,23 +2,30 @@
 
 namespace TechChallenge\Application\UseCase\Order;
 
-use TechChallenge\Domain\Order\UseCase\DtoInput;
-use TechChallenge\Domain\Order\Entities\Order;
-use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
-use TechChallenge\Domain\Order\UseCase\Show as IOrderUseCaseShow;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
+use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
+use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
+use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
 
-class Show implements IOrderUseCaseShow
+final class Show
 {
-    public function __construct(protected readonly IOrderRepository $OrderRepository)
+    private readonly IOrderDAO $OrderDAO;
+
+    private readonly IOrderRepository $OrderRepository;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->OrderDAO = $AbstractFactoryRepository->getDAO()->createOrderDAO();
+
+        $this->OrderRepository = $AbstractFactoryRepository->createOrderRepository();
     }
 
-    public function execute(DtoInput $data, bool|array $append = []): Order
+    public function execute(?string $id): OrderEntity
     {
-        if (!$this->OrderRepository->exist(["id" => $data->getId()]))
+        if (!$id || !$this->OrderDAO->exist(["id" => $id]))
             throw new OrderNotFoundException();
 
-        return $this->OrderRepository->show(["id" => $data->getId()], $append);
+        return $this->OrderRepository->show(["id" => $id], true);
     }
 }

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->char("id", 28)->primary(true)->unique()->index();
-            $table->char('customer_id', 28)->nullable()->constrained('customers', 'id')->index();
+            $table->char("id", 41)->primary(true)->unique()->index();
+            $table->char('customer_id', 41)->nullable()->constrained('customers', 'id')->index();
             $table->decimal('total')->nullable();
             $table->enum('status', [
                 'NEW',

@@ -3,13 +3,12 @@
 namespace TechChallenge\Domain\Product\Repository;
 
 use TechChallenge\Domain\Product\Entities\Product;
-use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
 
 interface IProduct
 {
-    public function __construct(ICategoryRepository $CategoryRepository);
+    public function __construct(IProductDAO $IProductDAO);
 
-    /** @return Product[] */
     public function index(array $filters = [], array|bool $append = []): array;
 
     public function show(array $filters = [], array|bool $append = []): Product|null;
@@ -19,6 +18,4 @@ interface IProduct
     public function update(Product $product): void;
 
     public function delete(Product $product): void;
-
-    public function exist(array $filters = []): bool;
 }

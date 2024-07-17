@@ -6,6 +6,6 @@ class InvalidItemOrder extends OrderException
 {
     public function __construct()
     {
-        parent::__construct("Item inválida", 400);
+        parent::__construct("Item inválido", 400);
     }
 }

@@ -18,11 +18,14 @@ class Price
         $value = trim($value);
 
         if (preg_match('/^\d{1,3}(\.\d{3})*,\d{2}$/', $value)) {
+
             $value = str_replace('.', '', $value);
             $value = str_replace(',', '.', $value);
-        } elseif (preg_match('/^\d{1,3}(,\d{3})*\.\d{2}$/', $value)) {
+        } else if (preg_match('/^\d{1,3}(,\d{3})*\.\d{2}$/', $value)) {
+
             $value = str_replace(',', '', $value);
-        } elseif (!is_numeric($value)) {
+        } else if (!is_numeric($value)) {
+
             throw new DefaultException("Preço inválido");
         }
 

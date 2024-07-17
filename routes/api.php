@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use TechChallenge\Adapter\Driver\Api\V1\Product;
-use TechChallenge\Adapter\Driver\Api\V1\Customer;
-use TechChallenge\Adapter\Driver\Api\V1\Category;
-use TechChallenge\Adapter\Driver\Api\V1\Order;
+use TechChallenge\Api\Customer\Customer;
+use TechChallenge\Api\Product\Product;
+use TechChallenge\Api\Category\Category;
+use TechChallenge\Api\Order\Order;
 
 Route::controller(Product::class)
     ->prefix('/product')
@@ -42,6 +42,7 @@ Route::controller(Order::class)
     ->group(function () {
         Route::get('/', [Order::class, "index"]);
         Route::get('/{id}', [Order::class, "show"]);
+        /* FALTA RESOLVER ESSAS ABAIXO  */
         Route::post('/', [Order::class, "store"]);
         Route::put('/{id}', [Order::class, "update"]);
         Route::delete('/{id}', [Order::class, "delete"]);

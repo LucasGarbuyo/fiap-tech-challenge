@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->char('category_id', 28)
+            $table->char('category_id', 41)
                 ->after('id')
                 ->constrained(
                     table: 'categories',

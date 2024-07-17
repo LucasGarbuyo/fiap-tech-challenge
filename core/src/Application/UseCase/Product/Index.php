@@ -2,14 +2,16 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use TechChallenge\Domain\Product\UseCase\Index as IProductUseCaseIndex;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
 
-
-class Index implements IProductUseCaseIndex
+final class Index
 {
-    public function __construct(protected readonly IProductRepository $ProductRepository)
+    private IProductRepository $ProductRepository;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->ProductRepository = $AbstractFactoryRepository->createProductRepository();
     }
 
     public function execute(array $filters = [], array|bool $append = []): array

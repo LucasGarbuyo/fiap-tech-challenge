@@ -2,13 +2,16 @@
 
 namespace TechChallenge\Application\UseCase\Category;
 
-use TechChallenge\Domain\Category\UseCase\Index as ICategoryUseCaseEdit;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
 
-class Index implements ICategoryUseCaseEdit
+final class Index
 {
-    public function __construct(protected readonly ICategoryRepository $CategoryRepository)
+    private readonly ICategoryRepository $CategoryRepository;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->CategoryRepository = $AbstractFactoryRepository->createCategoryRepository();
     }
 
     public function execute(array $filters = [], array|bool $append = []): array

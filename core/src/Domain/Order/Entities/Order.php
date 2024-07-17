@@ -2,6 +2,7 @@
 
 namespace TechChallenge\Domain\Order\Entities;
 
+use TechChallenge\Domain\Shared\Entities\Standard as StandardEntity;
 use DateTime;
 use TechChallenge\Domain\Customer\Entities\Customer;
 use TechChallenge\Domain\Order\Enum\OrderStatus;
@@ -9,88 +10,25 @@ use TechChallenge\Domain\Order\Exceptions\InvalidItemOrder;
 use TechChallenge\Domain\Order\Exceptions\InvalidStatusOrder;
 use TechChallenge\Domain\Shared\ValueObjects\Price;
 
-class Order
+class Order extends StandardEntity
 {
-    private ?string $customer_id = null;
-    private ?Customer $customer = null;
-    private ?Price $total;
-    private array $items = [];
-    private array $status_history = [];
-    private OrderStatus $status;
-    private readonly DateTime $created_at;
-    private readonly DateTime $updated_at;
-    private ?DateTime $deleted_at = null;
+    protected static string $idPrefix = "ORDE";
 
-    public function __construct(
-        private readonly string $id,
-        Price $total,
-        DateTime $created_at,
-        DateTime $updated_at,
-    ) {
-        $this
-            ->setTotal($total)
-            ->setCreatedAt($created_at)
-            ->setUpdatedAt($updated_at);
-    }
+    protected ?string $customerId = null;
 
-    public static function create(
-        ?string $id = null,
-        ?Price $total,
-        ?DateTime $created_at,
-        ?DateTime $updated_at
-    ): self {
-        return new self(
-            id: $id ?? uniqid("ORDE_", true),
-            total: $total ?? new Price(0.0),
-            created_at: $created_at ?? new DateTime(),
-            updated_at: $updated_at ?? new DateTime(),
-        );
-    }
+    protected ?Customer $customer = null;
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
+    protected ?Price $total;
 
-    public function setCreatedAt(DateTime $created_at): self
-    {
-        $this->created_at = $created_at;
+    protected array $items = [];
 
-        return $this;
-    }
+    protected array $statusHistory = [];
 
-    public function setUpdatedAt(DateTime $updated_at): self
-    {
-        $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function setDeleteAt(): self
-    {
-        $this->deleted_at = new DateTime();
-
-        return $this;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->created_at;
-    }
-
-    public function getUpdatedAt(): DateTime
-    {
-        return $this->updated_at;
-    }
-
-    public function getDeletedAt(): DateTime|null
-    {
-        return $this->deleted_at;
-    }
+    protected ?OrderStatus $status = null;
 
     public function delete(): self
     {
-        $this->deleted_at = new DateTime();
+        $this->deletedAt = new DateTime();
 
         foreach ($this->getItems() as $item)
             $item->delete();
@@ -101,7 +39,7 @@ class Order
         return $this;
     }
 
-    public function setCustomer(Customer $customer): self
+    public function setCustomer(?Customer $customer): self
     {
         $this->customer = $customer;
 
@@ -115,19 +53,19 @@ class Order
 
     public function setCustomerId(?string $customerId = null): self
     {
-        $this->customer_id = $customerId;
+        $this->customerId = $customerId;
 
         return $this;
     }
 
-    public function getStatus(): OrderStatus
+    public function getStatus(): ?OrderStatus
     {
         return $this->status;
     }
 
     public function getStatusHistories(): array
     {
-        return $this->status_history;
+        return $this->statusHistory;
     }
 
     public function setStatusHistories(array $statusHistories): self
@@ -136,88 +74,77 @@ class Order
             if (!$statusHistory instanceof Status)
                 throw new InvalidStatusOrder();
 
-            $this->setStatusHistory($statusHistory);
+            $this->addStatusHistory($statusHistory);
         }
 
         return $this;
     }
 
-    public function setStatusHistory(Status $statusHistory)
+    protected function addStatusHistory(Status $statusHistory): self
     {
-        $this->status_history[] = $statusHistory;
+        $this->statusHistory[] = $statusHistory;
+
+        return $this;
     }
 
     public function setAsNew(): self
     {
-        $status = Status::create(null, $this->getId(), OrderStatus::NEW);
-
-        $this->setStatusHistory($status);
-
-        $this->setStatus($status->getStatus());
+        $this->addStatus(OrderStatus::NEW);
 
         return $this;
     }
 
     public function setAsReceived(): self
     {
-        $status = Status::create(null, $this->getId(), OrderStatus::RECEIVED);
-
-        $this->setStatusHistory($status);
-
-        $this->setStatus($status->getStatus());
+        $this->addStatus(OrderStatus::RECEIVED);
 
         return $this;
     }
 
     public function setAsPaid(): self
     {
-        $status = Status::create(null, $this->getId(), OrderStatus::PAID);
-
-        $this->setStatusHistory($status);
-
-        $this->setStatus($status->getStatus());
+        $this->addStatus(OrderStatus::PAID);
 
         return $this;
     }
 
     public function setAsInPreparation(): self
     {
-        $status = Status::create(null, $this->getId(), OrderStatus::IN_PREPARATION);
-
-        $this->setStatusHistory($status);
-
-        $this->setStatus($status->getStatus());
+        $this->addStatus(OrderStatus::IN_PREPARATION);
 
         return $this;
     }
 
     public function setAsReady(): self
     {
-        $status = Status::create(null, $this->getId(), OrderStatus::READY);
-
-        $this->setStatusHistory($status);
-
-        $this->setStatus($status->getStatus());
+        $this->addStatus(OrderStatus::READY);
 
         return $this;
     }
 
     public function setAsFinished(): self
     {
-        $status = Status::create(null, $this->getId(), OrderStatus::FINISHED);
-
-        $this->setStatusHistory($status);
-
-        $this->setStatus($status->getStatus());
+        $this->addStatus(OrderStatus::FINISHED);
 
         return $this;
     }
 
     public function setAsCanceled(): self
     {
-        $status = Status::create(null, $this->getId(), OrderStatus::CANCELED);
+        $this->addStatus(OrderStatus::CANCELED);
 
-        $this->setStatusHistory($status);
+        return $this;
+    }
+
+    protected function addStatus(OrderStatus $OrderStatus): self
+    {
+        $status = Status::create();
+
+        $status
+            ->setOrderId($this->getId())
+            ->setStatus($OrderStatus);
+
+        $this->addStatusHistory($status);
 
         $this->setStatus($status->getStatus());
 
@@ -251,9 +178,9 @@ class Order
         return $this;
     }
 
-    public function getCustomerId(): string|null
+    public function getCustomerId(): ?string
     {
-        return $this->customer_id;
+        return $this->customerId;
     }
 
     public function setItems(array $items): self
@@ -273,7 +200,7 @@ class Order
         $exist = false;
 
         foreach ($this->getItems() as $orderItem) {
-            if ($orderItem->getProductId() == $item->getProductId()) {
+            if ($orderItem->getProductId() === $item->getProductId()) {
                 $orderItem->setQuantity($item->getQuantity());
                 $orderItem->setPrice($item->getPrice());
                 $exist = true;
@@ -292,19 +219,19 @@ class Order
         return $this->items;
     }
 
-    public function setTotal(Price $total): self
+    public function setTotal(?Price $total): self
     {
         $this->total = $total;
 
         return $this;
     }
 
-    public function getTotal(): Price
+    public function getTotal(): ?Price
     {
         return $this->total;
     }
 
-    public function calcTotal()
+    public function calcTotal(): self
     {
         $price = 0;
 
@@ -316,35 +243,16 @@ class Order
         }
 
         $this->setTotal(new Price($price));
+
+        return $this;
     }
 
-    public function removeItemsByProductIdsNotIn(array $idsProducts)
+    public function removeItemsByProductIdsNotIn(array $idsProducts): self
     {
         foreach ($this->getItems() as $item)
             if (!in_array($item->getProductId(), $idsProducts))
                 $item->delete();
-    }
 
-    public function toArray(): array
-    {
-        $items = array_map(function ($item) {
-            return $item->toArray();
-        }, $this->getItems());
-
-        $statusHistories = array_map(function ($status) {
-            return $status->toArray();
-        }, $this->getStatusHistories());
-
-        return [
-            "id" => $this->getId(),
-            "customer_id" => $this->getCustomerId(),
-            "customer" => $this->getCustomer() ? $this->getCustomer()->toArray() : null,
-            "total" => $this->getTotal()->getValue(),
-            "status" => $this->getStatus(),
-            "items" => $items,
-            "status_histories" => $statusHistories,
-            "created_at" => $this->getCreatedAt()->format("Y-m-d H:i:s"),
-            "updated_at" => $this->getUpdatedAt()->format("Y-m-d H:i:s")
-        ];
+        return $this;
     }
 }

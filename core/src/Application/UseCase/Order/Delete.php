@@ -2,24 +2,31 @@
 
 namespace TechChallenge\Application\UseCase\Order;
 
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Order\Exceptions\OrderException;
 use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
-use TechChallenge\Domain\Order\UseCase\Delete as IOrderUseCaseDelete;
-use TechChallenge\Domain\Order\UseCase\DtoInput;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
+use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
 
-class Delete implements IOrderUseCaseDelete
+final class Delete
 {
-    public function __construct(protected readonly IOrderRepository $OrderRepository)
+    private readonly IOrderRepository $OrderRepository;
+
+    private readonly IOrderDAO $OrderDAO;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->OrderRepository = $AbstractFactoryRepository->createOrderRepository();
+
+        $this->OrderDAO = $AbstractFactoryRepository->getDAO()->createOrderDAO();
     }
 
-    public function execute(DtoInput $data): void
+    public function execute(?string $id): void
     {
-        if (is_null($data->getId()) || !$this->OrderRepository->exist(["id" => $data->getId()]))
+        if (!$id || !$this->OrderDAO->exist(["id" => $id]))
             throw new OrderNotFoundException();
 
-        $order = $this->OrderRepository->show(["id" => $data->getId()], true);
+        $order = $this->OrderRepository->show(["id" => $id], true);
 
         if (!$order->isNew())
             throw new OrderException("Não pode excluir um pedido que não seja novo", 400);

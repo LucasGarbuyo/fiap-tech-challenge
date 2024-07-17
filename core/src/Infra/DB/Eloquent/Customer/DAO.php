@@ -1,0 +1,88 @@
+<?php
+
+namespace TechChallenge\Infra\DB\Eloquent\Customer;
+
+use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
+use Illuminate\Database\Eloquent\Builder;
+
+final class DAO implements ICustomerDAO
+{
+    public function index(array $filters = [], array|bool $append = []): array
+    {
+        $query = $this->query($filters, $append);
+
+        if (!empty($filters["pag"]) && !empty($filters["prp"])) {
+
+            $paginator = $query->paginate(perPage: $filters["prp"], page: $filters["pag"]);
+
+            return [
+                'data' => $paginator->items(),
+                'pagination' => [
+                    'total'         => $paginator->total(),
+                    'per_page'      => $paginator->perPage(),
+                    'current_page'  => $paginator->currentPage(),
+                    'last_page'     => $paginator->lastPage(),
+                    'from'          => $paginator->firstItem(),
+                    'to'            => $paginator->lastItem(),
+                ],
+            ];
+        }
+
+        $results = $query->get()->toArray();
+
+        return $results;
+    }
+
+    public function store(array $customer): void
+    {
+        Model::create($customer);
+    }
+
+    public function show(array $filters = [], array|bool $append = []): ?array
+    {
+        return $this->query($filters, $append)->first()->toArray();
+    }
+
+    public function update(array $customer): void
+    {
+        Model::where("id", $customer["id"])->update($customer);
+    }
+
+    public function delete(array $customer): void
+    {
+        Model::where("id", $customer["id"])->update($customer);
+    }
+
+    public function exist(array $filters = []): bool
+    {
+        return $this->query($filters)->exists();
+    }
+
+    protected function query(array $filters = [], array|bool $append = []): Builder
+    {
+        $query = Model::query();
+
+        if (!empty($filters["id"])) {
+            if (!is_array($filters["id"]))
+                $filters["id"] = [$filters["id"]];
+
+            $query->whereIn('id', $filters["id"]);
+        }
+
+        if (!empty($filters["not-id"])) {
+            if (!is_array($filters["not-id"]))
+                $filters["not-id"] = [$filters["not-id"]];
+
+            $query->whereNotIn('id', $filters["not-id"]);
+        }
+
+        if (!empty($filters["cpf"])) {
+            if (!is_array($filters["cpf"]))
+                $filters["cpf"] = [$filters["cpf"]];
+
+            $query->whereIn('cpf', $filters["cpf"]);
+        }
+
+        return $query;
+    }
+}

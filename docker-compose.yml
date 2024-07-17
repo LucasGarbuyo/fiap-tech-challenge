@@ -18,7 +18,8 @@ services:
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
             DB_CONNECTION: '${DB_CONNECTION:-mysql}'
         depends_on:
-            -   mysql
+            mysql:
+                condition: service_healthy
         networks:
             - grupo47-network
 
@@ -38,9 +39,16 @@ services:
         networks:
             - grupo47-network
         healthcheck:
-            test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD:-grupo47}" ]
-            retries: 3
+            test:
+                [
+                    "CMD",
+                    "mysqladmin",
+                    "ping",
+                    "-p${DB_PASSWORD:-grupo47}"
+                ]
+            retries: 20
             timeout: 5s
+            interval: 30s
 
 networks:
     grupo47-network:

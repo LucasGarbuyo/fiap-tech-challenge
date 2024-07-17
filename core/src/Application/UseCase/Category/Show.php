@@ -2,23 +2,30 @@
 
 namespace TechChallenge\Application\UseCase\Category;
 
-use TechChallenge\Domain\Category\UseCase\DtoInput;
-use TechChallenge\Domain\Category\Entities\Category;
-use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
-use TechChallenge\Domain\Category\UseCase\Show as ICategoryUseCaseShow;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
 use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+use TechChallenge\Domain\Category\DAO\ICategory as ICategoryDAO;
+use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
+use TechChallenge\Domain\Category\Entities\Category;
 
-class Show implements ICategoryUseCaseShow
+final class Show
 {
-    public function __construct(protected readonly ICategoryRepository $CategoryRepository)
+    private readonly ICategoryRepository $CategoryRepository;
+
+    private readonly ICategoryDAO $CategoryDAO;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->CategoryRepository = $AbstractFactoryRepository->createCategoryRepository();
+
+        $this->CategoryDAO = $AbstractFactoryRepository->getDAO()->createCategoryDAO();
     }
 
-    public function execute(DtoInput $data): Category
+    public function execute(string $id): Category
     {
-        if (!$this->CategoryRepository->exist(["id" => $data->id]))
-            throw new CategoryNotFoundException('Not found', 404);
+        if (!$this->CategoryDAO->exist(["id" => $id]))
+            throw new CategoryNotFoundException();
 
-        return $this->CategoryRepository->show(["id" => $data->id]);
+        return $this->CategoryRepository->show(["id" => $id], true);
     }
 }

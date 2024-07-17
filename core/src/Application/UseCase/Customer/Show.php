@@ -2,23 +2,30 @@
 
 namespace TechChallenge\Application\UseCase\Customer;
 
-use TechChallenge\Domain\Customer\UseCase\Show as ICustomerUseCaseShow;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
+use TechChallenge\Domain\Customer\DAO\ICustomer as ICustomerDAO;
 use TechChallenge\Domain\Customer\Repository\ICustomer as ICustomerRepository;
-use TechChallenge\Domain\Customer\UseCase\DtoInput;
-use TechChallenge\Domain\Customer\Entities\Customer;
+use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
 use TechChallenge\Domain\Customer\Exceptions\CustomerNotFoundException;
 
-class Show implements ICustomerUseCaseShow
+final class Show
 {
-    public function __construct(protected readonly ICustomerRepository $CustomerRepository)
+    private readonly ICustomerDAO $CustomerDAO;
+
+    private readonly ICustomerRepository $CustomerRepository;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
+        $this->CustomerDAO = $AbstractFactoryRepository->getDAO()->createCustomerDAO();
+
+        $this->CustomerRepository = $AbstractFactoryRepository->createCustomerRepository();
     }
 
-    public function execute(DtoInput $data): Customer
+    public function execute(string $id): CustomerEntity
     {
-        if (!$this->CustomerRepository->exist(["id" => $data->id]))
+        if (!$this->CustomerDAO->exist(["id" => $id]))
             throw new CustomerNotFoundException();
 
-        return $this->CustomerRepository->show(["id" => $data->id]);
+        return $this->CustomerRepository->show(["id" => $id], true);
     }
 }

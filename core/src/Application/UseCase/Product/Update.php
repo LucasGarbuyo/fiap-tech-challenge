@@ -2,37 +2,46 @@
 
 namespace TechChallenge\Application\UseCase\Product;
 
-use DateTime;
 use TechChallenge\Domain\Category\Exceptions\CategoryNotFoundException;
-use TechChallenge\Domain\Product\Factories\Product as ProductFactory;
-use TechChallenge\Domain\Product\UseCase\DtoInput;
-use TechChallenge\Domain\Product\UseCase\Update as IProductUseCaseUpdate;
+use TechChallenge\Domain\Category\DAO\ICategory as ICategoryDAO;
+use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
+use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
+use TechChallenge\Domain\Product\SimpleFactory\Product as FactorySimpleProduct;
 use TechChallenge\Domain\Product\Repository\IProduct as IProductRepository;
-use TechChallenge\Domain\Category\Repository\ICategory as ICategoryRepository;
+use TechChallenge\Application\DTO\Product\DtoInput;
 use TechChallenge\Domain\Product\Exceptions\ProductNotFoundException;
+use DateTime;
 
-class Update implements IProductUseCaseUpdate
+final class Update
 {
-    public function __construct(
-        protected readonly IProductRepository $ProductRepository,
-        protected readonly ICategoryRepository $CategoryRepository
-    ) {
+    private readonly IProductRepository $ProductRepository;
+
+    private readonly IProductDAO $ProductDAO;
+
+    private readonly ICategoryDAO $CategoryDAO;
+
+    public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
+    {
+        $this->ProductDAO = $AbstractFactoryRepository->getDAO()->createProductDAO();
+
+        $this->ProductRepository = $AbstractFactoryRepository->createProductRepository();
+
+        $this->CategoryDAO = $AbstractFactoryRepository->getDAO()->createCategoryDAO();
     }
 
     public function execute(DtoInput $data): void
     {
-        if (!$this->ProductRepository->exist(["id" => $data->id]))
+        if (!$this->ProductDAO->exist(["id" => $data->id]))
             throw new ProductNotFoundException();
 
-        $productFactory = (new ProductFactory())
-            ->new($data->id, $data->created_at, $data->updated_at)
+        $productFactory = (new FactorySimpleProduct())
+            ->new($data->id, $data->createdAt, $data->updatedAt)
             ->withNameDescriptionPriceImage($data->name, $data->description, $data->price, $data->image);
 
-        if (!empty($data->category_id)) {
-            if (!$this->CategoryRepository->exist(["id" => $data->category_id]))
+        if (!empty($data->categoryId)) {
+            if (!$this->CategoryDAO->exist(["id" => $data->categoryId]))
                 throw new CategoryNotFoundException();
-
-            $productFactory->withCategoryId($data->category_id);
+            $productFactory->withCategoryId($data->categoryId);
         }
 
         $product = $productFactory->build();
