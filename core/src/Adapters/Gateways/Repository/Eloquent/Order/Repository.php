@@ -7,11 +7,13 @@ use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
 use TechChallenge\Adapters\Gateways\Repository\Eloquent\Abstract\Repository as AbstractRepository;
 use TechChallenge\Domain\Order\Entities\Order as OrderEntity;
 use TechChallenge\Domain\Order\Entities\Item as ItemEntity;
+use TechChallenge\Domain\Order\Entities\Status as StatusEntity;
 use TechChallenge\Domain\Customer\Entities\Customer as CustomerEntity;
 use TechChallenge\Domain\Order\SimpleFactory\Order as SimpleFactoryOrder;
 use TechChallenge\Domain\Order\SimpleFactory\Item as SimpleFactoryItem;
 use TechChallenge\Domain\Customer\SimpleFactory\Customer as SimpleFactoryCustomer;
 use TechChallenge\Adapters\Presenters\Order\ToArray as OrderToArray;
+use TechChallenge\Domain\Order\SimpleFactory\Status as SimpleFactoryStatus;
 
 class Repository extends AbstractRepository implements IOrderRepository
 {
@@ -20,6 +22,8 @@ class Repository extends AbstractRepository implements IOrderRepository
     private readonly SimpleFactoryItem $SimpleFactoryItem;
 
     private readonly SimpleFactoryCustomer $SimpleFactoryCustomer;
+
+    private readonly SimpleFactoryStatus $SimpleFactoryStatus;
 
     private readonly OrderToArray $OrderToArray;
 
@@ -30,6 +34,8 @@ class Repository extends AbstractRepository implements IOrderRepository
         $this->SimpleFactoryItem = new SimpleFactoryItem();
 
         $this->SimpleFactoryCustomer = new SimpleFactoryCustomer();
+
+        $this->SimpleFactoryStatus = new SimpleFactoryStatus();
 
         $this->OrderToArray = new OrderToArray();
     }
@@ -90,23 +96,11 @@ class Repository extends AbstractRepository implements IOrderRepository
             $this->SimpleFactoryOrder->withItems($items);
         }
 
-        /*
-        if (isset($order["status_history"])) {
-            $items = $order["status_history"];
-            $itemEntities = [];
-            foreach ($items as $item) {
-                $itemEntity = $this->createItemEntity($item);
-                $this->SimpleFactoryOrder->withItems(array($itemEntity));
-                if (!is_null($itemEntity)) {
-                    $itemEntities[] = $itemEntity;
-                }
-            }
-        }
+        if (isset($order["status_history"]) && count($order["status_history"]) > 0) {
+            $status = $this->createStatusHistoriesEntity($order["status_history"]);
 
-        if (isset($order["status_history"])) {
-            // $status = $this->createStatusHistoryEntity($order["customer"]);
-            $this->SimpleFactoryOrder->withStatus($order["status_history"]);
-        }*/
+            $this->SimpleFactoryOrder->withStatusHistories($status);
+        }
 
         return $this->SimpleFactoryOrder->build();
     }
@@ -134,6 +128,23 @@ class Repository extends AbstractRepository implements IOrderRepository
         return $this->SimpleFactoryItem
             ->restore($item["id"], $item["product_id"], $item["order_id"], $item["created_at"], $item["updated_at"])
             ->withQuantityPrice($item["quantity"], $item["price"])
+            ->build();
+    }
+
+    protected function createStatusHistoriesEntity(array $statusHistories): array
+    {
+        $entities = [];
+
+        foreach ($statusHistories as $statusHistory)
+            $entities[] = $this->createStatusHistoryEntity($statusHistory);
+
+        return $entities;
+    }
+
+    protected function createStatusHistoryEntity(array $status): StatusEntity
+    {
+        return $this->SimpleFactoryStatus
+            ->restore($status["id"], $status["order_id"], $status["status"], $status["created_at"], $status["updated_at"])
             ->build();
     }
 }

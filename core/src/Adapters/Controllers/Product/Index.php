@@ -14,7 +14,7 @@ final class Index
 
     public function execute(array $filters = [])
     {
-        $results = (new UseCaseProductIndex($this->AbstractFactoryRepository))->execute($filters);
+        $results = (new UseCaseProductIndex($this->AbstractFactoryRepository))->execute($filters, true);
 
         $presenter = new PresenterProductToArray();
 

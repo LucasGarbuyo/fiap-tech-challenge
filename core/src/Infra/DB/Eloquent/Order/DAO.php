@@ -51,7 +51,15 @@ class DAO implements IOrderDAO
 
     public function update(array $order): void
     {
-        Model::where("id", $order["id"])->update($order);
+        Model::where("id", $order["id"])->update([
+            "id" => $order["id"],
+            "customer_id" => $order["customer_id"],
+            "total" => $order["total"],
+            "status" => $order["status"],
+            "created_at" => $order["created_at"],
+            "updated_at" => $order["updated_at"],
+            "deleted_at" => $order["deleted_at"],
+        ]);
 
         $this->saveItems($order["items"], $order["id"]);
 
@@ -60,11 +68,19 @@ class DAO implements IOrderDAO
 
     public function delete(array $order): void
     {
-        Model::where("id", $order["id"])->update($order);
-
         $this->saveItems($order["items"], $order["id"]);
 
         $this->saveStatus($order["status_history"], $order["id"]);
+
+        Model::where("id", $order["id"])->update([
+            "id" => $order["id"],
+            "customer_id" => $order["customer_id"],
+            "total" => $order["total"],
+            "status" => $order["status"],
+            "created_at" => $order["created_at"],
+            "updated_at" => $order["updated_at"],
+            "deleted_at" => $order["deleted_at"],
+        ]);
     }
 
     public function exist(array $filters = []): bool
