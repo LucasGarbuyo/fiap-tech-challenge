@@ -102,6 +102,8 @@ Para fazer a limpeza da aplicação, use o comando:
    `make kubectl-deploy-apply`
 5. Para ver o endereço da aplicação, obtenha o IP do Minikube 
    `minikube ip`      
+6. Para ver o endereço da aplicação, obtenha o IP do Minikube 
+   `minikube dashboard`      
 
 ### Passo a passo para remover da aplicação
 
