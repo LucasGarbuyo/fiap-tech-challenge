@@ -1,0 +1,60 @@
+services:
+  laravel.fpm:
+    build:
+      context: .
+      dockerfile: .infra/docker/Dockerfile
+      target: fpm_server
+    env_file: ".env"
+    networks:
+      - projeto
+
+  laravel.web:
+    build:
+      context: .
+      dockerfile: .infra/docker/Dockerfile
+      target: web_server
+    ports:
+      - '80:80'
+    environment:
+      FPM_HOST: "laravel.fpm:9000"
+    networks:
+      - projeto
+
+  laravel.cron:
+    build:
+      context: .
+      dockerfile: .infra/docker/Dockerfile
+      target: cron
+    env_file: ".env"
+    networks:
+      - projeto
+
+  redis:
+    image: redis:latest
+    networks:
+      - projeto
+
+  mysql:
+    image: 'mysql:8.0'
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USERNAME}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - 'projeto-mysql:/var/lib/mysql'
+    networks:
+      - projeto
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}" ]
+      retries: 3
+      timeout: 5s
+
+networks:
+  projeto:
+
+volumes:
+  projeto-mysql:
