@@ -5,6 +5,7 @@ use TechChallenge\Api\Customer\Customer;
 use TechChallenge\Api\Product\Product;
 use TechChallenge\Api\Category\Category;
 use TechChallenge\Api\Order\Order;
+use TechChallenge\Api\MercadoPago\MercadoPago;
 
 Route::controller(Product::class)
     ->prefix('/product')
@@ -48,4 +49,11 @@ Route::controller(Order::class)
         Route::delete('/{id}', [Order::class, "delete"]);
         Route::post('/checkout/{id}', [Order::class, "checkout"]);
         Route::post('/status/{id}', [Order::class, "changeStatus"]);
+    });
+
+
+Route::controller(MercadoPago::class)
+    ->prefix('/webhook')
+    ->group(function () {
+        Route::post('/', [MercadoPago::class, "handle"]);
     });
