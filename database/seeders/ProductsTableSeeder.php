@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+use Ramsey\Uuid\Uuid as RamseyUuid;
 
 class ProductsTableSeeder extends Seeder
 {
@@ -17,12 +18,13 @@ class ProductsTableSeeder extends Seeder
     {
         $faker = Faker::create();
         $products = [];
+        $uuid = RamseyUuid::uuid4();
 
         $categoriesId = DB::table('categories')->pluck('id')->toArray();
 
         for ($i = 0; $i < 10; $i++) {
             $products[] = [
-                'id' => $i,
+                'id' => "PROD_{$uuid->toString()}",
                 'category_id' => $faker->randomElement($categoriesId),
                 'name' => $faker->word,
                 'description' => $faker->paragraph,

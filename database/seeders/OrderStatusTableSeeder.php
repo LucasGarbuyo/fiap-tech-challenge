@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
+use Ramsey\Uuid\Uuid as RamseyUuid;
 
 class OrderStatusTableSeeder extends Seeder
 {
@@ -17,12 +18,13 @@ class OrderStatusTableSeeder extends Seeder
     {
         $faker = Faker::create();
         $orderStatuses = [];
+        $uuid = RamseyUuid::uuid4();
 
         $orderIds = DB::table('orders')->pluck('id')->toArray();
 
         for ($i = 0; $i < 10; $i++) {
             $orderStatuses[] = [
-                'id' => $i,
+                'id' => $uuid->toString(),
                 'order_id' => $faker->randomElement($orderIds),
                 'status' => $faker->randomElement([
                     'NEW',
