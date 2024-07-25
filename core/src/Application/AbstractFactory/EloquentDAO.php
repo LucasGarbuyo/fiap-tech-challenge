@@ -11,6 +11,8 @@ use TechChallenge\Domain\Product\DAO\IProduct as IProductDAO;
 use TechChallenge\Infra\DB\Eloquent\Product\DAO as EloquentProductDAO;
 use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
 use TechChallenge\Infra\DB\Eloquent\Order\DAO as EloquentOrderDAO;
+use TechChallenge\Domain\MercadoPago\DAO\IMercadoPago as IMercadoPagoDAO;
+use TechChallenge\Infra\DB\Eloquent\MercadoPago\DAO as EloquentMercadoPagoDAO;
 
 class EloquentDAO implements AbstractFactoryDAO
 {
@@ -32,5 +34,10 @@ class EloquentDAO implements AbstractFactoryDAO
     public function createOrderDAO(): IOrderDAO
     {
         return new EloquentOrderDAO();
+    }
+
+    public function createPaymentWithMercadoPagoDAO(): IMercadoPagoDAO
+    {
+        return new EloquentMercadoPagoDAO();
     }
 }
