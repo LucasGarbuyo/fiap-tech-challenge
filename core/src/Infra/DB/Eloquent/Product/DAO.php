@@ -12,11 +12,16 @@ final class DAO implements IProductDAO
     {
         $query = $this->query($filters, $append);
 
-        if (!empty($filters["pag"]) && !empty($filters["prp"])) {
-            $paginator = $query->paginate(perPage: $filters["pag"], page: $filters["page"]);
+        if (!empty($filters["page"]) && !empty($filters["per_page"])) {
+
+            $paginator = $query->paginate(perPage: $filters["per_page"], page: $filters["page"]);
+
+            $data = $paginator->items();
+
+            $data = array_map(fn ($item) => $item->toArray(), $data);
 
             return [
-                'data' => $paginator->items(),
+                'data' => $data,
                 'pagination' => [
                     'total'         => $paginator->total(),
                     'per_page'      => $paginator->perPage(),

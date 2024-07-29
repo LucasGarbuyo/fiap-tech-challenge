@@ -18,7 +18,10 @@ class Category extends Controller
     public function index(Request $request)
     {
         try {
-            $results = (new ControllerCategoryIndex($this->AbstractFactoryRepository))->execute([]);
+            $results = (new ControllerCategoryIndex($this->AbstractFactoryRepository))->execute([
+                "page" => $request->get('page'),
+                "per_page" => $request->get('per_page')
+            ]);
 
             return $this->return($results, 200);
         } catch (DefaultException $e) {

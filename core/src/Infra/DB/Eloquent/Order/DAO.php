@@ -13,12 +13,16 @@ class DAO implements IOrderDAO
     {
         $query = $this->query($filters, $append);
 
-        if (!empty($filters["pag"]) && !empty($filters["prp"])) {
+        if (!empty($filters["page"]) && !empty($filters["per_page"])) {
 
-            $paginator = $query->paginate(perPage: $filters["prp"], page: $filters["pag"]);
+            $paginator = $query->paginate(perPage: $filters["per_page"], page: $filters["page"]);
+
+            $data = $paginator->items();
+
+            $data = array_map(fn ($item) => $item->toArray(), $data);
 
             return [
-                'data' => $paginator->items(),
+                'data' => $data,
                 'pagination' => [
                     'total'         => $paginator->total(),
                     'per_page'      => $paginator->perPage(),

@@ -19,7 +19,11 @@ class Customer extends Controller
     public function index(Request $request)
     {
         try {
-            $results = (new ControllerCustomerIndex($this->AbstractFactoryRepository))->execute([]);
+            $results = (new ControllerCustomerIndex($this->AbstractFactoryRepository))
+                ->execute([
+                    "page" => $request->get('page'),
+                    "per_page" => $request->get('per_page')
+                ]);
 
             return $this->return($results, 200);
         } catch (DefaultException $e) {
