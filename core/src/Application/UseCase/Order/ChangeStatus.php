@@ -25,7 +25,7 @@ final class ChangeStatus
         $this->OrderRepository = $AbstractFactoryRepository->createOrderRepository();
     }
 
-    public function execute(DtoInput $dto): void
+    public function execute(DtoInput $dto, bool $finishOrder = false): void
     {
         if (!$dto->id || !$this->OrderDAO->exist(["id" => $dto->id]))
             throw new OrderNotFoundException();
@@ -55,7 +55,11 @@ final class ChangeStatus
         } else if ($status === OrderStatus::READY) {
             $order->setAsReady();
         } else if ($status === OrderStatus::FINISHED) {
-            $order->setAsFinished();
+            if ($finishOrder) {
+                $order->setAsFinished();
+            } else {
+                throw new OrderException("Não pode alterar o status para finalizado", 400);
+            }
         } else if ($status === OrderStatus::CANCELED) {
             $order->setAsCanceled();
         }

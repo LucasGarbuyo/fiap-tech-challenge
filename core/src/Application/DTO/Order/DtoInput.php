@@ -11,6 +11,7 @@ class DtoInput
         public readonly ?string $id = null,
         public readonly ?string $customerId = null,
         public readonly ?string $status = null,
+        public readonly bool $finishOrder = false,
         $items = [],
     ) {
         $this->setItems($items);
