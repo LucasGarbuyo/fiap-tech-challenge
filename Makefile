@@ -9,7 +9,7 @@ phpcs := vendor/bin/phpcs
 phpcbf := vendor/bin/phpcbf
 phpunit := vendor/bin/phpunit
 
-CONTAINER := fiap-tech-challenge-php-1
+CONTAINER := php
 PATH_CONTAINER := /var/www/html
 COMPOSE_DEV := docker-compose.yml
 
@@ -25,6 +25,14 @@ start: ## Inicia o projeto com o Docker e executa as migrações, seed
 start1 : copy-env up set-container-php-name install-deps generate-key migrate seed restart msg_success
 
 ## —— Comandos ⚙️  ————————————————————————————————————————————————————————————
+copy-env: ## Copia o arquivo .env.example para .env se ele não existir
+	@if [ ! -f .env ]; then cp .env.example .env; fi
+	@printf "\033[32mArquivo .env criado.\033[0m\n"
+
+up: ## Inicia os containers do Docker
+	docker compose -f $(COMPOSE_DEV) up -d
+	@printf "\033[32mDocker iniciado com sucesso!\033[0m\n"
+
 set-container-php-name: ## Define a variável CONTAINER com o nome do container da aplicação PHP
 	@$(eval CONTAINER=$(shell \
 		container_id=$$(docker-compose ps -q php); \
@@ -33,17 +41,6 @@ set-container-php-name: ## Define a variável CONTAINER com o nome do container 
 	)) \
 	echo "Nome do container PHP: $(CONTAINER)"
 
-copy-env: ## Copia o arquivo .env.example para .env se ele não existir
-	@if [ ! -f .env ]; then cp .env.example .env; fi
-
-up: ## Inicia os containers do Docker
-	docker compose -f $(COMPOSE_DEV) up -d
-	@printf "\033[32mDocker iniciado com sucesso!\033[0m\n"
-
-access-container: ## Acessa o container da aplicação
-	docker exec -it $(CONTAINER) bash
-	@printf "\033[32mAcesso ao container realizado com sucesso!\033[0m\n"
-
 install-deps: ## Instala as dependências do projeto
 	docker exec -it $(CONTAINER) composer install
 	@printf "\033[32mComplementos instaladas com sucesso!\033[0m\n"
@@ -51,6 +48,10 @@ install-deps: ## Instala as dependências do projeto
 generate-key: ## Cria uma chave para a aplicação
 	docker exec -it $(CONTAINER) php artisan key:generate
 	@printf "\033[32mChave gerada com sucesso!\033[0m\n"
+
+access-container: ## Acessa o container da aplicação
+	docker exec -it $(CONTAINER) bash
+	@printf "\033[32mAcesso ao container realizado com sucesso!\033[0m\n"
 
 clean: ## Remove todos os containers, volumes, imagens, networks e arquivos de cache do projeto	 e os arquivos de volume do mysql dentro da pasta docker/database/volumes/mysql
 	@printf "\033[5;1m\033[33m\033[41mLimpando!\033[0m\n"

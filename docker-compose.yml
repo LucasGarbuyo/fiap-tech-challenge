@@ -1,55 +1,35 @@
 services:
+
     php:
+        container_name: php
         build:
-            context: ./docker
-            dockerfile: Dockerfile
-            args:
-                WWWGROUP: '${WWWGROUP:-1000}'
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        volumes:
-            - .:/var/www/html
+            context: .
+            dockerfile: ./docker/Dockerfile
         ports:
-            - '${APP_PORT:-80}:80'
-        environment:
-            WWWUSER: '${WWWUSER:-1000}'
-            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
-            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
-            IGNITION_LOCAL_SITES_PATH: '${PWD}'
-            DB_CONNECTION: '${DB_CONNECTION:-mysql}'
+            - 8100:80
+        volumes:
+            - ./:/var/www/html
+            - ./docker/php/php.ini:/usr/local/etc/conf.d/custom.ini
         depends_on:
             mysql:
                 condition: service_healthy
-        networks:
-            - grupo47-network
 
     mysql:
+        container_name: mysql
         image: 'mysql/mysql-server:8.0'
         ports:
-            - '${FORWARD_DB_PORT:-3306}:3306'
-        environment:
-            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD:-grupo47}'
+            - 3306:3306
+        environment:            
             MYSQL_ROOT_HOST: "%"
             MYSQL_DATABASE: '${DB_DATABASE:-grupo47}'
             MYSQL_USER: '${DB_USERNAME:-grupo47}'
             MYSQL_PASSWORD: '${DB_PASSWORD:-grupo47}'
+            MYSQL_EMPTY_ROOT_PASSWORD: "yes"
         volumes:
             - './docker/database/volumes/mysql/:/var/lib/mysql'
-            - './docker/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
-        networks:
-            - grupo47-network
         healthcheck:
             test:
-                [
-                    "CMD",
-                    "mysqladmin",
-                    "ping",
-                    "-p${DB_PASSWORD:-grupo47}"
-                ]
+                ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
             retries: 20
             timeout: 5s
             interval: 30s
-
-networks:
-    grupo47-network:
-        driver: bridge

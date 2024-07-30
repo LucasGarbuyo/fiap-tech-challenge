@@ -1,51 +1,94 @@
-FROM ubuntu:22.04
+FROM php:8.2-apache-buster
 
 LABEL maintainer="Grupo 47 < 6SOAT"
 LABEL description=" Grupo 47's Docker image for the Tech Challenge"
 
-ARG WWWGROUP
+# Enable mod_rewrite
+RUN a2enmod rewrite
 
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Install necessary build tools
+RUN apt-get update && apt-get install -y \
+    gcc \
+    make \
+    autoconf \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install required extensions and dependencies
+RUN apt-get update && apt-get install -y \
+    libbz2-dev \
+    libcurl4-openssl-dev \
+    libxml2-dev \
+    mariadb-client \
+    libssl-dev \
+    libldap-dev \
+    libpcre3-dev \
+    libmariadb-dev \
+    libonig-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    libicu-dev \
+    libldap2-dev \
+    libgd-dev \
+    libpq-dev
+    
+# Remove default PHP extensions
+RUN docker-php-ext-install -j$(nproc) \
+    mysqli \
+	pdo_mysql \
+    ctype \
+    session \
+    dom 
+
+# Install additional PHP extensions
+RUN docker-php-ext-install -j$(nproc) \
+    bcmath \
+    zip \
+    intl \
+    gd \
+    mbstring \
+    opcache
+
+# Copy virtual host configuration
+COPY ./docker/php/vhost.conf /etc/apache2/sites-available/000-default.conf
+
+# Install required extensions and dependencies
+RUN apt-get update && apt-get install -y
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN pear config-set php_ini /usr/local/etc/php/php.ini
+
+ARG UID=1000
+ARG GID=1000
+
+COPY ./ /var/www/html
+
+RUN groupmod -g ${GID} www-data \
+  && usermod -u ${UID} -g www-data www-data \
+  && chown -hR www-data:www-data \
+  /var/www \
+  /usr/local/ \
+  /etc/ssl/ \
+  /etc/apache2/ \
+  /var/lock/apache2/ \
+  /var/run/apache2/ \
+  /var/log/apache2/
+
+# Expose ports
+EXPOSE 80
+EXPOSE 443
+
+USER www-data:www-data
 WORKDIR /var/www/html
+ENV PATH=$PATH:/var/www/.composer/vendor/bin
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV TZ=UTC
-ENV SUPERVISOR_PHP_COMMAND="/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan serve --host=0.0.0.0 --port=80"
-ENV SUPERVISOR_PHP_USER="grupo47"
+RUN composer install
 
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# Start Apache in the foreground
+CMD ["apache2ctl", "-D", "FOREGROUND"]
 
-RUN apt-get update \
-    && mkdir -p /etc/apt/keyrings \
-    && apt-get install -y gnupg gosu curl ca-certificates zip unzip git supervisor sqlite3 libcap2-bin libpng-dev python2 dnsutils librsvg2-bin fswatch ffmpeg nano  \
-    && curl -sS 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x14aa40ec0831756756d7f66c4f4ea0aae5267a6c' | gpg --dearmor | tee /etc/apt/keyrings/ppa_ondrej_php.gpg > /dev/null \
-    && echo "deb [signed-by=/etc/apt/keyrings/ppa_ondrej_php.gpg] https://ppa.launchpadcontent.net/ondrej/php/ubuntu jammy main" > /etc/apt/sources.list.d/ppa_ondrej_php.list \
-    && apt-get update \
-    && apt-get install -y php8.2-cli php8.2-dev \
-       php8.2-pgsql php8.2-sqlite3 php8.2-gd php8.2-imagick \
-       php8.2-curl \
-       php8.2-imap php8.2-mysql php8.2-mbstring \
-       php8.2-xml php8.2-zip php8.2-bcmath php8.2-soap \
-       php8.2-intl php8.2-readline \
-       php8.2-ldap \
-       php8.2-msgpack php8.2-igbinary php8.2-redis php8.2-swoole \
-       php8.2-memcached php8.2-pcov php8.2-xdebug \
-    && curl -sLS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
-    && apt-get install -y mysql-client \
-    && apt-get -y autoremove \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.2
-
-RUN groupadd --force -g $WWWGROUP grupo47
-RUN useradd -ms /bin/bash --no-user-group -g $WWWGROUP -u 1337 grupo47
-
-COPY start-container /usr/local/bin/start-container
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY php.ini /etc/php/8.2/cli/conf.d/99-grupo47.ini
-RUN chmod +x /usr/local/bin/start-container
-RUN chown grupo47:$WWWGROUP /var/www/html
-
-EXPOSE 8000
-
-ENTRYPOINT ["start-container"]
