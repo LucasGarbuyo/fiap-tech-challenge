@@ -735,18 +735,22 @@
                 ],
                 "summary": "Atualizar o status do pedido para 'Pago' utilizando o ID",
                 "description": "Este endpoint é usado para alterar o status para 'Pago' de um pedido existente pelo seu ID.",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "description": "ID único do pedido."
-                        },
-                        "description": "ID do pedido a alterar status."
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "id": {
+                                        "type": "string",
+                                        "description": "ID único do pedido.",
+                                        "example": "PROD_1"
+                                    }
+                                }
+                            }
+                        }
                     }
-                ],
+                },
                 "responses": {
                     "204": {
                         "description": "Status alterado com sucesso."
@@ -789,7 +793,7 @@
                                     "status": {
                                         "type": "string",
                                         "description": "Status do pedido.",
-                                        "example": "READY"
+                                        "example": "IN_PREPARATION"
                                     }
                                 }
                             }
