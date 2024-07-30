@@ -18,10 +18,10 @@ class CategoriesTableSeeder extends Seeder
     {
         $faker = Faker::create();
         $categories = [];
-        $uuid = RamseyUuid::uuid4();
 
 
         for ($i = 0; $i < 10; $i++) {
+            $uuid = RamseyUuid::uuid4();
             $categories[] = [
                 'id' => "CATE_{$uuid->toString()}",
                 'name' => $faker->word,

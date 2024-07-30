@@ -18,12 +18,12 @@ class OrderItemsTableSeeder extends Seeder
     {
         $faker = Faker::create();
         $orderItems = [];
-        $uuid = RamseyUuid::uuid4();
-
+        
         $orderIds = DB::table('orders')->pluck('id')->toArray();
         $productIds = DB::table('products')->pluck('id')->toArray();
-
+        
         for ($i = 0; $i < 10; $i++) {
+            $uuid = RamseyUuid::uuid4();
             $orderItems[] = [
                 'id' => $uuid->toString(),
                 'order_id' => $faker->randomElement($orderIds),

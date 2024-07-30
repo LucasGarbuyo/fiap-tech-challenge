@@ -18,11 +18,11 @@ class ProductsTableSeeder extends Seeder
     {
         $faker = Faker::create();
         $products = [];
-        $uuid = RamseyUuid::uuid4();
-
+        
         $categoriesId = DB::table('categories')->pluck('id')->toArray();
-
+        
         for ($i = 0; $i < 10; $i++) {
+            $uuid = RamseyUuid::uuid4();
             $products[] = [
                 'id' => "PROD_{$uuid->toString()}",
                 'category_id' => $faker->randomElement($categoriesId),

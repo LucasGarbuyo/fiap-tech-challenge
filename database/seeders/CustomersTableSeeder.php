@@ -18,9 +18,9 @@ class CustomersTableSeeder extends Seeder
     {
         $faker = Faker::create();
         $customers = [];
-        $uuid = RamseyUuid::uuid4();
-        
+
         for ($i = 0; $i < 10; $i++) {
+            $uuid = RamseyUuid::uuid4();
             $customers[] = [
                 'id' => "CUST_{$uuid->toString()}",
                 'name' => $faker->name,

@@ -18,11 +18,11 @@ class OrderStatusTableSeeder extends Seeder
     {
         $faker = Faker::create();
         $orderStatuses = [];
-        $uuid = RamseyUuid::uuid4();
-
+        
         $orderIds = DB::table('orders')->pluck('id')->toArray();
-
+        
         for ($i = 0; $i < 10; $i++) {
+            $uuid = RamseyUuid::uuid4();
             $orderStatuses[] = [
                 'id' => $uuid->toString(),
                 'order_id' => $faker->randomElement($orderIds),
