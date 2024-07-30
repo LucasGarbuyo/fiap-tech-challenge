@@ -24,7 +24,9 @@ class Order extends Controller
             $results = (new ControllerOrderIndex($this->AbstractFactoryRepository))
                 ->execute([
                     "page" => $request->get('page'),
-                    "per_page" => $request->get('per_page')
+                    "per_page" => $request->get('per_page'),
+                    "not_status" => $request->input('not_status', []),
+                    "status" => $request->input('status', []),
                 ]);
 
             return $this->return($results, 200);

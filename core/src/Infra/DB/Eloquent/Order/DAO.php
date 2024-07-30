@@ -112,6 +112,20 @@ class DAO implements IOrderDAO
             $query->whereIn('id', $filters["id"]);
         }
 
+        if (!empty($filters["not_status"])) {
+            if (!is_array($filters["not_status"]))
+                $filters["not_status"] = [$filters["not_status"]];
+
+            $query->whereNotIn('status', $filters["not_status"]);
+        }
+
+        if (!empty($filters["status"])) {
+            if (!is_array($filters["status"]))
+                $filters["status"] = [$filters["status"]];
+
+            $query->whereNotIn('status', $filters["status"]);
+        }
+
         return $query;
     }
 
