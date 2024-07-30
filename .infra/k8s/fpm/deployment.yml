@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fpm-deployment
+  name: deployment-fpm
   labels:
     tier: backend
     layer: fpm
@@ -28,9 +28,9 @@ spec:
         - --force
         envFrom:
         - configMapRef:
-            name: common-configmap
+            name: cm-common
         - secretRef:
-            name: common-secret
+            name: secret-common
       containers:
       - name: fpm
         image: lucasminikel/fpm_server:v0.0.1
@@ -38,9 +38,9 @@ spec:
         - containerPort: 9000
         envFrom:
         - configMapRef:
-            name: common-configmap
+            name: cm-common
         - secretRef:
-            name: common-secret
+            name: secret-common
         resources:
           requests:
             cpu: "200m"

@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webserver-deployment
+  name: deployment-webserver
   labels:
     tier: backend
     layer: webserver
@@ -24,7 +24,7 @@ spec:
         - containerPort: 80
         env:
         - name: FPM_HOST
-          value: fpm-service:9000
+          value: svc-fpm:9000
         resources:
           requests:
             cpu: "200m"

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: common-configmap
+  name: cm-common
   labels:
     tier: backend
     layer: webserver
@@ -27,7 +27,7 @@ data:
   LOG_LEVEL: "debug"
 
   DB_CONNECTION: "mysql"
-  DB_HOST: "database-service"
+  DB_HOST: "svc-database"
   DB_PORT: "3306"
   DB_DATABASE: "grupo47"
 
@@ -47,7 +47,7 @@ data:
   MEMCACHED_HOST: "memcached"
 
   REDIS_CLIENT: "phpredis"
-  REDIS_HOST: "cache-service"
+  REDIS_HOST: "svc-cache"
   REDIS_PORT: "6379"
 
   MAIL_MAILER: "smtp"

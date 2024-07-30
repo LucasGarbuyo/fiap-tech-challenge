@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: cache-statefulset
+  name: sts-cache
   labels:
     tier: backend
     layer: cache
 spec:
-  serviceName: cache-service
+  serviceName: svc-cache
   selector:
     matchLabels:
       tier: backend
@@ -31,4 +31,4 @@ spec:
       volumes:
       - name: volume-data
         persistentVolumeClaim:
-          claimName: cache-persistent-volume-claim
+          claimName: pvc-cache

@@ -1,7 +1,7 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: webserver-horizontalpodautoscaler
+  name: hpa-webserver
   labels:
     tier: backend
     layer: webserver
@@ -9,7 +9,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: webserver-deployment
+    name: deployment-webserver
   minReplicas: 1
   maxReplicas: 10
   metrics:

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: webserver-service
+  name: svc-webserver
   labels:
     tier: backend
     layer: webserver

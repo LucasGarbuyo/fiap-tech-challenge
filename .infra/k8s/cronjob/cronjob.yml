@@ -18,7 +18,7 @@ spec:
             - schedule:run
             envFrom:
             - configMapRef:
-                name: common-configmap
+                name: cm-common
             - secretRef:
-                name: common-secret
+                name: secret-common
           restartPolicy: OnFailure

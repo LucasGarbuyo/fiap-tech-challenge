@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: database-statefulset
+  name: sts-database
   labels:
     tier: backend
     layer: database
@@ -10,7 +10,7 @@ spec:
     matchLabels:
       tier: backend
       layer: database
-  serviceName: database-service
+  serviceName: svc-database
   replicas: 1
   template:
     metadata:
@@ -32,12 +32,12 @@ spec:
         - name: MYSQL_USER
           valueFrom:
             secretKeyRef:
-              name: database-secret
+              name: secret-database
               key: DB_USERNAME
         - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: database-secret
+              name: secret-database
               key: DB_PASSWORD
         volumeMounts:
         - name: volume-data
@@ -68,4 +68,4 @@ spec:
       volumes:
       - name: volume-data
         persistentVolumeClaim:
-          claimName: database-persistent-volume-claim
+          claimName: pvc-database

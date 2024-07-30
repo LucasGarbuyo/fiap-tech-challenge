@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: queueworker-deployment
+  name: deployment-queueworker
   labels:
     tier: backend
     layer: queueworker
@@ -34,9 +34,9 @@ spec:
         - containerPort: 9000
         envFrom:
         - configMapRef:
-            name: common-configmap
+            name: cm-common
         - secretRef:
-            name: common-secret
+            name: secret-common
         resources:
           requests:
             cpu: "200m"
