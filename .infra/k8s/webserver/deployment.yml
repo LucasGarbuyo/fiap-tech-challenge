@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-webserver
+  labels:
+    tier: backend
+    layer: webserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: backend
+      layer: webserver
+  template:
+    metadata:
+      labels:
+        tier: backend
+        layer: webserver
+    spec:
+      containers:
+      - name: webserver
+        image: lucasminikel/web_server:v0.0.1
+        ports:
+        - containerPort: 80
+        env:
+        - name: FPM_HOST
+          value: svc-fpm:9000
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-queueworker
+  labels:
+    tier: backend
+    layer: queueworker
+    queue: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: backend
+      layer: queueworker
+      queue: default
+  template:
+    metadata:
+      labels:
+        tier: backend
+        layer: queueworker
+        queue: default
+    spec:
+      containers:
+      - name: queueworker
+        image: lucasminikel/cli:v0.0.1
+        command:
+        - php
+        args:
+        - artisan
+        - queue:work
+        - --queue=default
+        - --max-jobs=200
+        ports:
+        - containerPort: 9000
+        envFrom:
+        - configMapRef:
+            name: cm-common
+        - secretRef:
+            name: secret-common
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"

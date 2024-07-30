@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: cronjob
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: scheduler
+            image: lucasminikel/cli:v0.0.1
+            command:
+            - php
+            args:
+            - artisan
+            - schedule:run
+            envFrom:
+            - configMapRef:
+                name: cm-common
+            - secretRef:
+                name: secret-common
+          restartPolicy: OnFailure

@@ -83,3 +83,33 @@ Para fazer a limpeza da aplicação, use o comando:
 2. **(Recomendado)** excluir a pasta do mysql dentro de ./docker/database/volumes/mysql. Vai poupar espaço.  
    `rm -Rf ./docker/database/volumes/mysql`
 
+
+## Kubernetes
+
+### Requisitos
+1. Docker 
+2. Minikube
+
+### Passo a passo para inicialização da aplicação
+
+1. Inicie o Minikube 
+   `minikube start`
+2. Habilite o addon de Ingress no Minikube 
+   `minikube addons enable ingress`
+3. Habilite o addon de Metrics no Minikube 
+   `minikube addons enable metrics-server`
+4. Aplique os arquivos de deploy do Kubernetes
+   `make kubectl-deploy-apply`
+5. Para ver o endereço da aplicação, obtenha o IP do Minikube 
+   `minikube ip`      
+6. Para ver o endereço da aplicação, obtenha o IP do Minikube 
+   `minikube dashboard`      
+
+### Passo a passo para remover da aplicação
+
+1. Remover os arquivos de deploy do Kubernetes
+   `make kubectl-deploy-delete`
+2. Pare o minikube
+   `minikube stop`
+3. Delete o minikube
+   `minikube delete`
