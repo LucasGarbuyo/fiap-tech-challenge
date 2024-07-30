@@ -49,12 +49,24 @@ class DAO implements ICategoryDAO
 
     public function update(array $category): void
     {
-        Model::where("id", $category["id"])->update($category);
+        Model::where("id", $category["id"])->update([
+            "name"        => $category["name"],
+            "type"        => $category["type"],
+            "created_at"  => $category["created_at"],
+            "updated_at"  => $category["updated_at"],
+            "deleted_at"  => $category["deleted_at"],
+        ]);
     }
 
     public function delete(array $category): void
     {
-        Model::where("id", $category["id"])->update($category);
+        Model::where("id", $category["id"])->update([
+            "name"        => $category["name"],
+            "type"        => $category["type"],
+            "created_at"  => $category["created_at"],
+            "updated_at"  => $category["updated_at"],
+            "deleted_at"  => $category["deleted_at"],
+        ]);
     }
 
     public function exist(array $filters = []): bool
