@@ -123,7 +123,12 @@ class DAO implements IOrderDAO
             if (!is_array($filters["status"]))
                 $filters["status"] = [$filters["status"]];
 
-            $query->whereNotIn('status', $filters["status"]);
+            $query->whereIn('status', $filters["status"]);
+        }
+
+        if (!empty($filters["order_create"])) {
+            if (in_array(strtoupper($filters["order_create"]), ["ASC", "DESC"]))
+                $query->orderBy("created_at", $filters["order_create"]);
         }
 
         return $query;
