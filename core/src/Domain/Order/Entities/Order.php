@@ -8,6 +8,7 @@ use TechChallenge\Domain\Customer\Entities\Customer;
 use TechChallenge\Domain\Order\Enum\OrderStatus;
 use TechChallenge\Domain\Order\Exceptions\InvalidItemOrder;
 use TechChallenge\Domain\Order\Exceptions\InvalidStatusOrder;
+use TechChallenge\Domain\Order\Exceptions\OrderException;
 use TechChallenge\Domain\Shared\ValueObjects\Price;
 
 class Order extends StandardEntity
@@ -89,6 +90,9 @@ class Order extends StandardEntity
 
     public function setAsNew(): self
     {
+        if ($this->getStatus() != null)
+            throw new OrderException("Pedido não pode ser marcado como novo pois já está em um status futuro");
+
         $this->addStatus(OrderStatus::NEW);
 
         return $this;
@@ -96,6 +100,9 @@ class Order extends StandardEntity
 
     public function setAsReceived(): self
     {
+        if (!$this->isNew())
+            throw new OrderException("Pedido não pode ser marcado como recebido pois não é um pedido novo");
+
         $this->addStatus(OrderStatus::RECEIVED);
 
         return $this;
@@ -103,6 +110,9 @@ class Order extends StandardEntity
 
     public function setAsPaid(): self
     {
+        if (!$this->isReceived())
+            throw new OrderException("Pedido não pode ser marado como pago pois não foi recebido");
+
         $this->addStatus(OrderStatus::PAID);
 
         return $this;
@@ -110,6 +120,9 @@ class Order extends StandardEntity
 
     public function setAsInPreparation(): self
     {
+        if (!$this->isPaid())
+            throw new OrderException("Pedido não pode ser marcado como em preparação pois não foi pago");
+
         $this->addStatus(OrderStatus::IN_PREPARATION);
 
         return $this;
@@ -117,6 +130,9 @@ class Order extends StandardEntity
 
     public function setAsReady(): self
     {
+        if (!$this->isInPreparation())
+            throw new OrderException("Pedido não pode ser marcado como pronto pois não foi preparado");
+
         $this->addStatus(OrderStatus::READY);
 
         return $this;
@@ -124,6 +140,9 @@ class Order extends StandardEntity
 
     public function setAsFinished(): self
     {
+        if (!$this->isReady())
+            throw new OrderException("Pedido não pode ser finalizado pois não está pronto");
+
         $this->addStatus(OrderStatus::FINISHED);
 
         return $this;
@@ -138,6 +157,12 @@ class Order extends StandardEntity
 
     protected function addStatus(OrderStatus $OrderStatus): self
     {
+        if ($this->getStatus() === $OrderStatus)
+            throw new OrderException("Não pode alterar o status para o mesmo status");
+
+        if ($this->isCanceled())
+            throw new OrderException("Não pode alterar o status pois o pedido foi cancelado e esse é um status final.");
+
         $status = Status::create();
 
         $status
@@ -164,6 +189,16 @@ class Order extends StandardEntity
     public function isPaid(): bool
     {
         return $this->getStatus() === OrderStatus::PAID;
+    }
+
+    public function isInPreparation(): bool
+    {
+        return $this->getStatus() === OrderStatus::IN_PREPARATION;
+    }
+
+    public function isReady(): bool
+    {
+        return $this->getStatus() === OrderStatus::READY;
     }
 
     public function isCanceled(): bool

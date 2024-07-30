@@ -9,7 +9,6 @@ use TechChallenge\Domain\Order\Exceptions\OrderException;
 use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
-use TechChallenge\Application\DTO\Order\DtoInput;
 use ValueError;
 
 final class ChangeStatus
@@ -25,30 +24,18 @@ final class ChangeStatus
         $this->OrderRepository = $AbstractFactoryRepository->createOrderRepository();
     }
 
-    public function execute(DtoInput $dto): void
+    public function execute(?string $id, ?string $status): void
     {
-        if (!$dto->id || !$this->OrderDAO->exist(["id" => $dto->id]))
+        if (!$id || !$this->OrderDAO->exist(["id" => $id]))
             throw new OrderNotFoundException();
 
-        $order = $this->OrderRepository->show(["id" => $dto->id], true);
-
-        if ($order->isCanceled())
-            throw new OrderException("Não pode alterar o status pois o pedido foi cancelado e esse é um status final.", 400);
-
-        if ($order->isNew() || $order->isReceived())
-            throw new OrderException("Não pode alterar o status pois o pedido não está pago", 400);
+        $order = $this->OrderRepository->show(["id" => $id], true);
 
         try {
-            $status = OrderStatus::from($dto->status);
+            $status = OrderStatus::from($status);
         } catch (ValueError $error) {
             throw new InvalidStatusOrder();
         }
-
-        if (in_array($status, [OrderStatus::NEW, OrderStatus::RECEIVED, OrderStatus::PAID]))
-            throw new OrderException("Não pode alterar o status para novo, recebido ou pago", 400);
-
-        if ($status === $order->getStatus())
-            throw new OrderException("Não pode alterar o status para o mesmo status", 400);
 
         if ($status === OrderStatus::IN_PREPARATION) {
             $order->setAsInPreparation();
@@ -58,6 +45,8 @@ final class ChangeStatus
             $order->setAsFinished();
         } else if ($status === OrderStatus::CANCELED) {
             $order->setAsCanceled();
+        } else {
+            throw new OrderException("Não é possível alterar o pedido para esse status {$status->value}");
         }
 
         $this->OrderRepository->update($order);

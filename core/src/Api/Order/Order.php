@@ -13,6 +13,7 @@ use TechChallenge\Adapters\Controllers\Order\Update as ControllerOrderUpdate;
 use TechChallenge\Adapters\Controllers\Order\Delete as ControllerOrderDelete;
 use TechChallenge\Adapters\Controllers\Order\ChangeStatus as ControllerOrderChangeStatus;
 use TechChallenge\Adapters\Controllers\Order\Checkout as ControllerOrderCheckout;
+use TechChallenge\Adapters\Controllers\Order\Webhook as ControllerOrderWebhook;
 use TechChallenge\Application\DTO\Order\DtoInput as OrderDtoInput;
 
 class Order extends Controller
@@ -195,9 +196,39 @@ class Order extends Controller
     public function changeStatus(Request $request, string $id)
     {
         try {
-            $dto = new OrderDtoInput($id, null, $request->status);
+            (new ControllerOrderChangeStatus($this->AbstractFactoryRepository))
+                ->execute(
+                    $id,
+                    $request->get('status')
+                );
 
-            (new ControllerOrderChangeStatus($this->AbstractFactoryRepository))->execute($dto);
+            return $this->return(null, 204);
+        } catch (DefaultException $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                $e->getStatus()
+            );
+        } catch (Throwable $e) {
+            return $this->return(
+                [
+                    "error" => [
+                        "message" => $e->getMessage()
+                    ]
+                ],
+                400
+            );
+        }
+    }
+
+    public function webhook(Request $request)
+    {
+        try {
+            (new ControllerOrderWebhook($this->AbstractFactoryRepository))
+                ->execute($request->get('id'));
 
             return $this->return(null, 204);
         } catch (DefaultException $e) {

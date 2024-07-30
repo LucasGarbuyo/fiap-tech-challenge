@@ -3,16 +3,16 @@
 namespace TechChallenge\Adapters\Controllers\Order;
 
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
-use TechChallenge\Application\UseCase\Order\ChangeStatus as UseCaseOrderChangeStatus;
+use TechChallenge\Application\UseCase\Order\Webhook as UseCaseOrderWebhook;
 
-final class ChangeStatus
+final class Webhook
 {
     public function __construct(private readonly AbstractFactoryRepository $AbstractFactoryRepository)
     {
     }
 
-    public function execute(?string $id, ?string $status)
+    public function execute(?string $id)
     {
-        return (new UseCaseOrderChangeStatus($this->AbstractFactoryRepository))->execute($id, $status);
+        (new UseCaseOrderWebhook($this->AbstractFactoryRepository))->execute($id);
     }
 }

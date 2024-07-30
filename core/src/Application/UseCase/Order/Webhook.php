@@ -3,20 +3,19 @@
 namespace TechChallenge\Application\UseCase\Order;
 
 use TechChallenge\Domain\Shared\AbstractFactory\Repository as AbstractFactoryRepository;
-use TechChallenge\Domain\Order\Exceptions\OrderException;
-use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
 use TechChallenge\Domain\Order\Repository\IOrder as IOrderRepository;
 use TechChallenge\Domain\Order\DAO\IOrder as IOrderDAO;
+use TechChallenge\Domain\Order\Exceptions\OrderNotFoundException;
 
-final class Checkout
+final class Webhook
 {
     private readonly IOrderDAO $OrderDAO;
 
-    private  readonly IOrderRepository $OrderRepository;
+    private readonly IOrderRepository $OrderRepository;
 
     public function __construct(AbstractFactoryRepository $AbstractFactoryRepository)
     {
-        $this->OrderDAO = $AbstractFactoryRepository->getDAO()->createOrderDAO();
+        $this->OrderDAO =  $AbstractFactoryRepository->getDAO()->createOrderDAO();
 
         $this->OrderRepository = $AbstractFactoryRepository->createOrderRepository();
     }
@@ -28,14 +27,7 @@ final class Checkout
 
         $order = $this->OrderRepository->show(["id" => $id], true);
 
-        if (!$order->isNew())
-            throw new OrderException("Não pode ser processado pois o pedido já foi pago", 400);
-
-        if (count($order->getItems()) == 0)
-            throw new OrderException("Não pode ser processado pois não há itens no carrinho", 400);
-
-        $order
-            ->setAsReceived();
+        $order->setAsPaid();
 
         $this->OrderRepository->update($order);
     }
