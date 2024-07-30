@@ -728,13 +728,13 @@
                 }
             }
         },
-        "/api/order/status/{id}": {
+        "/api/order/webhook": {
             "post": {
                 "tags": [
                     "Pedidos"
                 ],
-                "summary": "Alterar status do pedido por ID",
-                "description": "Este endpoint é usado para alterar o status de um pedido existente pelo seu ID.",
+                "summary": "Atualizar o status do pedido para 'Pago' utilizando o ID",
+                "description": "Este endpoint é usado para alterar o status para 'Pago' de um pedido existente pelo seu ID.",
                 "parameters": [
                     {
                         "in": "path",
@@ -747,23 +747,6 @@
                         "description": "ID do pedido a alterar status."
                     }
                 ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "status": {
-                                        "type": "string",
-                                        "description": "Status do pedido.",
-                                        "example": "READY"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
                 "responses": {
                     "204": {
                         "description": "Status alterado com sucesso."
@@ -777,13 +760,13 @@
                 }
             }
         },
-        "/api/order/webhook": {
+        "/api/order/status/{id}": {
             "post": {
                 "tags": [
                     "Pedidos"
                 ],
-                "summary": "Atualizar o status do pedido para 'Pago' utilizando o ID",
-                "description": "Este endpoint é usado para alterar o status para 'Pago' de um pedido existente pelo seu ID.",
+                "summary": "Alterar status do pedido por ID",
+                "description": "Este endpoint é usado para alterar o status de um pedido existente pelo seu ID.",
                 "parameters": [
                     {
                         "in": "path",
@@ -926,6 +909,12 @@
                     "type": "string",
                     "format": "date-time",
                     "description": "Data e hora da última atualização do produto."
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora que o produto foi deletado.",
+                    "nullable": true
                 }
             }
         },
@@ -953,6 +942,12 @@
                     "type": "string",
                     "format": "date-time",
                     "description": "Data e hora da última atualização da categoria."
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora que o produto foi deletado.",
+                    "nullable": true
                 }
             }
         },
@@ -984,6 +979,12 @@
                     "type": "string",
                     "format": "date-time",
                     "description": "Data e hora da última atualização do cliente."
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora que o produto foi deletado.",
+                    "nullable": true
                 }
             }
         },
@@ -1017,7 +1018,7 @@
                         "$ref": "#/definitions/Item"
                     }
                 },
-                "status_histories": {
+                "status_history": {
                     "$ref": "#/definitions/HistorioStatus"
                 },
                 "created_at": {
@@ -1029,6 +1030,12 @@
                     "type": "string",
                     "format": "date-time",
                     "description": "Data e hora da última atualização do pedido."
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora que o produto foi deletado.",
+                    "nullable": true
                 }
             }
         },
@@ -1066,6 +1073,12 @@
                     "type": "string",
                     "format": "date-time",
                     "description": "Data e hora da última atualização do pedido."
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora que o produto foi deletado.",
+                    "nullable": true
                 }
             }
         },
@@ -1093,6 +1106,12 @@
                     "type": "string",
                     "format": "date-time",
                     "description": "Data e hora da última atualização do historico."
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora que o produto foi deletado.",
+                    "nullable": true
                 }
             }
         },
