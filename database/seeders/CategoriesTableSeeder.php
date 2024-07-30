@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
-use Ramsey\Uuid\Uuid as RamseyUuid;
 
 class CategoriesTableSeeder extends Seeder
 {
@@ -19,12 +18,21 @@ class CategoriesTableSeeder extends Seeder
         $faker = Faker::create();
         $categories = [];
 
+        $categoriesNames = [
+            'Hambúrguer',
+            'Sanduíches',
+            'Vegetariano',
+            'Frango',
+            'Carnes',
+            'Acompanhamentos',
+            'Bebidas',
+        ];
 
-        for ($i = 0; $i < 10; $i++) {
-            $uuid = RamseyUuid::uuid4();
+        $categories = [];
+        foreach ($categoriesNames as $categoryName) {
             $categories[] = [
-                'id' => "CATE_{$uuid->toString()}",
-                'name' => $faker->word,
+                'id' => "CATE_{$faker->uuid()}",
+                'name' => $categoryName,
                 'type' => $faker->randomElement(['CAT_1', 'CAT_2', 'CAT_3']),
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
-use Ramsey\Uuid\Uuid as RamseyUuid;
 
 class CustomersTableSeeder extends Seeder
 {
@@ -20,9 +19,8 @@ class CustomersTableSeeder extends Seeder
         $customers = [];
 
         for ($i = 0; $i < 10; $i++) {
-            $uuid = RamseyUuid::uuid4();
             $customers[] = [
-                'id' => "CUST_{$uuid->toString()}",
+                'id' => "CUST_{$faker->uuid()}",
                 'name' => $faker->name,
                 'cpf' => $faker->numerify('###########'),
                 'email' => $faker->unique()->safeEmail,
