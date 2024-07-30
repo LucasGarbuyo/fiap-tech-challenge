@@ -124,7 +124,7 @@ class Product extends Controller
 
             (new ControllerProductUpdate($this->AbstractFactoryRepository))->execute($dto);
 
-            return $this->return($dto, 200);
+            return $this->return(null, 200);
         } catch (DefaultException $e) {
             return $this->return(
                 [
