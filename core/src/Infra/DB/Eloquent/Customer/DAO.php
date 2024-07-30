@@ -49,12 +49,26 @@ final class DAO implements ICustomerDAO
 
     public function update(array $customer): void
     {
-        Model::where("id", $customer["id"])->update($customer);
+        Model::where("id", $customer["id"])->update([
+            "name"        => $customer["name"],
+            "cpf"         => $customer["cpf"],
+            "email"       => $customer["email"],
+            "created_at"  => $customer["created_at"],
+            "updated_at"  => $customer["updated_at"],
+            "deleted_at"  => $customer["deleted_at"],
+        ]);
     }
 
     public function delete(array $customer): void
     {
-        Model::where("id", $customer["id"])->update($customer);
+        Model::where("id", $customer["id"])->update([
+            "name"        => $customer["name"],
+            "cpf"         => $customer["cpf"],
+            "email"       => $customer["email"],
+            "created_at"  => $customer["created_at"],
+            "updated_at"  => $customer["updated_at"],
+            "deleted_at"  => $customer["deleted_at"],
+        ]);
     }
 
     public function exist(array $filters = []): bool
