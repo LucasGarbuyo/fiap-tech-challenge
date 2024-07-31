@@ -27,7 +27,7 @@ class Order extends Controller
                     "per_page"     => $request->input('per_page', null),
                     "not_status"   => $request->input('not_status', []),
                     "status"       => $request->input('status', []),
-                    "order_create" => $request->input('order_create', null)
+                    "create_date_sort" => $request->input('create_date_sort', null)
                 ]);
 
             return $this->return($results, 200);

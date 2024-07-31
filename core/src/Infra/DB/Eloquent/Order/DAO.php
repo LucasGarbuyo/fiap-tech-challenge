@@ -126,9 +126,9 @@ class DAO implements IOrderDAO
             $query->whereIn('status', $filters["status"]);
         }
 
-        if (!empty($filters["order_create"])) {
-            if (in_array(strtoupper($filters["order_create"]), ["ASC", "DESC"]))
-                $query->orderBy("created_at", $filters["order_create"]);
+        if (!empty($filters["create_date_sort"])) {
+            if (in_array(strtoupper($filters["create_date_sort"]), ["ASC", "DESC"]))
+                $query->orderBy("created_at", $filters["create_date_sort"]);
         }
 
         return $query;
