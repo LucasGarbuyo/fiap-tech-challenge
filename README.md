@@ -2,7 +2,11 @@
 
 ## Link do Vídeo com a explicação e execução do projeto
 
-https://youtu.be/pG4ELz6mip8
+[https://youtu.be/pG4ELz6mip8](https://youtu.be/pG4ELz6mip8)
+
+<a href="https://youtu.be/pG4ELz6mip8">
+    <img width="100%" alt="01 Captura de tela" src="https://github.com/user-attachments/assets/dc89700a-d777-4754-ac7f-d2c4b73764de">
+</a>
 
 ## INTEGRANTES - GRUPO 47
 
