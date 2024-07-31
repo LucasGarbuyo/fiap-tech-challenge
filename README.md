@@ -1,6 +1,7 @@
 # FIAP - TECH CHALLENGE - SOFTWARE ARCHITECTURE
 
-## Link da execução do projeto
+## Link do Vídeo com a explicação e execução do projeto
+
 https://youtu.be/pG4ELz6mip8
 
 ## INTEGRANTES - GRUPO 47
@@ -53,7 +54,7 @@ Para fazer a limpeza da aplicação, use o comando:
    `docker-compose up -d`
 
 5. Acesse o container da aplicação com o comando:  
-   `docker exec -it fiap-tech-challenge-php-1 bash`
+   `docker exec -it php bash`
 
 6. Para instalar as dependências do projeto, execute o comando dentro do container:  
    `composer install`
@@ -68,10 +69,10 @@ Para fazer a limpeza da aplicação, use o comando:
    `php artisan db:seed`
 
 10. Acesse a aplicação com o endereço  
-    [http://localhost:8000](http://localhost:8000)
+    [http://localhost:8100](http://localhost:8100)
 
 11. Acesse o Swagger com o endereço  
-    [http://localhost:8000/api/documentation](http://localhost:8000/api/documentation)
+    [http://localhost:8100/api/documentation](http://localhost:8100/api/documentation)
 
 ## Para remover a aplicação
 
