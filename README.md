@@ -1,5 +1,8 @@
 # FIAP - TECH CHALLENGE - SOFTWARE ARCHITECTURE
 
+## Link da execução do projeto
+https://youtu.be/pG4ELz6mip8
+
 ## INTEGRANTES - GRUPO 47
 
 - RM354121 - Lucas
