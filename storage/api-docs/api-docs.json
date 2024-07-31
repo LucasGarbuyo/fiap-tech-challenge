@@ -11,6 +11,32 @@
                 ],
                 "summary": "Buscar categorias",
                 "description": "Este endpoint é usado para buscar todos as categorias cadastrados no sistema.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Informa a página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Informa a quantidade de registros por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": [
+                                100
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Listagem de categorias encontrada com sucesso.",
@@ -172,6 +198,32 @@
                 ],
                 "summary": "Buscar produtos",
                 "description": "Este endpoint é usado para buscar todos os produtos cadastrados no sistema.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Informa a página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Informa a quantidade de registros por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": [
+                                100
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Listagem de produtos encontrada com sucesso.",
@@ -336,6 +388,32 @@
                 ],
                 "summary": "Buscar clientes",
                 "description": "Este endpoint é usado para buscar todos os clientes cadastrados no sistema.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Informa a página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": [
+                                1
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Informa a quantidade de registros por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": [
+                                100
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Listagem de clientes encontrada com sucesso.",
@@ -548,7 +626,7 @@
                         "schema": {
                             "type": "integer",
                             "example": [
-                                20
+                                1
                             ]
                         }
                     },
@@ -560,7 +638,7 @@
                         "schema": {
                             "type": "integer",
                             "example": [
-                                20
+                                100
                             ]
                         }
                     }
@@ -761,20 +839,6 @@
                 ],
                 "summary": "Atualizar o status do pedido para 'Pago' utilizando o ID",
                 "description": "Este endpoint é usado para alterar o status para 'Pago' de um pedido existente pelo seu ID.",
-                "parameters": [
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "Informa a quantidade de registros por página",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": [
-                                20
-                            ]
-                        }
-                    }
-                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -787,7 +851,6 @@
                                         "example": "PROD_1"
                                     }
                                 }
-
                             }
                         }
                     }
