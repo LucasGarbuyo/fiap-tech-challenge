@@ -543,7 +543,7 @@
                     {
                         "name": "page",
                         "in": "query",
-                        "description": "Informa a quantidade de registros por página",
+                        "description": "Informa a página",
                         "required": false,
                         "schema": {
                             "type": "integer",
