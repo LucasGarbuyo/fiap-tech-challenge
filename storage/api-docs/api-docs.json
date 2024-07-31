@@ -539,6 +539,32 @@
                 ],
                 "summary": "Buscar pedidos",
                 "description": "Este endpoint é usado para buscar todos os pedidos cadastrados no sistema.",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Informa a quantidade de registros por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": [
+                                20
+                            ]
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Informa a quantidade de registros por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": [
+                                20
+                            ]
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Listagem de pedidos encontrada com sucesso.",
@@ -735,6 +761,20 @@
                 ],
                 "summary": "Atualizar o status do pedido para 'Pago' utilizando o ID",
                 "description": "Este endpoint é usado para alterar o status para 'Pago' de um pedido existente pelo seu ID.",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Informa a quantidade de registros por página",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": [
+                                20
+                            ]
+                        }
+                    }
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -747,6 +787,7 @@
                                         "example": "PROD_1"
                                     }
                                 }
+
                             }
                         }
                     }
