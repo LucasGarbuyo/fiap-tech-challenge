@@ -1,48 +1,67 @@
-# I set up `aws configure` with this profile
 variable "aws_profile" {
-  type    = string
-  default = "dafed"
+  description = "The AWS profile to use"
+  type        = string
+  default     = "default"
 }
 
 variable "aws_region" {
-  type    = string
-  default = "eu-west-2"
+  description = "AWS Region"
+  type        = string
+  default     = "us-east-1"
 }
 
-# The subdomain of cognito IDP for the hosted UI
-variable "cognito_user_pool_domain" {
-  type    = string
-  default = "dafedteam"
+variable "AWS_ACCESS_KEY_ID" {
+  description = "AWS Access Key ID"
+  type        = string
 }
 
-# The name of our user pool
-variable "cognito_user_pool_name" {
-  type    = string
-  default = "players"
+variable "AWS_SECRET_ACCESS_KEY" {
+  description = "AWS Secret Access Key"
+  type        = string
 }
 
-# List of users in our pool
-variable "cognito_user_pool_members" {
-  type = list(object({
-    email    = string
-    password = string
-  }))
+variable "AWS_DEFAULT_REGION" {
+  description = "AWS Default Region"
+  type        = string
+  default     = "eu-west-2"
 }
 
-# List of URLs that can be redirected to after login
-# from the hosted UI
-variable "web_callback_urls" {
-  type = list(string)
-  default = [
-    "https://t3.dafedteam.test/login-success"
-  ]
+variable "aws_cognito_user_pool_domain" {
+  description = "Domain for Cognito User Pool"
+  type        = string
 }
 
-# List of URLs that can be redirected to after logout
-# from the hosted UI
-variable "web_logout_urls" {
-  type = list(string)
-  default = [
-    "https://t3.dafedteam.test/logout-success"
-  ]
+variable "AWS_COGNITO_USER_POOL_ID" {
+  description = "AWS Cognito User Pool ID"
+  type        = string
+}
+
+variable "AWS_COGNITO_USER_POOL_WEB_CLIENT_ID" {
+  description = "AWS Cognito User Pool Web Client ID"
+  type        = string
+}
+
+variable "AWS_COGNITO_USER_POOL_WEB_CLIENT_SECRET" {
+  description = "AWS Cognito User Pool Web Client Secret"
+  type        = string
+}
+
+variable "AWS_COGNITO_USER_POOL_API_CLIENT_ID" {
+  description = "AWS Cognito API Client ID"
+  type        = string
+}
+
+variable "AWS_COGNITO_USER_POOL_API_CLIENT_SECRET" {
+  description = "AWS Cognito API Client Secret"
+  type        = string
+}
+
+variable "DAFED_ADMIN_USERNAME" {
+  description = "Admin Username"
+  type        = string
+}
+
+variable "DAFED_ADMIN_PASSWORD" {
+  description = "Admin Password"
+  type        = string
 }

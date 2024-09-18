@@ -124,6 +124,7 @@ return [
 
         'idp_uri' => env('AWS_COGNITO_IDP_URI'),
         'user_pool_id' => env('AWS_COGNITO_USER_POOL_ID'),
+        'user_pool_domain' => env('AWS_COGNITO_USER_POOL_DOMAIN'),
 
         'clients' => [
             'web' => [

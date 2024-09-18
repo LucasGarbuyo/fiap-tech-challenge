@@ -13,7 +13,6 @@ resource "aws_cognito_user_pool" "dafed" {
     allow_admin_create_user_only = true
   }
 
-  # https://stackoverflow.com/a/73434724/5873008
   username_attributes      = ["email"]
   auto_verified_attributes = ["email"]
 
@@ -25,14 +24,10 @@ resource "aws_cognito_user_pool" "dafed" {
   }
 }
 
+# Cognito User Pool Domain
 resource "aws_cognito_user_pool_domain" "dafed" {
-  domain       = var.cognito_user_pool_domain
+  domain       = var.aws_cognito_user_pool_domain
   user_pool_id = aws_cognito_user_pool.dafed.id
-}
-
-resource "aws_cognito_user_pool_ui_customization" "example" {
-  user_pool_id = aws_cognito_user_pool_domain.dafed.user_pool_id
-  image_file   = filebase64("resources/logo.png")
 }
 
 resource "aws_cognito_user" "players" {
