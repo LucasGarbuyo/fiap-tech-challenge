@@ -11,8 +11,12 @@ RUN apk --no-cache add pcre-dev ${PHPIZE_DEPS} \
     && apk del pcre-dev ${PHPIZE_DEPS}
 WORKDIR /opt/apps/projeto
 COPY --from=composer /opt/apps/projeto /opt/apps/projeto
-RUN chown -R www-data:www-data /opt/apps/projeto/bootstrap/cache
-RUN chown -R www-data:www-data /opt/apps/projeto/storage/framework/views
+RUN mkdir -p /opt/apps/projeto/bootstrap/cache && \
+    chmod -R 777 /opt/apps/projeto/bootstrap/cache
+RUN mkdir -p /opt/apps/projeto/storage/framework/views && \
+    chmod -R 777 /opt/apps/projeto/storage/framework/views
+RUN mkdir -p /opt/apps/projeto/storage/framework/sessions && \
+    chmod -R 777 /opt/apps/projeto/storage/framework/sessions
 
 FROM nginx:alpine AS web_server
 WORKDIR /opt/apps/projeto
