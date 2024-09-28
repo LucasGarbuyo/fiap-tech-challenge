@@ -19,7 +19,7 @@ spec:
     spec:
       initContainers:
       - name: migrations
-        image: lucasminikel/cli:v0.0.1
+        image: lucasminikel/fpm_server:v0.0.1
         command:
         - php
         args:
@@ -34,6 +34,7 @@ spec:
       containers:
       - name: fpm
         image: lucasminikel/fpm_server:v0.0.1
+        imagePullPolicy: Always
         ports:
         - containerPort: 9000
         envFrom:

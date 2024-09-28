@@ -27,11 +27,9 @@ data:
   LOG_LEVEL: "debug"
 
   DB_CONNECTION: "mysql"
-  DB_HOST: "svc-database"
   DB_PORT: "3306"
-  DB_DATABASE: "grupo47"
 
-  SESSION_DRIVER: "redis"
+  SESSION_DRIVER: "file"
   SESSION_LIFETIME: "120"
   SESSION_ENCRYPT: "false"
   SESSION_PATH: "/"
@@ -39,16 +37,16 @@ data:
 
   BROADCAST_CONNECTION: "log"
   FILESYSTEM_DISK: "local"
-  QUEUE_CONNECTION: "redis"
+  QUEUE_CONNECTION: "sync"
 
   CACHE_STORE: "database"
   CACHE_PREFIX: "null"
 
   MEMCACHED_HOST: "memcached"
 
-  REDIS_CLIENT: "phpredis"
-  REDIS_HOST: "svc-cache"
-  REDIS_PORT: "6379"
+  REDIS_CLIENT: "null"
+  REDIS_HOST: "null"
+  REDIS_PORT: "null"
 
   MAIL_MAILER: "smtp"
   MAIL_HOST: "mailhog"
