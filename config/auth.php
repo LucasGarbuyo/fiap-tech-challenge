@@ -112,4 +112,34 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication AWS
+    |--------------------------------------------------------------------------
+    |
+    */
+    'cognito' => [
+        'aws_access_key' => env('AWS_ACCESS_KEY_ID'),
+        'aws_secret_access_key' => env('AWS_SECRET_ACCESS_KEY'),
+
+        'idp_uri' => env('AWS_COGNITO_IDP_URI'),
+        'user_pool_id' => env('AWS_COGNITO_USER_POOL_ID'),
+        'user_pool_domain' => env('AWS_COGNITO_USER_POOL_DOMAIN'),
+
+        'clients' => [
+            'web' => [
+                'client_id' => env('AWS_COGNITO_USER_POOL_WEB_CLIENT_ID'),
+                'client_secret' => env('AWS_COGNITO_USER_POOL_WEB_CLIENT_SECRET'),
+            ],
+            'system' => [
+                'client_id' => env('AWS_COGNITO_USER_POOL_API_CLIENT_ID'),
+                'client_secret' => env('AWS_COGNITO_USER_POOL_API_CLIENT_SECRET'),
+
+                'admin' => [
+                    'user' => env('DAFED_ADMIN_USERNAME'),
+                    'pass' => env('DAFED_ADMIN_PASSWORD'),
+                ],
+            ],
+        ],
+    ],
 ];
